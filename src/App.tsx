@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/home/home';
+import Welcome from './pages/welcome/welcome';
 import Editor from './pages/editor/editor';
 import NotFound from './pages/not-found/not-found';
 import SignIn from './pages/sign-in/sign-in';
@@ -12,10 +12,10 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<Editor />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
-          <Route path="editor" element={<Editor />} />
+          <Route path="welcome" element={<Welcome />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

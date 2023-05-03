@@ -6,10 +6,10 @@ function Header() {
     <header className="header">
       <div className="header_wrapper-link">
         <NavLink to="/" end className="header__link">
-          Home
-        </NavLink>
-        <NavLink to="/editor" end className="header__link">
           Editor
+        </NavLink>
+        <NavLink to="/welcome" end className="header__link">
+          Welcome
         </NavLink>
         <NavLink to="/sign-in" end className="header__link">
           Sing In
