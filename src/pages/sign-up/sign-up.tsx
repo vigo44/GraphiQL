@@ -2,11 +2,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, set, ref } from 'firebase/database';
 import { loginUser } from '../../store/user-slice';
 
 type FormInputs = {
   email: string;
   password: string;
+  name: string;
 };
 
 function SignUp() {
@@ -15,6 +17,7 @@ function SignUp() {
 
   const handleRegister = (data: FormInputs) => {
     const auth = getAuth();
+    const database = getDatabase();
     console.log(data);
 
     createUserWithEmailAndPassword(auth, data.email, data.password)
@@ -25,8 +28,12 @@ function SignUp() {
             email: userCredential.user.email,
             token: userCredential.user.refreshToken,
             id: userCredential.user.uid,
+            name: data.name,
           })
         );
+        set(ref(database, 'users/' + userCredential.user.uid), {
+          name: data.name,
+        });
         navigate('/');
         alert('User Created Successfully');
       })
@@ -56,6 +63,18 @@ function SignUp() {
           reset();
         })}
       >
+        <input
+          type="text"
+          {...register('name', {
+            required: 'Enter your name!',
+            pattern: {
+              value:
+                /^([A-Za-zА-Яа-яЁё]{2,}\s[A-Za-zА-Яа-яЁё]{1,}'?-?[A-Za-zА-Яа-яЁё]{2,}\s?([A-Za-zА-Яа-яЁё]{1,})?)$/i,
+              message: 'Enter your firs name and last name with capital letters first - Jonh Dow',
+            },
+          })}
+        />
+        {errors.name && <span>{errors.name.message}</span>}
         <input
           type="text"
           {...register('email', {

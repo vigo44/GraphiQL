@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, update, get, child } from 'firebase/database';
 import { loginUser } from '../../store/user-slice';
 
 type FormInputs = {
@@ -15,17 +16,30 @@ function SignIn() {
 
   const handleLogin = (data: FormInputs) => {
     const auth = getAuth();
+    const database = getDatabase();
+    const date = new Date();
+    const dbRef = ref(getDatabase());
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
-        dispatch(
-          loginUser({
-            email: userCredential.user.email,
-            token: userCredential.user.refreshToken,
-            id: userCredential.user.uid,
-          })
-        );
+        update(ref(database, 'users/' + userCredential.user.uid), {
+          last_login: date,
+        });
+        get(child(dbRef, `users/${userCredential.user.uid}`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            dispatch(
+              loginUser({
+                email: userCredential.user.email,
+                token: userCredential.user.refreshToken,
+                id: userCredential.user.uid,
+                name: data.name,
+              })
+            );
+          } else {
+            console.log('No data available');
+          }
+        });
         navigate('/');
         alert('User Login Successfull');
       })
