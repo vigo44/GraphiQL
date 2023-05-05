@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,6 +41,10 @@ function SignIn() {
       });
   };
 
+  useEffect(() => {
+    dispatch(removeAuthError());
+  }, [dispatch]);
+
   const {
     register,
     handleSubmit,
@@ -59,6 +64,7 @@ function SignIn() {
       >
         <input
           type="text"
+          placeholder="Enter your email"
           {...register('email', {
             required: 'Email is Required!',
             pattern: {
@@ -70,6 +76,7 @@ function SignIn() {
         {errors.email && <span>{errors.email.message}</span>}
         <input
           type="text"
+          placeholder="Enter your password"
           {...register('password', {
             required: 'You must specify a password!',
             pattern: {

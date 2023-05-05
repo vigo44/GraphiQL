@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,6 +59,10 @@ function SignUp() {
       });
   };
 
+  useEffect(() => {
+    dispatch(removeAuthError());
+  }, [dispatch]);
+
   const {
     register,
     handleSubmit,
@@ -78,6 +83,7 @@ function SignUp() {
       >
         <input
           type="text"
+          placeholder="Enter your name (Jonh Dow)"
           {...register('name', {
             required: 'Enter your name!',
             pattern: {
@@ -90,6 +96,7 @@ function SignUp() {
         {errors.name && <span>{errors.name.message}</span>}
         <input
           type="text"
+          placeholder="Enter your email"
           {...register('email', {
             required: 'Email is Required!',
             pattern: {
@@ -101,6 +108,7 @@ function SignUp() {
         {errors.email && <span>{errors.email.message}</span>}
         <input
           type="text"
+          placeholder="Enter your password"
           {...register('password', {
             required: 'You must specify a password!',
             pattern: {
@@ -120,6 +128,7 @@ function SignUp() {
         {errors.password && <span>{errors.password.message}</span>}
         <input
           type="text"
+          placeholder="Repeat your password"
           {...register('confirm_password', {
             required: 'Please, repeat your password!',
             pattern: {
