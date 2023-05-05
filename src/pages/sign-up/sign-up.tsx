@@ -1,8 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, set, ref } from 'firebase/database';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 
 type FormInputs = {
@@ -13,34 +17,35 @@ type FormInputs = {
 
 function SignUp() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleRegister = (data: FormInputs) => {
     const auth = getAuth();
-    const database = getDatabase();
-    console.log(data);
 
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
-        dispatch(
-          loginUser({
-            email: userCredential.user.email,
-            token: userCredential.user.refreshToken,
-            id: userCredential.user.uid,
-            name: data.name,
-          })
-        );
-        set(ref(database, 'users/' + userCredential.user.uid), {
-          name: data.name,
+        updateProfile(userCredential.user, {
+          displayName: data.name,
         });
-        navigate('/');
-        alert('User Created Successfully');
+
+        signInWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            dispatch(
+              loginUser({
+                email: userCredential.user.email,
+                token: userCredential.user.refreshToken,
+                id: userCredential.user.uid,
+                name: userCredential.user.displayName,
+              })
+            );
+          })
+          .catch((error) => {
+            console.log(error.code, error.message);
+            alert('User Login failed');
+          });
       })
       .catch((error) => {
         console.log(error.code, error.message);
         alert('User created failed');
-        alert(error);
       });
   };
 

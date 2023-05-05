@@ -10,4 +10,4 @@ const firebaseConfig = {
   databaseURL: 'https://rsschool-graphiql-default-rtdb.europe-west1.firebasedatabase.app',
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
