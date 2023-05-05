@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,15 +8,20 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
+import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
+
+import { RootState } from 'store';
 
 type FormInputs = {
   email: string;
   password: string;
+  confirm_password: string;
   name: string;
 };
 
 function SignUp() {
   const dispatch = useDispatch();
+  const authError = useSelector((state: RootState) => state.authError);
 
   const handleRegister = (data: FormInputs) => {
     const auth = getAuth();
@@ -45,14 +50,18 @@ function SignUp() {
       })
       .catch((error) => {
         console.log(error.code, error.message);
-        alert('User created failed');
+        dispatch(
+          setAuthError({
+            error: error.message,
+          })
+        );
       });
   };
 
   const {
     register,
     handleSubmit,
-    reset,
+    watch,
     formState: { errors },
   } = useForm<FormInputs>({
     mode: 'onSubmit',
@@ -65,7 +74,6 @@ function SignUp() {
       <form
         onSubmit={handleSubmit((data) => {
           handleRegister(data);
-          reset();
         })}
       >
         <input
@@ -110,11 +118,41 @@ function SignUp() {
           })}
         />
         {errors.password && <span>{errors.password.message}</span>}
+        <input
+          type="text"
+          {...register('confirm_password', {
+            required: 'Please, repeat your password!',
+            pattern: {
+              value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
+              message: 'Password should contain at least one number and one special character',
+            },
+            minLength: {
+              value: 8,
+              message: 'Password must be more than 8 characters',
+            },
+            maxLength: {
+              value: 20,
+              message: 'Password must be less than 20 characters',
+            },
+            validate: (val: string) => {
+              if (watch('password') != val) {
+                return 'Your passwords do no match';
+              }
+            },
+          })}
+        />
+        {errors.confirm_password && <span>{errors.confirm_password.message}</span>}
         <input className="formSubmit" type="submit" value="SIGN UP" />
       </form>
       <span>
         Or <Link to="/sign-in">login to your account</Link>
       </span>
+      {authError.error && (
+        <div>
+          <span>{authError.error}</span>
+          <button onClick={() => dispatch(removeAuthError())}>X</button>
+        </div>
+      )}
     </div>
   );
 }

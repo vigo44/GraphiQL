@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
+import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
+
+import { RootState } from 'store';
 
 type FormInputs = {
   email: string;
@@ -11,6 +14,7 @@ type FormInputs = {
 
 function SignIn() {
   const dispatch = useDispatch();
+  const authError = useSelector((state: RootState) => state.authError);
 
   const handleLogin = (data: FormInputs) => {
     const auth = getAuth();
@@ -28,14 +32,17 @@ function SignIn() {
       })
       .catch((error) => {
         console.log(error.code, error.message);
-        alert('User Login failed');
+        dispatch(
+          setAuthError({
+            error: error.message,
+          })
+        );
       });
   };
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormInputs>({
     mode: 'onSubmit',
@@ -48,7 +55,6 @@ function SignIn() {
       <form
         onSubmit={handleSubmit((data) => {
           handleLogin(data);
-          reset();
         })}
       >
         <input
@@ -86,6 +92,12 @@ function SignIn() {
       <span>
         Or <Link to="/sign-up">create new account</Link>
       </span>
+      {authError.error && (
+        <div>
+          <span>{authError.error}</span>
+          <button onClick={() => dispatch(removeAuthError())}>X</button>
+        </div>
+      )}
     </div>
   );
 }
