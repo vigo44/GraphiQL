@@ -11,9 +11,14 @@ import {
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
 
+import InputName from '../../components/form-inputs/name-input';
+import InputEmail from '../../components/form-inputs/email-input';
+import InputPassword from '../../components/form-inputs/password-input';
+import InputConfirmPassword from '../../components/form-inputs/confirm-password-input';
+
 import { RootState } from 'store';
 
-type FormInputs = {
+export type FormInputs = {
   email: string;
   password: string;
   confirm_password: string;
@@ -33,21 +38,16 @@ function SignUp() {
           displayName: data.name,
         });
 
-        signInWithEmailAndPassword(auth, data.email, data.password)
-          .then((userCredential) => {
-            dispatch(
-              loginUser({
-                email: userCredential.user.email,
-                token: userCredential.user.refreshToken,
-                id: userCredential.user.uid,
-                name: userCredential.user.displayName,
-              })
-            );
-          })
-          .catch((error) => {
-            console.log(error.code, error.message);
-            alert('User Login failed');
-          });
+        signInWithEmailAndPassword(auth, data.email, data.password).then((userCredential) => {
+          dispatch(
+            loginUser({
+              email: userCredential.user.email,
+              token: userCredential.user.refreshToken,
+              id: userCredential.user.uid,
+              name: userCredential.user.displayName,
+            })
+          );
+        });
       })
       .catch((error) => {
         console.log(error.code, error.message);
@@ -78,79 +78,14 @@ function SignUp() {
       <h1>Sign Up</h1>
       <form
         onSubmit={handleSubmit((data) => {
+          dispatch(removeAuthError());
           handleRegister(data);
         })}
       >
-        <input
-          type="text"
-          placeholder="Enter your name (Jonh Dow)"
-          {...register('name', {
-            required: 'Enter your name!',
-            pattern: {
-              value:
-                /^([A-Za-zА-Яа-яЁё]{2,}\s[A-Za-zА-Яа-яЁё]{1,}'?-?[A-Za-zА-Яа-яЁё]{2,}\s?([A-Za-zА-Яа-яЁё]{1,})?)$/i,
-              message: 'Enter your firs name and last name with capital letters first - Jonh Dow',
-            },
-          })}
-        />
-        {errors.name && <span>{errors.name.message}</span>}
-        <input
-          type="text"
-          placeholder="Enter your email"
-          {...register('email', {
-            required: 'Email is Required!',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'Invalid email address',
-            },
-          })}
-        />
-        {errors.email && <span>{errors.email.message}</span>}
-        <input
-          type="text"
-          placeholder="Enter your password"
-          {...register('password', {
-            required: 'You must specify a password!',
-            pattern: {
-              value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-              message: 'Password should contain at least one number and one special character',
-            },
-            minLength: {
-              value: 8,
-              message: 'Password must be more than 8 characters',
-            },
-            maxLength: {
-              value: 20,
-              message: 'Password must be less than 20 characters',
-            },
-          })}
-        />
-        {errors.password && <span>{errors.password.message}</span>}
-        <input
-          type="text"
-          placeholder="Repeat your password"
-          {...register('confirm_password', {
-            required: 'Please, repeat your password!',
-            pattern: {
-              value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-              message: 'Password should contain at least one number and one special character',
-            },
-            minLength: {
-              value: 8,
-              message: 'Password must be more than 8 characters',
-            },
-            maxLength: {
-              value: 20,
-              message: 'Password must be less than 20 characters',
-            },
-            validate: (val: string) => {
-              if (watch('password') != val) {
-                return 'Your passwords do no match';
-              }
-            },
-          })}
-        />
-        {errors.confirm_password && <span>{errors.confirm_password.message}</span>}
+        <InputName register={register} errors={errors} />
+        <InputEmail register={register} errors={errors} />
+        <InputPassword register={register} errors={errors} />
+        <InputConfirmPassword register={register} errors={errors} watch={watch} />
         <input className="formSubmit" type="submit" value="SIGN UP" />
       </form>
       <span>

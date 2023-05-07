@@ -6,12 +6,11 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
 
-import { RootState } from 'store';
+import InputEmail from '../../components/form-inputs/email-input';
+import InputPassword from '../../components/form-inputs/password-input';
 
-type FormInputs = {
-  email: string;
-  password: string;
-};
+import { RootState } from 'store';
+import { FormInputs } from '../../pages/sign-up/sign-up';
 
 function SignIn() {
   const dispatch = useDispatch();
@@ -59,41 +58,12 @@ function SignIn() {
       <h1>Sign In</h1>
       <form
         onSubmit={handleSubmit((data) => {
+          dispatch(removeAuthError());
           handleLogin(data);
         })}
       >
-        <input
-          type="text"
-          placeholder="Enter your email"
-          {...register('email', {
-            required: 'Email is Required!',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'Invalid email address',
-            },
-          })}
-        />
-        {errors.email && <span>{errors.email.message}</span>}
-        <input
-          type="text"
-          placeholder="Enter your password"
-          {...register('password', {
-            required: 'You must specify a password!',
-            pattern: {
-              value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-              message: 'Password should contain at least one number and one special character',
-            },
-            minLength: {
-              value: 8,
-              message: 'Password must be more than 8 characters',
-            },
-            maxLength: {
-              value: 20,
-              message: 'Password must be less than 20 characters',
-            },
-          })}
-        />
-        {errors.password && <span>{errors.password.message}</span>}
+        <InputEmail register={register} errors={errors} />
+        <InputPassword register={register} errors={errors} />
         <input className="formSubmit" type="submit" value="SIGN IN" />
       </form>
       <span>
