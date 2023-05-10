@@ -91,6 +91,9 @@ function SignUp() {
       <span>
         Or <Link to="/sign-in">login to your account</Link>
       </span>
+      <span>
+        <Link to="/pass-reset">Forgot your password?</Link>
+      </span>
       {authError.error && (
         <div>
           <span>{authError.error}</span>

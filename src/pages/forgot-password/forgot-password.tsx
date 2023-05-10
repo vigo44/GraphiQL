@@ -2,34 +2,29 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { loginUser } from '../../store/user-slice';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
+import { setPassResetModalOpen } from '../../store/password-reset-modal-slice';
 import setErrorMessage from '../../common/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
-import InputPassword from '../../components/form-inputs/password-input';
+import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
 
-function SignIn() {
+function PasswordReset() {
   const dispatch = useDispatch();
   const authError = useSelector((state: RootState) => state.authError);
+  const passResetModal = useSelector((state: RootState) => state.passResetModal);
 
-  const handleLogin = (data: FormInputs) => {
+  const handlePasswordReset = (email: string) => {
     const auth = getAuth();
 
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        dispatch(
-          loginUser({
-            email: userCredential.user.email,
-            token: userCredential.user.refreshToken,
-            id: userCredential.user.uid,
-            name: userCredential.user.displayName,
-          })
-        );
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        dispatch(setPassResetModalOpen());
+        setPassResetModalOpen();
       })
       .catch((error) => {
         dispatch(
@@ -55,31 +50,28 @@ function SignIn() {
 
   return (
     <div>
-      <h1>Sign In</h1>
+      <h1>Reset password</h1>
       <form
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
-          handleLogin(data);
+          handlePasswordReset(data.email);
         })}
       >
         <InputEmail register={register} errors={errors} />
-        <InputPassword register={register} errors={errors} />
-        <input className="formSubmit" type="submit" value="SIGN IN" />
+        <input className="formSubmit" type="submit" value="CONFIRM" />
       </form>
       <span>
-        Or <Link to="/sign-up">create new account</Link>
-      </span>
-      <span>
-        <Link to="/pass-reset">Forgot your password?</Link>
+        Or <Link to="/sign-in">login to your account</Link>
       </span>
       {authError.error && (
         <div>
           <span>{authError.error}</span>
-          <button onClick={() => dispatch(removeAuthError())}>X</button>
+          <button onClick={() => removeAuthError()}>X</button>
         </div>
       )}
+      {passResetModal.isPassResetModalOpen && <PasswordResetModal />}
     </div>
   );
 }
 
-export default SignIn;
+export default PasswordReset;
