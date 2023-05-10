@@ -35,6 +35,9 @@ function setErrorMessage(error: string): string {
       errorMessage =
         'User with that email is allready exists! Please, check your email or use another one.';
       break;
+    case 'auth/too-many-requests':
+      errorMessage = 'There`s too many requests for now. Please, try again later.';
+      break;
     default:
       errorMessage = 'Some unexpected error occured! Please, try again.';
       break;

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signOut } from 'firebase/auth';
 import { CheckAuth } from '../../hooks/check-auth';
@@ -9,6 +9,7 @@ import { RootState } from 'store';
 
 function Header() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isAuth } = CheckAuth();
   const name = useSelector((state: RootState) => state.user.name);
 
@@ -19,7 +20,6 @@ function Header() {
         dispatch(logoutUser());
       })
       .catch((error) => {
-        console.log(error.code, error.message);
         alert('Logout failed');
         alert(error);
       });
@@ -35,12 +35,8 @@ function Header() {
           <button onClick={() => handleLogout()}>{name} | Log Out</button>
         ) : (
           <>
-            <NavLink to="/sign-in" end className="header__link">
-              Sing In
-            </NavLink>
-            <NavLink to="/sign-up" end className="header__link">
-              Sing Up
-            </NavLink>
+            <button onClick={() => navigate('/sign-in')}>Sing In</button>
+            <button onClick={() => navigate('/sign-up')}>Sing Up</button>
           </>
         )}
       </div>

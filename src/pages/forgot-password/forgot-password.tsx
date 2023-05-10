@@ -24,7 +24,6 @@ function PasswordReset() {
     sendPasswordResetEmail(auth, email)
       .then(() => {
         dispatch(setPassResetModalOpen());
-        setPassResetModalOpen();
       })
       .catch((error) => {
         dispatch(
@@ -66,7 +65,7 @@ function PasswordReset() {
       {authError.error && (
         <div>
           <span>{authError.error}</span>
-          <button onClick={() => removeAuthError()}>X</button>
+          <button onClick={() => dispatch(removeAuthError())}>X</button>
         </div>
       )}
       {passResetModal.isPassResetModalOpen && <PasswordResetModal />}
