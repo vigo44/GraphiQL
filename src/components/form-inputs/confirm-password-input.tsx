@@ -1,6 +1,9 @@
 import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
 
+import { Alert, InputAdornment, TextField } from '@mui/material';
+
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { KeyOutlined } from '@mui/icons-material';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
@@ -11,7 +14,8 @@ type ComponentProps = {
 function InputConfirmPassword(props: ComponentProps) {
   return (
     <div>
-      <input
+      <TextField
+        variant="standard"
         type="text"
         placeholder="Repeat your password"
         {...props.register('confirm_password', {
@@ -34,8 +38,18 @@ function InputConfirmPassword(props: ComponentProps) {
             }
           },
         })}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <KeyOutlined />
+            </InputAdornment>
+          ),
+        }}
+        fullWidth
       />
-      {props.errors.confirm_password && <span>{props.errors.confirm_password.message}</span>}
+      {props.errors.confirm_password && (
+        <Alert severity="error">{props.errors.confirm_password.message}</Alert>
+      )}
     </div>
   );
 }

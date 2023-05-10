@@ -1,6 +1,9 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
+import { Alert, InputAdornment, TextField } from '@mui/material';
+
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { PersonOutline } from '@mui/icons-material';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
@@ -10,7 +13,8 @@ type ComponentProps = {
 function InputName(props: ComponentProps) {
   return (
     <div>
-      <input
+      <TextField
+        variant="standard"
         type="text"
         placeholder="Enter your name (Jonh Dow)"
         {...props.register('name', {
@@ -21,8 +25,16 @@ function InputName(props: ComponentProps) {
             message: 'Enter your firs name and last name with capital letters first - Jonh Dow',
           },
         })}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <PersonOutline />
+            </InputAdornment>
+          ),
+        }}
+        fullWidth
       />
-      {props.errors.name && <span>{props.errors.name.message}</span>}
+      {props.errors.name && <Alert severity="error">{props.errors.name.message}</Alert>}
     </div>
   );
 }

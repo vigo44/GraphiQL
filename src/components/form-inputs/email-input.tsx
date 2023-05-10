@@ -1,5 +1,8 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
+import { Alert, InputAdornment, TextField } from '@mui/material';
+import { MailOutline } from '@mui/icons-material';
+
 import { FormInputs } from '../../pages/sign-up/sign-up';
 
 type ComponentProps = {
@@ -10,7 +13,8 @@ type ComponentProps = {
 function InputEmail(props: ComponentProps) {
   return (
     <div>
-      <input
+      <TextField
+        variant="standard"
         type="text"
         placeholder="Enter your email"
         {...props.register('email', {
@@ -20,8 +24,16 @@ function InputEmail(props: ComponentProps) {
             message: 'Invalid email address',
           },
         })}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <MailOutline />
+            </InputAdornment>
+          ),
+        }}
+        fullWidth
       />
-      {props.errors.email && <span>{props.errors.email.message}</span>}
+      {props.errors.email && <Alert severity="error">{props.errors.email.message}</Alert>}
     </div>
   );
 }

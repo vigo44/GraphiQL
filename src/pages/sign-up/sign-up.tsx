@@ -17,6 +17,8 @@ import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 import InputConfirmPassword from '../../components/form-inputs/confirm-password-input';
 
+import { Alert, Box, Button } from '@mui/material';
+
 import { RootState } from 'store';
 
 export type FormInputs = {
@@ -76,7 +78,17 @@ function SignUp() {
   return (
     <div>
       <h1>Sign Up</h1>
-      <form
+      <Box
+        component="form"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          width: '350px',
+          p: '20px',
+          border: 1,
+          borderRadius: '10px',
+        }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
           handleRegister(data);
@@ -86,8 +98,10 @@ function SignUp() {
         <InputEmail register={register} errors={errors} />
         <InputPassword register={register} errors={errors} />
         <InputConfirmPassword register={register} errors={errors} watch={watch} />
-        <input className="formSubmit" type="submit" value="SIGN UP" />
-      </form>
+        <Button variant="contained" type="submit" value="SIGN UP">
+          SIGN UP
+        </Button>
+      </Box>
       <span>
         Or <Link to="/sign-in">login to your account</Link>
       </span>
@@ -95,10 +109,9 @@ function SignUp() {
         <Link to="/pass-reset">Forgot your password?</Link>
       </span>
       {authError.error && (
-        <div>
+        <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
           <span>{authError.error}</span>
-          <button onClick={() => dispatch(removeAuthError())}>X</button>
-        </div>
+        </Alert>
       )}
     </div>
   );

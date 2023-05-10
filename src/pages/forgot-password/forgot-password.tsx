@@ -10,6 +10,8 @@ import setErrorMessage from '../../common/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
 
+import { Alert, Box, Button } from '@mui/material';
+
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
 
@@ -50,23 +52,34 @@ function PasswordReset() {
   return (
     <div>
       <h1>Reset password</h1>
-      <form
+      <Box
+        component="form"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          width: '350px',
+          p: '20px',
+          border: 1,
+          borderRadius: '10px',
+        }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
           handlePasswordReset(data.email);
         })}
       >
         <InputEmail register={register} errors={errors} />
-        <input className="formSubmit" type="submit" value="CONFIRM" />
-      </form>
+        <Button variant="contained" type="submit">
+          CONFIRM
+        </Button>
+      </Box>
       <span>
         Or <Link to="/sign-in">login to your account</Link>
       </span>
       {authError.error && (
-        <div>
+        <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
           <span>{authError.error}</span>
-          <button onClick={() => dispatch(removeAuthError())}>X</button>
-        </div>
+        </Alert>
       )}
       {passResetModal.isPassResetModalOpen && <PasswordResetModal />}
     </div>

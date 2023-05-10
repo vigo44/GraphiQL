@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckAuth } from '../../hooks/check-auth';
 
+import { Button } from '@mui/material';
+
 import { RootState } from '../../store';
 
 function Welcome() {
@@ -13,11 +15,17 @@ function Welcome() {
     <div>
       <h1>Welcome{isAuth && `, ${name}`}</h1>
       {isAuth ? (
-        <button onClick={() => navigate('/')}>Go to Editor</button>
+        <Button variant="outlined" onClick={() => navigate('/')}>
+          Go to Editor
+        </Button>
       ) : (
         <>
-          <button onClick={() => navigate('/sign-in')}>Sing In</button>
-          <button onClick={() => navigate('/sign-up')}>Sing Up</button>
+          <Button variant="outlined" onClick={() => navigate('/sign-in')}>
+            Sing In
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/sign-up')}>
+            Sing Up
+          </Button>
         </>
       )}
     </div>

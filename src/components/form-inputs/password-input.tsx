@@ -1,6 +1,9 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
+import { Alert, InputAdornment, TextField } from '@mui/material';
+
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { KeyOutlined } from '@mui/icons-material';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
@@ -10,7 +13,8 @@ type ComponentProps = {
 function InputPassword(props: ComponentProps) {
   return (
     <div>
-      <input
+      <TextField
+        variant="standard"
         type="text"
         placeholder="Enter your password"
         {...props.register('password', {
@@ -28,8 +32,16 @@ function InputPassword(props: ComponentProps) {
             message: 'Password must be less than 20 characters',
           },
         })}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <KeyOutlined />
+            </InputAdornment>
+          ),
+        }}
+        fullWidth
       />
-      {props.errors.password && <span>{props.errors.password.message}</span>}
+      {props.errors.password && <Alert severity="error">{props.errors.password.message}</Alert>}
     </div>
   );
 }
