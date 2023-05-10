@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
+import setErrorMessage from '../../common/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
@@ -31,10 +32,9 @@ function SignIn() {
         );
       })
       .catch((error) => {
-        console.log(error.code, error.message);
         dispatch(
           setAuthError({
-            error: error.message,
+            error: setErrorMessage(error.code),
           })
         );
       });

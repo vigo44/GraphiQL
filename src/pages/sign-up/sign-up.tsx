@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
+import setErrorMessage from '../../common/error-message';
 
 import InputName from '../../components/form-inputs/name-input';
 import InputEmail from '../../components/form-inputs/email-input';
@@ -50,10 +51,9 @@ function SignUp() {
         });
       })
       .catch((error) => {
-        console.log(error.code, error.message);
         dispatch(
           setAuthError({
-            error: error.message,
+            error: setErrorMessage(error.code),
           })
         );
       });
