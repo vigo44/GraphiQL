@@ -5,7 +5,7 @@ import { CheckAuth } from '../../hooks/check-auth';
 import { logoutUser } from '../../store/user-slice';
 import './header.css';
 
-import { Button } from '@mui/material';
+import { Button, ButtonGroup } from '@mui/material';
 
 import { RootState } from 'store';
 
@@ -34,18 +34,14 @@ function Header() {
           Welcome
         </NavLink>
         {isAuth ? (
-          <Button variant="contained" onClick={() => handleLogout()}>
+          <Button variant="contained" size="small" onClick={() => handleLogout()}>
             {name} | Log Out
           </Button>
         ) : (
-          <>
-            <Button variant="text" onClick={() => navigate('/sign-in')}>
-              Sing In
-            </Button>
-            <Button variant="text" onClick={() => navigate('/sign-up')}>
-              Sing Up
-            </Button>
-          </>
+          <ButtonGroup variant="contained" size="small">
+            <Button onClick={() => navigate('/sign-in')}>Sing In</Button>
+            <Button onClick={() => navigate('/sign-up')}>Sing Up</Button>
+          </ButtonGroup>
         )}
       </div>
     </header>

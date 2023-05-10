@@ -1,6 +1,6 @@
 import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
 
-import { Alert, InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 
 import { FormInputs } from '../../pages/sign-up/sign-up';
 import { KeyOutlined } from '@mui/icons-material';
@@ -15,26 +15,28 @@ function InputConfirmPassword(props: ComponentProps) {
   return (
     <div>
       <TextField
-        variant="standard"
+        variant="outlined"
+        size="small"
+        label="Repeated password"
         type="text"
         placeholder="Repeat your password"
         {...props.register('confirm_password', {
-          required: 'Please, repeat your password!',
+          required: '*Please, repeat your password!',
           pattern: {
             value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-            message: 'Password should contain at least one number and one special character',
+            message: '*Password should contain at least one number and one special character',
           },
           minLength: {
             value: 8,
-            message: 'Password must be more than 8 characters',
+            message: '*Password must be more than 8 characters',
           },
           maxLength: {
             value: 20,
-            message: 'Password must be less than 20 characters',
+            message: '*Password must be less than 20 characters',
           },
           validate: (val: string) => {
             if (props.watch('password') != val) {
-              return 'Your passwords do no match';
+              return '*Your passwords do no match';
             }
           },
         })}
@@ -46,10 +48,13 @@ function InputConfirmPassword(props: ComponentProps) {
           ),
         }}
         fullWidth
+        error={props.errors.confirm_password ? true : false}
+        helperText={
+          props.errors.confirm_password
+            ? props.errors.confirm_password.message
+            : '*Enter the same password'
+        }
       />
-      {props.errors.confirm_password && (
-        <Alert severity="error">{props.errors.confirm_password.message}</Alert>
-      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckAuth } from '../../hooks/check-auth';
 
-import { Button } from '@mui/material';
+import { Button, ButtonGroup, Typography } from '@mui/material';
 
 import { RootState } from '../../store';
 
@@ -13,20 +13,24 @@ function Welcome() {
 
   return (
     <div>
-      <h1>Welcome{isAuth && `, ${name}`}</h1>
+      <Typography
+        variant="h2"
+        component="h1"
+        sx={{
+          alignSelf: 'flex-start',
+        }}
+      >
+        Welcome{isAuth && `, ${name}`}
+      </Typography>
       {isAuth ? (
         <Button variant="outlined" onClick={() => navigate('/')}>
           Go to Editor
         </Button>
       ) : (
-        <>
-          <Button variant="outlined" onClick={() => navigate('/sign-in')}>
-            Sing In
-          </Button>
-          <Button variant="outlined" onClick={() => navigate('/sign-up')}>
-            Sing Up
-          </Button>
-        </>
+        <ButtonGroup variant="outlined" size="large">
+          <Button onClick={() => navigate('/sign-in')}>Sing In</Button>
+          <Button onClick={() => navigate('/sign-up')}>Sing Up</Button>
+        </ButtonGroup>
       )}
     </div>
   );

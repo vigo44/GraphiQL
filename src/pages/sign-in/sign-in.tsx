@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -10,13 +10,14 @@ import setErrorMessage from '../../common/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 
-import { Alert, Box, Button } from '@mui/material';
+import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
 
 function SignIn() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
 
   const handleLogin = (data: FormInputs) => {
@@ -56,8 +57,26 @@ function SignIn() {
   });
 
   return (
-    <>
-      <h1>Sign In</h1>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '10px',
+        p: '20px',
+        backgroundColor: 'gainsboro',
+        borderRadius: '10px',
+      }}
+    >
+      <Typography
+        variant="h3"
+        component="h2"
+        sx={{
+          alignSelf: 'flex-start',
+        }}
+      >
+        Sign In
+      </Typography>
       <Box
         component="form"
         sx={{
@@ -66,6 +85,7 @@ function SignIn() {
           gap: '10px',
           width: '350px',
           p: '20px',
+          backgroundColor: 'white',
           border: 1,
           borderRadius: '10px',
         }}
@@ -76,22 +96,44 @@ function SignIn() {
       >
         <InputEmail register={register} errors={errors} />
         <InputPassword register={register} errors={errors} />
+        <Collapse in={!!authError.error}>
+          <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
+            <span>{authError.error}</span>
+          </Alert>
+        </Collapse>
         <Button variant="contained" type="submit">
           SIGN IN
         </Button>
       </Box>
-      <span>
-        Or <Link to="/sign-up">create new account</Link>
-      </span>
-      <span>
-        <Link to="/pass-reset">Forgot your password?</Link>
-      </span>
-      {authError.error && (
-        <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
-          <span>{authError.error}</span>
-        </Alert>
-      )}
-    </>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '80%',
+        }}
+      >
+        <Link
+          component="button"
+          underline="hover"
+          onClick={() => {
+            navigate('/sign-up');
+          }}
+        >
+          Create new account
+        </Link>
+        <Divider sx={{ width: '100%' }}>Or</Divider>
+        <Link
+          component="button"
+          underline="hover"
+          sx={{ width: '100%' }}
+          onClick={() => {
+            navigate('/pass-reset');
+          }}
+        >
+          Forgot your password
+        </Link>
+      </Box>
+    </Box>
   );
 }
 

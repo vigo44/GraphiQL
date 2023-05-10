@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
@@ -10,15 +10,15 @@ import setErrorMessage from '../../common/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
 
-import { Alert, Box, Button } from '@mui/material';
+import { Alert, Box, Button, Collapse, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
 
 function PasswordReset() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
-  const passResetModal = useSelector((state: RootState) => state.passResetModal);
 
   const handlePasswordReset = (email: string) => {
     const auth = getAuth();
@@ -50,8 +50,26 @@ function PasswordReset() {
   });
 
   return (
-    <div>
-      <h1>Reset password</h1>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '10px',
+        p: '20px',
+        backgroundColor: 'gainsboro',
+        borderRadius: '10px',
+      }}
+    >
+      <Typography
+        variant="h3"
+        component="h2"
+        sx={{
+          alignSelf: 'flex-start',
+        }}
+      >
+        Reset password
+      </Typography>
       <Box
         component="form"
         sx={{
@@ -60,6 +78,7 @@ function PasswordReset() {
           gap: '10px',
           width: '350px',
           p: '20px',
+          backgroundColor: 'white',
           border: 1,
           borderRadius: '10px',
         }}
@@ -69,20 +88,26 @@ function PasswordReset() {
         })}
       >
         <InputEmail register={register} errors={errors} />
+        <Collapse in={!!authError.error}>
+          <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
+            <span>{authError.error}</span>
+          </Alert>
+        </Collapse>
         <Button variant="contained" type="submit">
           CONFIRM
         </Button>
       </Box>
-      <span>
-        Or <Link to="/sign-in">login to your account</Link>
-      </span>
-      {authError.error && (
-        <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
-          <span>{authError.error}</span>
-        </Alert>
-      )}
-      {passResetModal.isPassResetModalOpen && <PasswordResetModal />}
-    </div>
+      <Link
+        component="button"
+        underline="hover"
+        onClick={() => {
+          navigate('/sign-in');
+        }}
+      >
+        Login to your account
+      </Link>
+      <PasswordResetModal />
+    </Box>
   );
 }
 
