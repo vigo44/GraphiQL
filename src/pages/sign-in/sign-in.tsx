@@ -14,8 +14,11 @@ import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/ma
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function SignIn() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
@@ -76,7 +79,7 @@ function SignIn() {
           alignSelf: 'flex-start',
         }}
       >
-        Sign In
+        {t('signInForm.signInTitle')}
       </Typography>
       <Box
         component="form"
@@ -103,7 +106,7 @@ function SignIn() {
           </Alert>
         </Collapse>
         <Button variant="contained" type="submit">
-          SIGN IN
+          {t('signInForm.signIN')}
         </Button>
       </Box>
       <Box
@@ -120,9 +123,9 @@ function SignIn() {
             navigate('/sign-up');
           }}
         >
-          Create new account
+          {t('signInForm.createNewAcc')}
         </Link>
-        <Divider sx={{ width: '100%' }}>Or</Divider>
+        <Divider sx={{ width: '100%' }}>{t('signInForm.or')}</Divider>
         <Link
           component="button"
           underline="hover"
@@ -131,7 +134,7 @@ function SignIn() {
             navigate('/pass-reset');
           }}
         >
-          Forgot your password
+          {t('signInForm.forgotYourPass')}
         </Link>
       </Box>
     </Box>

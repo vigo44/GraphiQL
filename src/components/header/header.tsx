@@ -7,8 +7,10 @@ import { logoutUser } from '../../store/user-slice';
 import { AppBar, Button, ButtonGroup, useScrollTrigger } from '@mui/material';
 
 import { RootState } from 'store';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuth } = CheckAuth();
@@ -30,6 +32,10 @@ function Header() {
       });
   };
 
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <AppBar
       component="header"
@@ -47,7 +53,7 @@ function Header() {
     >
       <div>
         <Button variant="text" onClick={() => navigate('/welcome')}>
-          Welcome
+          {t('header.welcome')}
         </Button>
         {isAuth ? (
           <Button
@@ -55,14 +61,18 @@ function Header() {
             size={trigger ? 'small' : 'medium'}
             onClick={() => handleLogout()}
           >
-            {name} | Log Out
+            {name} | {t('header.logOUT')}
           </Button>
         ) : (
           <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
-            <Button onClick={() => navigate('/sign-in')}>Sing In</Button>
-            <Button onClick={() => navigate('/sign-up')}>Sing Up</Button>
+            <Button onClick={() => navigate('/sign-in')}>{t('header.signIN')}</Button>
+            <Button onClick={() => navigate('/sign-up')}>{t('header.signUP')}</Button>
           </ButtonGroup>
         )}
+        <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
+          <Button onClick={() => changeLanguage('en')}>EN</Button>
+          <Button onClick={() => changeLanguage('ru')}>RU</Button>
+        </ButtonGroup>
       </div>
     </AppBar>
   );

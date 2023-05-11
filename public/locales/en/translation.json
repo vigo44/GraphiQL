@@ -1,0 +1,49 @@
+{
+  "header": {
+    "welcome": "Welcome",
+    "signIN": "Sign In",
+    "signUP": "Sign Up",
+    "logOUT": "Log Out"
+  },
+  "notFoundPage": {
+    "notFound": "404 Page not found!"
+  },
+  "forgotPassForm": {
+    "resetPass": "Reset password",
+    "confirm": "confirm",
+    "loginToYourAcc": "Login to your account"
+  },
+  "signInForm": {
+    "signInTitle": "Sign In",
+    "signIN": "Sign In",
+    "createNewAcc": "Create new account",
+    "or": "or",
+    "forgotYourPass": "Forgot your password?"
+  },
+  "signUpForm": {
+    "signUpTitle": "Sign Up",
+    "signUP": "Sign Up",
+    "loginToYourAcc": "Login to your account",
+    "or": "or",
+    "forgotYourPass": "Forgot your password?"
+  },
+  "passResetModal": {
+    "successText": "Success! Check your email to reset your password.",
+    "signIN": "Sign In"
+  },
+  "creatorsSection": {
+    "title": "Developers"
+  },
+  "rsschoolSection": {
+    "text": "This is not just another community of developers, this is something more."
+  },
+  "welcomeSection": {
+    "welcome": "Welcome",
+    "title": "What is GraphiQL?",
+    "text": "GraphiQL is the GraphQL integrated development environment (IDE). It’s a powerful (and all-around awesome) tool you’ll use often while building Gatsby websites. It offers syntax highlighting, intellisense autocompletion, automatic documentation, and much more.",
+    "text2": "Use GraphiQL to interactively build your page and static queries.",
+    "goToEditor": "Go to Editor",
+    "signIN": "Sign In",
+    "signUP": "Sign Up"
+  }
+}

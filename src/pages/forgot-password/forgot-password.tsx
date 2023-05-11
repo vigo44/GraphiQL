@@ -14,8 +14,11 @@ import { Alert, Box, Button, Collapse, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function PasswordReset() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
@@ -69,7 +72,7 @@ function PasswordReset() {
           alignSelf: 'flex-start',
         }}
       >
-        Reset password
+        {t('forgotPassForm.resetPass')}
       </Typography>
       <Box
         component="form"
@@ -95,7 +98,7 @@ function PasswordReset() {
           </Alert>
         </Collapse>
         <Button variant="contained" type="submit">
-          CONFIRM
+          {t('forgotPassForm.confirm')}
         </Button>
       </Box>
       <Link
@@ -105,7 +108,7 @@ function PasswordReset() {
           navigate('/sign-in');
         }}
       >
-        Login to your account
+        {t('forgotPassForm.loginToYourAcc')}
       </Link>
       <PasswordResetModal />
     </Box>

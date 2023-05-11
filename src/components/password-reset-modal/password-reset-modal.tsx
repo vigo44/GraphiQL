@@ -5,8 +5,11 @@ import { setPassResetModalClose } from '../../store/password-reset-modal-slice';
 import { Modal, Box, Button } from '@mui/material';
 
 import { RootState } from 'store';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function PasswordResetModal() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const passResetModal = useSelector((state: RootState) => state.passResetModal);
@@ -39,7 +42,7 @@ function PasswordResetModal() {
           borderRadius: '10px',
         }}
       >
-        <span>Success! Check your email to reset your password.</span>
+        <span>{t('passResetModal.successText')}</span>
         <Button
           variant="contained"
           onClick={() => {
@@ -47,7 +50,7 @@ function PasswordResetModal() {
             navigate('/sign-in');
           }}
         >
-          SIGN IN
+          {t('passResetModal.signIN')}
         </Button>
       </Box>
     </Modal>

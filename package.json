@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint --ext js,ts,tsx src",
+    "lint": "eslint --fix --ext js,ts,tsx src",
     "test": "vitest --coverage"
   },
   "dependencies": {
@@ -42,8 +42,12 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "i18next": "^22.4.15",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "i18next-http-backend": "^2.2.0",
     "jsdom": "^21.1.1",
     "prettier": "^2.8.4",
+    "react-i18next": "^12.2.2",
     "typescript": "^4.9.3",
     "vite": "^4.2.0",
     "vitest": "^0.29.5",

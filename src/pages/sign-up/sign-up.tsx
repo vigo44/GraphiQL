@@ -20,6 +20,8 @@ import InputConfirmPassword from '../../components/form-inputs/confirm-password-
 import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 export type FormInputs = {
   email: string;
@@ -29,6 +31,7 @@ export type FormInputs = {
 };
 
 function SignUp() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
@@ -96,7 +99,7 @@ function SignUp() {
           alignSelf: 'flex-start',
         }}
       >
-        Sign Up
+        {t('signUpForm.signUpTitle')}
       </Typography>
       <Box
         component="form"
@@ -125,7 +128,7 @@ function SignUp() {
           </Alert>
         </Collapse>
         <Button variant="contained" type="submit" value="SIGN UP">
-          SIGN UP
+          {t('signUpForm.signUP')}
         </Button>
       </Box>
       <Box
@@ -142,9 +145,9 @@ function SignUp() {
             navigate('/sign-in');
           }}
         >
-          Login to your account
+          {t('signUpForm.loginToYourAcc')}
         </Link>
-        <Divider sx={{ width: '100%' }}>Or</Divider>
+        <Divider sx={{ width: '100%' }}>{t('signUpForm.or')}</Divider>
         <Link
           component="button"
           underline="hover"
@@ -153,7 +156,7 @@ function SignUp() {
             navigate('/pass-reset');
           }}
         >
-          Forgot your password
+          {t('signUpForm.forgotYourPass')}
         </Link>
       </Box>
     </Box>

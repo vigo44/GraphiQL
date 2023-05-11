@@ -2,8 +2,11 @@ import { Box, Typography } from '@mui/material';
 import DeveloperCard from '../../components/card/card';
 
 import palaceholder from '../../assets/placeholder.jpg';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function CreatorsSection() {
+  const { t } = useTranslation();
   return (
     <Box
       component="section"
@@ -17,7 +20,7 @@ function CreatorsSection() {
       }}
     >
       <Typography variant="h4" component="h3">
-        Developers
+        {t('creatorsSection.title')}
       </Typography>
       <Box
         component="div"

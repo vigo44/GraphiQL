@@ -1,8 +1,11 @@
 import { Box, Button, ButtonGroup, Paper, Typography } from '@mui/material';
 
 import rs_school_black from '../../assets/rs_school_black.svg';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function RsshoolSection() {
+  const { t } = useTranslation();
   return (
     <Paper
       elevation={3}
@@ -48,7 +51,7 @@ function RsshoolSection() {
           }}
         >
           <Typography variant="body1" component="p" sx={{ textAlign: 'center' }}>
-            This is not just another community of developers, this is something more.
+            {t('rsschoolSection.text')}
           </Typography>
           <ButtonGroup variant="text">
             <Button component="a" href="https://rs.school">
