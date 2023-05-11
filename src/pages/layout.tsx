@@ -2,14 +2,9 @@ import { Outlet } from 'react-router-dom';
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 
-import { Box, useScrollTrigger } from '@mui/material';
+import { Box } from '@mui/material';
 
 function Layout() {
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 20,
-  });
-
   return (
     <>
       <Header />

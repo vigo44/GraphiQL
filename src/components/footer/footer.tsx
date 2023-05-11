@@ -13,7 +13,6 @@ function Footer() {
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        height: { xl: '50px', lg: 'fit-content' },
         backgroundColor: 'black',
         boxShadow: '0px -2px 2px black',
       }}
