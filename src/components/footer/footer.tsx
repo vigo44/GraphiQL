@@ -23,7 +23,7 @@ function Footer() {
           width: 60,
           p: '20px',
         }}
-        alt="The house from the offer."
+        alt="RsSchool logo"
         src={rs_school}
       />
       <List
