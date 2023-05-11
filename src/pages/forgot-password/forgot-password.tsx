@@ -57,8 +57,9 @@ function PasswordReset() {
         alignItems: 'center',
         gap: '10px',
         p: '20px',
-        backgroundColor: 'gainsboro',
+        backgroundColor: 'white',
         borderRadius: '10px',
+        boxShadow: '0px 5px 10px grey',
       }}
     >
       <Typography
