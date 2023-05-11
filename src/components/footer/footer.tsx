@@ -25,6 +25,7 @@ function Footer() {
         }}
         alt="RsSchool logo"
         src={rs_school}
+        onClick={() => (window.location.href = 'https://rs.school/react/')}
       />
       <List
         sx={{
