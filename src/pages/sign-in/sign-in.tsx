@@ -84,7 +84,7 @@ function SignIn() {
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
-          width: '350px',
+          width: { sm: '350px', xs: '215px' },
           p: '20px',
           backgroundColor: 'white',
           border: 1,

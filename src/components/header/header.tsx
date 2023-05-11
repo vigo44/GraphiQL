@@ -37,7 +37,7 @@ function Header() {
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'space-betwen',
+        alignItems: 'flex-end',
         height: trigger ? '50px' : '75px',
         p: '0 20px',
         backgroundColor: 'white',

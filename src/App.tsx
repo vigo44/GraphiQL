@@ -14,6 +14,8 @@ import SignUp from './pages/sign-up/sign-up';
 import PasswordReset from './pages/forgot-password/forgot-password';
 import Layout from './pages/layout';
 
+import { Box } from '@mui/material';
+
 function App() {
   const dispatch = useDispatch();
   const { isAuth } = CheckAuth();
@@ -40,7 +42,16 @@ function App() {
   }, [handleAutoLogin]);
 
   return (
-    <div className="App">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        minHeight: '100vh',
+      }}
+    >
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={isAuth ? <Editor /> : <Navigate to="/sign-in" />} />
@@ -51,7 +62,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </div>
+    </Box>
   );
 }
 
