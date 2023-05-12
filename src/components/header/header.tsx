@@ -46,7 +46,7 @@ function Header() {
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         height: trigger ? '50px' : '75px',
         p: '0 20px',
         backgroundColor: 'white',
@@ -58,8 +58,10 @@ function Header() {
         component="div"
         sx={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'flex-end',
           gap: '15px',
+          width: '100%',
+          maxWidth: '1200px',
         }}
       >
         <Button
