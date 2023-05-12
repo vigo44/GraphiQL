@@ -1,4 +1,6 @@
+import { useDispatch } from 'react-redux';
 import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
 
@@ -12,6 +14,8 @@ type ComponentProps = {
 };
 
 function InputConfirmPassword(props: ComponentProps) {
+  const dispatch = useDispatch();
+
   return (
     <div>
       <TextField
@@ -54,6 +58,7 @@ function InputConfirmPassword(props: ComponentProps) {
             ? props.errors.confirm_password.message
             : '*Enter the same password'
         }
+        onChange={() => dispatch(removeAuthError())}
       />
     </div>
   );

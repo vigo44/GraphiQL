@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAuth, signOut } from 'firebase/auth';
 import { CheckAuth } from '../../hooks/check-auth';
 import { logoutUser } from '../../store/user-slice';
+import { removeAuthError } from '../../store/auth-error-slice';
 
-import { AppBar, Button, ButtonGroup, useScrollTrigger } from '@mui/material';
+import { AppBar, Box, Button, ButtonGroup, Typography, useScrollTrigger } from '@mui/material';
+import { Language } from '@mui/icons-material';
 
-import { RootState } from 'store';
 import { useTranslation } from 'react-i18next';
 
 function Header() {
@@ -14,7 +15,6 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuth } = CheckAuth();
-  const name = useSelector((state: RootState) => state.user.name);
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -32,8 +32,12 @@ function Header() {
       });
   };
 
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
+  const changeLanguage = () => {
+    const currenLang = t('lang.appLang');
+
+    dispatch(removeAuthError());
+
+    currenLang === 'EN' ? i18n.changeLanguage('ru') : i18n.changeLanguage('en');
   };
 
   return (
@@ -51,7 +55,14 @@ function Header() {
         transition: '0.3s',
       }}
     >
-      <div>
+      <Box
+        component="div"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '15px',
+        }}
+      >
         <Button variant="text" onClick={() => navigate('/welcome')}>
           {t('header.welcome')}
         </Button>
@@ -60,20 +71,31 @@ function Header() {
             variant="contained"
             size={trigger ? 'small' : 'medium'}
             onClick={() => handleLogout()}
+            sx={{ whiteSpace: 'nowrap' }}
           >
-            {name} | {t('header.logOUT')}
+            {t('header.logOUT')}
           </Button>
         ) : (
           <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
-            <Button onClick={() => navigate('/sign-in')}>{t('header.signIN')}</Button>
-            <Button onClick={() => navigate('/sign-up')}>{t('header.signUP')}</Button>
+            <Button onClick={() => navigate('/sign-in')} sx={{ whiteSpace: 'nowrap' }}>
+              {t('header.signIN')}
+            </Button>
+            <Button onClick={() => navigate('/sign-up')} sx={{ whiteSpace: 'nowrap' }}>
+              {t('header.signUP')}
+            </Button>
           </ButtonGroup>
         )}
-        <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
-          <Button onClick={() => changeLanguage('en')}>EN</Button>
-          <Button onClick={() => changeLanguage('ru')}>RU</Button>
-        </ButtonGroup>
-      </div>
+        <Button
+          sx={{ whiteSpace: 'nowrap' }}
+          onClick={() => changeLanguage()}
+          startIcon={<Language />}
+          size={trigger ? 'small' : 'medium'}
+        >
+          <Typography variant="body1" component="div" color="gray">
+            {t('lang.appLang')}
+          </Typography>
+        </Button>
+      </Box>
     </AppBar>
   );
 }

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
-import setErrorMessage from '../../common/error-message';
+import ErrorMessage from '../../hooks/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
@@ -21,6 +21,7 @@ function SignIn() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
 
   const handleLogin = (data: FormInputs) => {
@@ -77,6 +78,7 @@ function SignIn() {
         component="h2"
         sx={{
           alignSelf: 'flex-start',
+          fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
         }}
       >
         {t('signInForm.signInTitle')}

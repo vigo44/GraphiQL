@@ -26,11 +26,11 @@ function WelcomeSection() {
         minHeight: 'calc(100vh - 50px)',
       }}
     >
-      <Typography variant="h2" component="h1">
+      <Typography variant="h2" component="h1" sx={{ textAlign: 'center' }}>
         {t('welcomeSection.welcome')}
         {isAuth && `, ${name}`}
       </Typography>
-      <Typography variant="h4" component="h4">
+      <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
         {t('welcomeSection.title')}
       </Typography>
       <Typography

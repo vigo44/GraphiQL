@@ -8,8 +8,9 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'EN',
+    fallbackLng: 'en',
     debug: false,
+    returnNull: false,
     detection: {
       order: ['localStorage', 'cookie'],
       caches: ['localStorage', 'cookie'],
@@ -18,4 +19,5 @@ i18n
       escapeValue: false,
     },
   });
+
 export default i18n;

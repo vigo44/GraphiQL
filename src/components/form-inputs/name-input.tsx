@@ -1,4 +1,6 @@
+import { useDispatch } from 'react-redux';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
 
@@ -11,6 +13,8 @@ type ComponentProps = {
 };
 
 function InputName(props: ComponentProps) {
+  const dispatch = useDispatch();
+
   return (
     <div>
       <TextField
@@ -37,6 +41,7 @@ function InputName(props: ComponentProps) {
         fullWidth
         error={props.errors.name ? true : false}
         helperText={props.errors.name ? props.errors.name.message : '*Jonh Dow'}
+        onChange={() => dispatch(removeAuthError())}
       />
     </div>
   );

@@ -10,7 +10,7 @@ import {
 } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
-import setErrorMessage from '../../common/error-message';
+import ErrorMessage from '../../hooks/error-message';
 
 import InputName from '../../components/form-inputs/name-input';
 import InputEmail from '../../components/form-inputs/email-input';
@@ -34,6 +34,7 @@ function SignUp() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
 
   const handleRegister = (data: FormInputs) => {
@@ -97,6 +98,7 @@ function SignUp() {
         component="h2"
         sx={{
           alignSelf: 'flex-start',
+          fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
         }}
       >
         {t('signUpForm.signUpTitle')}

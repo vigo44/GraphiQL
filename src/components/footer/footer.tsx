@@ -41,7 +41,7 @@ function Footer() {
           href="https://github.com/vigo44"
           sx={{ flexGrow: 0, width: 'fit-content' }}
         >
-          <ListItemIcon>
+          <ListItemIcon sx={{ minWidth: '35px' }}>
             <GitHub color="primary" />
           </ListItemIcon>
           <ListItemText primary="vigo44" sx={{ color: 'white' }} />
@@ -51,7 +51,7 @@ function Footer() {
           href="https://github.com/Spektar001"
           sx={{ flexGrow: 0, width: 'fit-content' }}
         >
-          <ListItemIcon>
+          <ListItemIcon sx={{ minWidth: '35px' }}>
             <GitHub color="primary" />
           </ListItemIcon>
           <ListItemText primary="Spektar001" sx={{ color: 'white' }} />
@@ -61,7 +61,7 @@ function Footer() {
           href="https://github.com/LoginamNet"
           sx={{ flexGrow: 0, width: 'fit-content' }}
         >
-          <ListItemIcon>
+          <ListItemIcon sx={{ minWidth: '35px' }}>
             <GitHub color="primary" />
           </ListItemIcon>
           <ListItemText primary="LoginamNet" sx={{ color: 'white' }} />

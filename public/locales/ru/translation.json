@@ -1,4 +1,7 @@
 {
+  "lang": {
+    "appLang": "РУ"
+  },
   "header": {
     "welcome": "Привет",
     "signIN": "Войти",
@@ -48,5 +51,11 @@
   },
   "errorMessages": {
     "userNotFound": "Нет существующей записи пользователя, соответствующей предоставленному идентификатору. Пожалуйста, проверьте свою электронную почту."
+  },
+  "emailInput": {
+    "placeholder": "Введите ваш email",
+    "required": "*Введите email!",
+    "emailPattern": "*Неправильный email адрес",
+    "defaultHelper": "*mail@test.com"
   }
 }

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
 import { setPassResetModalOpen } from '../../store/password-reset-modal-slice';
-import setErrorMessage from '../../common/error-message';
+import ErrorMessage from '../../hooks/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
@@ -21,6 +21,7 @@ function PasswordReset() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
 
   const handlePasswordReset = (email: string) => {
@@ -70,6 +71,7 @@ function PasswordReset() {
         component="h2"
         sx={{
           alignSelf: 'flex-start',
+          fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
         }}
       >
         {t('forgotPassForm.resetPass')}

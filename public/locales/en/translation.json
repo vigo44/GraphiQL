@@ -1,4 +1,7 @@
 {
+  "lang": {
+    "appLang": "EN"
+  },
   "header": {
     "welcome": "Welcome",
     "signIN": "Sign In",
@@ -45,5 +48,14 @@
     "goToEditor": "Go to Editor",
     "signIN": "Sign In",
     "signUP": "Sign Up"
+  },
+  "errorMessages": {
+    "userNotFound": "There is no existing user record matching the provided ID. Please check your email."
+  },
+  "emailInput": {
+    "placeholder": "Enter your email",
+    "required": "*Email is Required!",
+    "emailPattern": "*Invalid email address",
+    "defaultHelper": "*mail@test.com"
   }
 }

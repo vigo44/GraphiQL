@@ -1,4 +1,6 @@
+import { useDispatch } from 'react-redux';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
 
@@ -11,6 +13,8 @@ type ComponentProps = {
 };
 
 function InputPassword(props: ComponentProps) {
+  const dispatch = useDispatch();
+
   return (
     <div>
       <TextField
@@ -49,6 +53,7 @@ function InputPassword(props: ComponentProps) {
             ? props.errors.password.message
             : '*One number, one letter and one special character'
         }
+        onChange={() => dispatch(removeAuthError())}
       />
     </div>
   );
