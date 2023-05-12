@@ -6,7 +6,8 @@
     "welcome": "Welcome",
     "signIN": "Sign In",
     "signUP": "Sign Up",
-    "logOUT": "Log Out"
+    "logOUT": "Log Out",
+    "menu": "Menu"
   },
   "notFoundPage": {
     "notFound": "404 Page not found!"

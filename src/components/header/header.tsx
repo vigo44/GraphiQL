@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getAuth, signOut } from 'firebase/auth';
-import { CheckAuth } from '../../hooks/check-auth';
 import { logoutUser } from '../../store/user-slice';
 import { removeAuthError } from '../../store/auth-error-slice';
 
-import { AppBar, Box, Button, ButtonGroup, Typography, useScrollTrigger } from '@mui/material';
+import DesktopMenu from '../../components/menu/desktop-menu';
+import MobileMenu from '../../components/menu/mobile-menu';
+
+import { AppBar, Box, Button, Typography, useScrollTrigger } from '@mui/material';
 import { Language } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
@@ -13,8 +14,6 @@ import { useTranslation } from 'react-i18next';
 function Header() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isAuth } = CheckAuth();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -63,28 +62,6 @@ function Header() {
           gap: '15px',
         }}
       >
-        <Button variant="text" onClick={() => navigate('/welcome')}>
-          {t('header.welcome')}
-        </Button>
-        {isAuth ? (
-          <Button
-            variant="contained"
-            size={trigger ? 'small' : 'medium'}
-            onClick={() => handleLogout()}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            {t('header.logOUT')}
-          </Button>
-        ) : (
-          <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
-            <Button onClick={() => navigate('/sign-in')} sx={{ whiteSpace: 'nowrap' }}>
-              {t('header.signIN')}
-            </Button>
-            <Button onClick={() => navigate('/sign-up')} sx={{ whiteSpace: 'nowrap' }}>
-              {t('header.signUP')}
-            </Button>
-          </ButtonGroup>
-        )}
         <Button
           sx={{ whiteSpace: 'nowrap' }}
           onClick={() => changeLanguage()}
@@ -95,6 +72,8 @@ function Header() {
             {t('lang.appLang')}
           </Typography>
         </Button>
+        <DesktopMenu handleLogout={handleLogout} />
+        <MobileMenu handleLogout={handleLogout} />
       </Box>
     </AppBar>
   );

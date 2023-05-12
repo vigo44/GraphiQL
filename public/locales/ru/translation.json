@@ -6,7 +6,8 @@
     "welcome": "Привет",
     "signIN": "Войти",
     "signUP": "Регистрация",
-    "logOUT": "Выйти"
+    "logOUT": "Выйти",
+    "menu": "Меню"
   },
   "notFoundPage": {
     "notFound": "404 Страница не найдена!"
