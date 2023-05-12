@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
-import { InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
 
 import { FormInputs } from '../../pages/sign-up/sign-up';
-import { KeyOutlined } from '@mui/icons-material';
+import { KeyOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
@@ -15,6 +16,9 @@ type ComponentProps = {
 
 function InputConfirmPassword(props: ComponentProps) {
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   return (
     <div>
@@ -22,7 +26,7 @@ function InputConfirmPassword(props: ComponentProps) {
         variant="outlined"
         size="small"
         label="Repeated password"
-        type="text"
+        type={showPassword ? 'text' : 'password'}
         placeholder="Repeat your password"
         {...props.register('confirm_password', {
           required: '*Please, repeat your password!',
@@ -48,6 +52,17 @@ function InputConfirmPassword(props: ComponentProps) {
           startAdornment: (
             <InputAdornment position="start">
               <KeyOutlined />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
             </InputAdornment>
           ),
         }}
