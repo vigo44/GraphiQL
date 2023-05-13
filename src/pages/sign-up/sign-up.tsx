@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,6 +17,8 @@ import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 import InputConfirmPassword from '../../components/form-inputs/confirm-password-input';
 
+import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/material';
+
 import { RootState } from 'store';
 
 export type FormInputs = {
@@ -28,6 +30,7 @@ export type FormInputs = {
 
 function SignUp() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authError = useSelector((state: RootState) => state.authError);
 
   const handleRegister = (data: FormInputs) => {
@@ -74,9 +77,39 @@ function SignUp() {
   });
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      <form
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '10px',
+        p: '20px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        boxShadow: '0px 5px 10px grey',
+      }}
+    >
+      <Typography
+        variant="h3"
+        component="h2"
+        sx={{
+          alignSelf: 'flex-start',
+        }}
+      >
+        Sign Up
+      </Typography>
+      <Box
+        component="form"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          width: { sm: '350px', xs: '215px' },
+          p: '20px',
+          backgroundColor: 'white',
+          border: 1,
+          borderRadius: '10px',
+        }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
           handleRegister(data);
@@ -86,21 +119,44 @@ function SignUp() {
         <InputEmail register={register} errors={errors} />
         <InputPassword register={register} errors={errors} />
         <InputConfirmPassword register={register} errors={errors} watch={watch} />
-        <input className="formSubmit" type="submit" value="SIGN UP" />
-      </form>
-      <span>
-        Or <Link to="/sign-in">login to your account</Link>
-      </span>
-      <span>
-        <Link to="/pass-reset">Forgot your password?</Link>
-      </span>
-      {authError.error && (
-        <div>
-          <span>{authError.error}</span>
-          <button onClick={() => dispatch(removeAuthError())}>X</button>
-        </div>
-      )}
-    </div>
+        <Collapse in={!!authError.error}>
+          <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
+            <span>{authError.error}</span>
+          </Alert>
+        </Collapse>
+        <Button variant="contained" type="submit" value="SIGN UP">
+          SIGN UP
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '80%',
+        }}
+      >
+        <Link
+          component="button"
+          underline="hover"
+          onClick={() => {
+            navigate('/sign-in');
+          }}
+        >
+          Login to your account
+        </Link>
+        <Divider sx={{ width: '100%' }}>Or</Divider>
+        <Link
+          component="button"
+          underline="hover"
+          sx={{ width: '100%' }}
+          onClick={() => {
+            navigate('/pass-reset');
+          }}
+        >
+          Forgot your password
+        </Link>
+      </Box>
+    </Box>
   );
 }
 

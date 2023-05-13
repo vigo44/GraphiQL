@@ -1,26 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { CheckAuth } from '../../hooks/check-auth';
+import { Box } from '@mui/material';
 
-import { RootState } from '../../store';
+import WelcomeSection from '../../components/welcome/welcome-section';
+import CreatorsSection from '../../components/welcome/creators-section';
+import RsshoolSection from '../../components/welcome/rsschool-section';
 
 function Welcome() {
-  const navigate = useNavigate();
-  const { isAuth } = CheckAuth();
-  const name = useSelector((state: RootState) => state.user.name);
-
   return (
-    <div>
-      <h1>Welcome{isAuth && `, ${name}`}</h1>
-      {isAuth ? (
-        <button onClick={() => navigate('/')}>Go to Editor</button>
-      ) : (
-        <>
-          <button onClick={() => navigate('/sign-in')}>Sing In</button>
-          <button onClick={() => navigate('/sign-up')}>Sing Up</button>
-        </>
-      )}
-    </div>
+    <Box
+      component="div"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '40px',
+        width: '90%',
+        maxWidth: '1080px',
+        marginBottom: '20px',
+      }}
+    >
+      <WelcomeSection />
+      <RsshoolSection />
+      <CreatorsSection />
+    </Box>
   );
 }
 
