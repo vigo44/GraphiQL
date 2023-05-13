@@ -21,13 +21,14 @@ function InputEmail(props: ComponentProps) {
   const placeholder = t('emailInput.placeholder');
   const required = t('emailInput.required');
   const helper = t('emailInput.defaultHelper');
+  const label = t('emailInput.label');
 
   return (
     <div>
       <TextField
         variant="outlined"
         size="small"
-        label="Email"
+        label={label}
         type="text"
         placeholder={placeholder}
         {...props.register('email', {

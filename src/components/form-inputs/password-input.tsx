@@ -7,6 +7,8 @@ import { IconButton, InputAdornment, TextField } from '@mui/material';
 
 import { FormInputs } from '../../pages/sign-up/sign-up';
 import { KeyOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
@@ -14,33 +16,38 @@ type ComponentProps = {
 };
 
 function InputPassword(props: ComponentProps) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const placeholder = t('passwordInput.placeholder');
+  const required = t('passwordInput.required');
+  const label = t('passwordInput.label');
+  const helper = t('passwordInput.defaultHelper');
 
   return (
     <div>
       <TextField
         variant="outlined"
         size="small"
-        label="Password"
+        label={label}
         type={showPassword ? 'text' : 'password'}
-        placeholder="Enter your password"
+        placeholder={placeholder}
         {...props.register('password', {
-          required: '*You must specify a password!',
+          required: required,
           pattern: {
             value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-            message:
-              '*Password should contain at least one number, one letter and one special character',
+            message: t('passwordInput.passwordPattern'),
           },
           minLength: {
             value: 8,
-            message: '*Password must be more than 8 characters',
+            message: t('passwordInput.passwordPattern8'),
           },
           maxLength: {
             value: 20,
-            message: '*Password must be less than 20 characters',
+            message: t('passwordInput.passwordPattern20'),
           },
         })}
         InputProps={{
@@ -66,7 +73,7 @@ function InputPassword(props: ComponentProps) {
         helperText={
           props.errors.password
             ? props.errors.password.message
-            : '*One number, one letter and one special character'
+            : helper
         }
         onChange={() => dispatch(removeAuthError())}
       />

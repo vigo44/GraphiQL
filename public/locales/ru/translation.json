@@ -57,6 +57,32 @@
     "placeholder": "Введите ваш email",
     "required": "*Введите email!",
     "emailPattern": "*Неправильный email адрес",
-    "defaultHelper": "*mail@test.com"
+    "defaultHelper": "*mail@test.com",
+    "label": "Эл.адрес"
+  },
+  "nameInput": {
+    "placeholder": "Введите ваше имя",
+    "required": "*Введите имя!",
+    "namePattern": "*Введите свое имя и фамилию с заглавными буквами - John Dow",
+    "label": "Имя"
+  },
+  "passwordInput": {
+    "placeholder": "Введите ваш пароль",
+    "required": "*Необходимо указать пароль!",
+    "label": "Пароль",
+    "passwordPattern": "*Пароль должен содержать как минимум одну цифру, одну букву и один специальный символ",
+    "passwordPattern8": "*Пароль должен быть больше 8 символов",
+    "passwordPattern20": "*Пароль должен быть меньше 20 символов",
+    "defaultHelper": "*Одна цифра, одна буква и один специальный символ"
+  },
+  "repeatPassInput": {
+    "placeholder": "Повторите свой пароль",
+    "required": "*Пожалуйста, повторите пароль!",
+    "label": "Повторите пароль",
+    "passwordPattern": "*Пароль должен содержать как минимум одну цифру, одну букву и один специальный символ",
+    "passwordPattern8": "*Пароль должен быть больше 8 символов",
+    "passwordPattern20": "*Пароль должен быть меньше 20 символов",
+    "defaultHelper": "*Введите тот же пароль",
+    "validatePass": "*Ваши пароли не совпадают"
   }
 }

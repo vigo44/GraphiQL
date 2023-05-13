@@ -57,6 +57,32 @@
     "placeholder": "Enter your email",
     "required": "*Email is Required!",
     "emailPattern": "*Invalid email address",
-    "defaultHelper": "*mail@test.com"
+    "defaultHelper": "*mail@test.com",
+    "label": "Email"
+  },
+  "nameInput": {
+    "placeholder": "Enter your name",
+    "required": "*Enter your name!",
+    "namePattern": "*Enter your firs name and last name with capital letters first - Jonh Dow",
+    "label": "Name"
+  },
+  "passwordInput": {
+    "placeholder": "Enter your password",
+    "required": "*You must specify a password!",
+    "label": "Password",
+    "passwordPattern": "*Password should contain at least one number, one letter and one special character",
+    "passwordPattern8": "*Password must be more than 8 characters",
+    "passwordPattern20": "*Password must be less than 20 characters",
+    "defaultHelper": "*One number, one letter and one special character"
+  },
+  "repeatPassInput": {
+    "placeholder": "Repeat your password",
+    "required": "*Please, repeat your password!",
+    "label": "Repeated password",
+    "passwordPattern": "*Password should contain at least one number, one letter and one special character",
+    "passwordPattern8": "*Password must be more than 8 characters",
+    "passwordPattern20": "*Password must be less than 20 characters",
+    "defaultHelper": "*Enter the same password",
+    "validatePass": "*Your passwords do no match"
   }
 }
