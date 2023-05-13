@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ function PasswordReset() {
   const navigate = useNavigate();
   const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
+  const [currenLang, setLang] = useState(t('lang.appLang') as string);
 
   const handlePasswordReset = (email: string) => {
     const auth = getAuth();
@@ -40,18 +41,30 @@ function PasswordReset() {
       });
   };
 
-  useEffect(() => {
-    dispatch(removeAuthError());
-  }, [dispatch]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm<FormInputs>({
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
+
+  const changeLanguage = (currenLang: string) => {
+    const newLang = t('lang.appLang');
+
+    if (currenLang !== newLang) {
+      setLang(newLang);
+      clearErrors();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(removeAuthError());
+  }, [dispatch]);
+
+  useEffect(() => changeLanguage(currenLang));
 
   return (
     <Box
@@ -93,7 +106,7 @@ function PasswordReset() {
           handlePasswordReset(data.email);
         })}
       >
-        <InputEmail register={register} errors={errors} />
+        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>

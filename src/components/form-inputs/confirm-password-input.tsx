@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { IconButton, InputAdornment, TextField } from '@mui/material';
@@ -14,6 +14,7 @@ type ComponentProps = {
   register: UseFormRegister<FormInputs>;
   errors: FieldErrors<FormInputs>;
   watch: UseFormWatch<FormInputs>;
+  clearErrors: UseFormClearErrors<FormInputs>;
 };
 
 function InputConfirmPassword(props: ComponentProps) {
@@ -78,7 +79,10 @@ function InputConfirmPassword(props: ComponentProps) {
         fullWidth
         error={props.errors.confirm_password ? true : false}
         helperText={props.errors.confirm_password ? props.errors.confirm_password.message : helper}
-        onChange={() => dispatch(removeAuthError())}
+        onChange={() => {
+          props.errors.confirm_password && props.clearErrors('confirm_password');
+          dispatch(removeAuthError());
+        }}
       />
     </div>
   );

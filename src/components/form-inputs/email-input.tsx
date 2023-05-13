@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
@@ -12,6 +12,7 @@ import '../../i18nex';
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
   errors: FieldErrors<FormInputs>;
+  clearErrors: UseFormClearErrors<FormInputs>;
 };
 
 function InputEmail(props: ComponentProps) {
@@ -48,7 +49,10 @@ function InputEmail(props: ComponentProps) {
         fullWidth
         error={props.errors.email ? true : false}
         helperText={props.errors.email ? props.errors.email.message : helper}
-        onChange={() => dispatch(removeAuthError())}
+        onChange={() => {
+          props.errors.email && props.clearErrors('email');
+          dispatch(removeAuthError());
+        }}
       />
     </div>
   );

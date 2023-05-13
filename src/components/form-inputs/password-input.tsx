@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { IconButton, InputAdornment, TextField } from '@mui/material';
@@ -13,6 +13,7 @@ import '../../i18nex';
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
   errors: FieldErrors<FormInputs>;
+  clearErrors: UseFormClearErrors<FormInputs>;
 };
 
 function InputPassword(props: ComponentProps) {
@@ -71,7 +72,10 @@ function InputPassword(props: ComponentProps) {
         fullWidth
         error={props.errors.password ? true : false}
         helperText={props.errors.password ? props.errors.password.message : helper}
-        onChange={() => dispatch(removeAuthError())}
+        onChange={() => {
+          props.errors.password && props.clearErrors('password');
+          dispatch(removeAuthError());
+        }}
       />
     </div>
   );
