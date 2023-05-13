@@ -70,11 +70,7 @@ function InputPassword(props: ComponentProps) {
         }}
         fullWidth
         error={props.errors.password ? true : false}
-        helperText={
-          props.errors.password
-            ? props.errors.password.message
-            : helper
-        }
+        helperText={props.errors.password ? props.errors.password.message : helper}
         onChange={() => dispatch(removeAuthError())}
       />
     </div>

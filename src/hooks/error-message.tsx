@@ -9,42 +9,37 @@ function ErrorMessage() {
 
     switch (error) {
       case 'auth/email-already-exists':
-        errorMessage =
-          'The provided email is already in use by an existing user. Each user must have a unique email.';
+        errorMessage = t('errorMessages.emailAlreadyExists');
         break;
       case 'auth/id-token-expired':
-        errorMessage = 'The provided Firebase ID token is expired.';
+        errorMessage = t('errorMessages.idTokenExpired');
         break;
       case 'auth/id-token-revoked':
-        errorMessage = 'The Firebase ID token has been revoked.';
+        errorMessage = t('errorMessages.idTokenRevoked');
         break;
       case 'auth/internal-error':
-        errorMessage =
-          'The Authentication server encountered an unexpected error while trying to process the request. Please, try again.';
+        errorMessage = t('errorMessages.internalError');
         break;
       case 'auth/invalid-display-name':
-        errorMessage =
-          'The provided value for the displayName user property is invalid. It must be a non-empty string.';
+        errorMessage = t('errorMessages.invalidDisplayName');
         break;
       case 'auth/invalid-email':
-        errorMessage =
-          'The provided value for the email user property is invalid. It must be a string email address.';
+        errorMessage = t('errorMessages.invalidEmail');
         break;
       case 'auth/wrong-password':
-        errorMessage = 'The provided password for this user is incorrect. Please, try again.';
+        errorMessage = t('errorMessages.wrongPassword');
         break;
       case 'auth/user-not-found':
         errorMessage = t('errorMessages.userNotFound');
         break;
       case 'auth/email-already-in-use':
-        errorMessage =
-          'User with that email is allready exists! Please, check your email or use another one.';
+        errorMessage = t('errorMessages.emailAlreadyInUse');
         break;
       case 'auth/too-many-requests':
-        errorMessage = 'There`s too many requests for now. Please, try again later.';
+        errorMessage = t('errorMessages.tooManyRequests');
         break;
       default:
-        errorMessage = 'Some unexpected error occured! Please, try again.';
+        errorMessage = t('errorMessages.default');
         break;
     }
 

@@ -50,9 +50,6 @@
     "signIN": "Sign In",
     "signUP": "Sign Up"
   },
-  "errorMessages": {
-    "userNotFound": "There is no existing user record matching the provided ID. Please check your email."
-  },
   "emailInput": {
     "placeholder": "Enter your email",
     "required": "*Email is Required!",
@@ -84,5 +81,18 @@
     "passwordPattern20": "*Password must be less than 20 characters",
     "defaultHelper": "*Enter the same password",
     "validatePass": "*Your passwords do no match"
+  },
+  "errorMessages": {
+    "emailAlreadyExists": "The provided email is already in use by an existing user. Each user must have a unique email.",
+    "idTokenExpired": "The provided Firebase ID token is expired.",
+    "idTokenRevoked": "The Firebase ID token has been revoked.",
+    "internalError": "The Authentication server encountered an unexpected error while trying to process the request. Please, try again.",
+    "invalidDisplayName": "The provided value for the displayName user property is invalid. It must be a non-empty string.",
+    "invalidEmail": "The provided value for the email user property is invalid. It must be a string email address.",
+    "wrongPassword": "The provided password for this user is incorrect. Please, try again.",
+    "userNotFound": "There is no existing user record matching the provided ID. Please check your email.",
+    "emailAlreadyInUse": "User with that email is allready exists! Please, check your email or use another one.",
+    "tooManyRequests": "There`s too many requests for now. Please, try again later.",
+    "default": "Some unexpected error occured! Please, try again."
   }
 }
