@@ -11,7 +11,7 @@ import {
   MenuItem,
   useScrollTrigger,
 } from '@mui/material';
-import { WavingHand, Person, PersonAdd, Logout } from '@mui/icons-material';
+import { WavingHand, Person, PersonAdd, Logout, FormatIndentIncrease } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 
@@ -76,6 +76,20 @@ function MobileMenu(props: ComponentProps) {
             <WavingHand fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t('header.welcome')}</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate('/');
+          }}
+          sx={{
+            display: isAuth ? 'flex' : 'none',
+          }}
+        >
+          <ListItemIcon>
+            <FormatIndentIncrease fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('header.editor')}</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {

@@ -30,6 +30,11 @@ function DesktopMenu(props: ComponentProps) {
       <Button variant="text" onClick={() => navigate('/welcome')}>
         {t('header.welcome')}
       </Button>
+      {isAuth && (
+        <Button variant="text" onClick={() => navigate('/')}>
+          {t('header.editor')}
+        </Button>
+      )}
       {isAuth ? (
         <Button
           variant="contained"

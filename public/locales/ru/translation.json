@@ -4,6 +4,7 @@
   },
   "header": {
     "welcome": "Привет",
+    "editor": "Редактор",
     "signIN": "Войти",
     "signUP": "Регистрация",
     "logOUT": "Выйти",
