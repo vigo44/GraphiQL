@@ -17,7 +17,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="suspense__container">
+              <div className="loading-icon animation"></div>
+            </div>
+          }
+        >
           <App />
         </Suspense>
       </BrowserRouter>
