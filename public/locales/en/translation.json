@@ -95,5 +95,13 @@
     "emailAlreadyInUse": "User with that email is allready exists! Please, check your email or use another one.",
     "tooManyRequests": "There`s too many requests for now. Please, try again later.",
     "default": "Some unexpected error occured! Please, try again."
+  },
+  "editor": {
+    "queryTitle": "Query",
+    "varsTitle": "Variables",
+    "responesTitle": "Respones",
+    "docsTitle": "Docs",
+    "btnShowRespones": "Execute query",
+    "btnShowDocs": "Show docs"
   }
 }

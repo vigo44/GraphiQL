@@ -6,6 +6,9 @@ import useQueryGraphQL from '../../hooks/query-graphql';
 import useValidationVaribles from '../../hooks/validation-variables';
 import useValidationQuery from '../../hooks/validation-query';
 
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
+
 const defQuery = `query($name: String) {
   characters(page: 2, filter: { name: $name }) {
     info {
@@ -23,6 +26,7 @@ const defVars = `{
 }`;
 
 function Editor() {
+  const { t } = useTranslation();
   const [codeQuery, setCodeQuery] = useState(defQuery);
   const [codeVars, setCodeVars] = useState(defVars);
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
@@ -98,7 +102,7 @@ function Editor() {
 
   return (
     <>
-      <p>Query:</p>
+      <p>{t('editor.queryTitle')}:</p>
       <CodeEditor
         value={codeQuery}
         language="graphql"
@@ -112,7 +116,7 @@ function Editor() {
             'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
         }}
       />
-      <p>Vars:</p>
+      <p>{t('editor.varsTitle')}:</p>
       <CodeEditor
         value={codeVars}
         language="json"
@@ -126,8 +130,8 @@ function Editor() {
             'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
         }}
       />
-      <button onClick={handlerClick}>Show response</button>
-      <p>Response:</p>
+      <button onClick={handlerClick}>{t('editor.btnShowRespones')}</button>
+      <p>{t('editor.responesTitle')}:</p>
       <CodeEditor
         readOnly={true}
         value={codeResponse}
@@ -141,8 +145,8 @@ function Editor() {
             'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
         }}
       />
-      <button onClick={handlerClickDocs}>Show Docs</button>
-      <p>Docs:</p>
+      <button onClick={handlerClickDocs}>{t('editor.btnShowDocs')}</button>
+      <p>{t('editor.docsTitle')}:</p>
       <CodeEditor
         readOnly={true}
         value={codeDocs}
