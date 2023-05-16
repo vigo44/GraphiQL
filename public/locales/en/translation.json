@@ -1,0 +1,99 @@
+{
+  "lang": {
+    "appLang": "EN"
+  },
+  "header": {
+    "welcome": "Welcome",
+    "editor": "Editor",
+    "signIN": "Sign In",
+    "signUP": "Sign Up",
+    "logOUT": "Log Out",
+    "menu": "Menu"
+  },
+  "notFoundPage": {
+    "notFound": "404 Page not found!"
+  },
+  "forgotPassForm": {
+    "resetPass": "Reset password",
+    "confirm": "confirm",
+    "loginToYourAcc": "Login to your account"
+  },
+  "signInForm": {
+    "signInTitle": "Sign In",
+    "signIN": "Sign In",
+    "createNewAcc": "Create new account",
+    "or": "or",
+    "forgotYourPass": "Forgot your password?"
+  },
+  "signUpForm": {
+    "signUpTitle": "Sign Up",
+    "signUP": "Sign Up",
+    "loginToYourAcc": "Login to your account",
+    "or": "or",
+    "forgotYourPass": "Forgot your password?"
+  },
+  "passResetModal": {
+    "successText": "Success! Check your email to reset your password.",
+    "signIN": "Sign In"
+  },
+  "creatorsSection": {
+    "title": "Developers"
+  },
+  "rsschoolSection": {
+    "text": "This is not just another community of developers, this is something more."
+  },
+  "welcomeSection": {
+    "welcome": "Welcome",
+    "title": "What is GraphiQL?",
+    "text": "GraphiQL is the GraphQL integrated development environment (IDE). It’s a powerful (and all-around awesome) tool you’ll use often while building Gatsby websites. It offers syntax highlighting, intellisense autocompletion, automatic documentation, and much more.",
+    "text2": "Use GraphiQL to interactively build your page and static queries.",
+    "goToEditor": "Go to Editor",
+    "signIN": "Sign In",
+    "signUP": "Sign Up"
+  },
+  "emailInput": {
+    "placeholder": "Enter your email",
+    "required": "*Email is Required!",
+    "emailPattern": "*Invalid email address",
+    "defaultHelper": "*mail@test.com",
+    "label": "Email"
+  },
+  "nameInput": {
+    "placeholder": "Enter your name",
+    "required": "*Enter your name!",
+    "namePattern": "*Enter your firs name and last name with capital letters first - Jonh Dow",
+    "label": "Name"
+  },
+  "passwordInput": {
+    "placeholder": "Enter your password",
+    "required": "*You must specify a password!",
+    "label": "Password",
+    "passwordPattern": "*Password should contain at least one number, one letter and one special character",
+    "passwordPattern8": "*Password must be more than 8 characters",
+    "passwordPattern20": "*Password must be less than 20 characters",
+    "defaultHelper": "*One number, one letter and one special character"
+  },
+  "repeatPassInput": {
+    "placeholder": "Repeat your password",
+    "required": "*Please, repeat your password!",
+    "label": "Repeated password",
+    "passwordPattern": "*Password should contain at least one number, one letter and one special character",
+    "passwordPattern8": "*Password must be more than 8 characters",
+    "passwordPattern20": "*Password must be less than 20 characters",
+    "defaultHelper": "*Enter the same password",
+    "validatePass": "*Your passwords do no match"
+  },
+  "errorMessages": {
+    "emailAlreadyExists": "The provided email is already in use by an existing user. Each user must have a unique email.",
+    "idTokenExpired": "The provided Firebase ID token is expired.",
+    "idTokenRevoked": "The Firebase ID token has been revoked.",
+    "internalError": "The Authentication server encountered an unexpected error while trying to process the request. Please, try again.",
+    "invalidDisplayName": "The provided value for the displayName user property is invalid. It must be a non-empty string.",
+    "invalidEmail": "The provided value for the email user property is invalid. It must be a string email address.",
+    "wrongPassword": "The provided password for this user is incorrect. Please, try again.",
+    "userNotFound": "There is no existing user record matching the provided ID. Please check your email.",
+    "emailAlreadyInUse": "User with that email is allready exists! Please, check your email or use another one.",
+    "tooManyRequests": "There`s too many requests for now. Please, try again later.",
+    "default": "Some unexpected error occured! Please, try again."
+  }
+}

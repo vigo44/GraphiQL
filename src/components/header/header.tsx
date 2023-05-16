@@ -1,18 +1,19 @@
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAuth, signOut } from 'firebase/auth';
-import { CheckAuth } from '../../hooks/check-auth';
 import { logoutUser } from '../../store/user-slice';
+import { removeAuthError } from '../../store/auth-error-slice';
 
-import { AppBar, Button, ButtonGroup, useScrollTrigger } from '@mui/material';
+import DesktopMenu from '../../components/menu/desktop-menu';
+import MobileMenu from '../../components/menu/mobile-menu';
 
-import { RootState } from 'store';
+import { AppBar, Box, Button, Typography, useScrollTrigger } from '@mui/material';
+import { Language } from '@mui/icons-material';
+
+import { useTranslation } from 'react-i18next';
 
 function Header() {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isAuth } = CheckAuth();
-  const name = useSelector((state: RootState) => state.user.name);
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -30,6 +31,14 @@ function Header() {
       });
   };
 
+  const changeLanguage = () => {
+    const currenLang = t('lang.appLang');
+
+    dispatch(removeAuthError());
+
+    currenLang === 'EN' ? i18n.changeLanguage('ru') : i18n.changeLanguage('en');
+  };
+
   return (
     <AppBar
       component="header"
@@ -37,7 +46,7 @@ function Header() {
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         height: trigger ? '50px' : '75px',
         p: '0 20px',
         backgroundColor: 'white',
@@ -45,25 +54,29 @@ function Header() {
         transition: '0.3s',
       }}
     >
-      <div>
-        <Button variant="text" onClick={() => navigate('/welcome')}>
-          Welcome
+      <Box
+        component="div"
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '15px',
+          width: '100%',
+          maxWidth: '1200px',
+        }}
+      >
+        <Button
+          sx={{ whiteSpace: 'nowrap' }}
+          onClick={() => changeLanguage()}
+          startIcon={<Language />}
+          size={trigger ? 'small' : 'medium'}
+        >
+          <Typography variant="body1" component="div" color="gray">
+            {t('lang.appLang')}
+          </Typography>
         </Button>
-        {isAuth ? (
-          <Button
-            variant="contained"
-            size={trigger ? 'small' : 'medium'}
-            onClick={() => handleLogout()}
-          >
-            {name} | Log Out
-          </Button>
-        ) : (
-          <ButtonGroup variant="contained" size={trigger ? 'small' : 'medium'}>
-            <Button onClick={() => navigate('/sign-in')}>Sing In</Button>
-            <Button onClick={() => navigate('/sign-up')}>Sing Up</Button>
-          </ButtonGroup>
-        )}
-      </div>
+        <DesktopMenu handleLogout={handleLogout} />
+        <MobileMenu handleLogout={handleLogout} />
+      </Box>
     </AppBar>
   );
 }

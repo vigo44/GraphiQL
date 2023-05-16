@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
 import { setPassResetModalOpen } from '../../store/password-reset-modal-slice';
-import setErrorMessage from '../../common/error-message';
+import ErrorMessage from '../../hooks/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
@@ -14,11 +14,16 @@ import { Alert, Box, Button, Collapse, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function PasswordReset() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
+  const [currenLang, setLang] = useState(t('lang.appLang') as string);
 
   const handlePasswordReset = (email: string) => {
     const auth = getAuth();
@@ -36,18 +41,30 @@ function PasswordReset() {
       });
   };
 
-  useEffect(() => {
-    dispatch(removeAuthError());
-  }, [dispatch]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm<FormInputs>({
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
+
+  const changeLanguage = (currenLang: string) => {
+    const newLang = t('lang.appLang');
+
+    if (currenLang !== newLang) {
+      setLang(newLang);
+      clearErrors();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(removeAuthError());
+  }, [dispatch]);
+
+  useEffect(() => changeLanguage(currenLang));
 
   return (
     <Box
@@ -67,9 +84,10 @@ function PasswordReset() {
         component="h2"
         sx={{
           alignSelf: 'flex-start',
+          fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
         }}
       >
-        Reset password
+        {t('forgotPassForm.resetPass')}
       </Typography>
       <Box
         component="form"
@@ -88,14 +106,14 @@ function PasswordReset() {
           handlePasswordReset(data.email);
         })}
       >
-        <InputEmail register={register} errors={errors} />
+        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
         <Button variant="contained" type="submit">
-          CONFIRM
+          {t('forgotPassForm.confirm')}
         </Button>
       </Box>
       <Link
@@ -105,7 +123,7 @@ function PasswordReset() {
           navigate('/sign-in');
         }}
       >
-        Login to your account
+        {t('forgotPassForm.loginToYourAcc')}
       </Link>
       <PasswordResetModal />
     </Box>

@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { loginUser } from '../../store/user-slice';
 import { setAuthError, removeAuthError } from '../../store/auth-error-slice';
-import setErrorMessage from '../../common/error-message';
+import ErrorMessage from '../../hooks/error-message';
 
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
@@ -14,11 +14,16 @@ import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/ma
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function SignIn() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
+  const [currenLang, setLang] = useState(t('lang.appLang') as string);
 
   const handleLogin = (data: FormInputs) => {
     const auth = getAuth();
@@ -43,18 +48,30 @@ function SignIn() {
       });
   };
 
-  useEffect(() => {
-    dispatch(removeAuthError());
-  }, [dispatch]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm<FormInputs>({
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
+
+  const changeLanguage = (currenLang: string) => {
+    const newLang = t('lang.appLang');
+
+    if (currenLang !== newLang) {
+      setLang(newLang);
+      clearErrors();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(removeAuthError());
+  }, [dispatch]);
+
+  useEffect(() => changeLanguage(currenLang));
 
   return (
     <Box
@@ -74,9 +91,10 @@ function SignIn() {
         component="h2"
         sx={{
           alignSelf: 'flex-start',
+          fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
         }}
       >
-        Sign In
+        {t('signInForm.signInTitle')}
       </Typography>
       <Box
         component="form"
@@ -95,15 +113,15 @@ function SignIn() {
           handleLogin(data);
         })}
       >
-        <InputEmail register={register} errors={errors} />
-        <InputPassword register={register} errors={errors} />
+        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
+        <InputPassword register={register} errors={errors} clearErrors={clearErrors} />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
         <Button variant="contained" type="submit">
-          SIGN IN
+          {t('signInForm.signIN')}
         </Button>
       </Box>
       <Box
@@ -120,9 +138,9 @@ function SignIn() {
             navigate('/sign-up');
           }}
         >
-          Create new account
+          {t('signInForm.createNewAcc')}
         </Link>
-        <Divider sx={{ width: '100%' }}>Or</Divider>
+        <Divider sx={{ width: '100%' }}>{t('signInForm.or')}</Divider>
         <Link
           component="button"
           underline="hover"
@@ -131,7 +149,7 @@ function SignIn() {
             navigate('/pass-reset');
           }}
         >
-          Forgot your password
+          {t('signInForm.forgotYourPass')}
         </Link>
       </Box>
     </Box>

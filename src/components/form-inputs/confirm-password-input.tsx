@@ -1,42 +1,60 @@
-import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { removeAuthError } from '../../store/auth-error-slice';
 
-import { InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
 
 import { FormInputs } from '../../pages/sign-up/sign-up';
-import { KeyOutlined } from '@mui/icons-material';
+import { KeyOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
   errors: FieldErrors<FormInputs>;
   watch: UseFormWatch<FormInputs>;
+  clearErrors: UseFormClearErrors<FormInputs>;
 };
 
 function InputConfirmPassword(props: ComponentProps) {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const placeholder = t('repeatPassInput.placeholder');
+  const required = t('repeatPassInput.required');
+  const label = t('repeatPassInput.label');
+  const helper = t('repeatPassInput.defaultHelper');
+  const validatePass = t('repeatPassInput.validatePass');
+
   return (
     <div>
       <TextField
         variant="outlined"
         size="small"
-        label="Repeated password"
-        type="text"
-        placeholder="Repeat your password"
+        label={label}
+        type={showPassword ? 'text' : 'password'}
+        placeholder={placeholder}
         {...props.register('confirm_password', {
-          required: '*Please, repeat your password!',
+          required: required,
           pattern: {
             value: /^(?=\D*\d)(?=.*?[a-zA-Z]).*[\W_].*$/i,
-            message: '*Password should contain at least one number and one special character',
+            message: t('repeatPassInput.passwordPattern'),
           },
           minLength: {
             value: 8,
-            message: '*Password must be more than 8 characters',
+            message: t('repeatPassInput.passwordPattern8'),
           },
           maxLength: {
             value: 20,
-            message: '*Password must be less than 20 characters',
+            message: t('repeatPassInput.passwordPattern20'),
           },
           validate: (val: string) => {
             if (props.watch('password') != val) {
-              return '*Your passwords do no match';
+              return validatePass;
             }
           },
         })}
@@ -46,14 +64,25 @@ function InputConfirmPassword(props: ComponentProps) {
               <KeyOutlined />
             </InputAdornment>
           ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
         }}
         fullWidth
         error={props.errors.confirm_password ? true : false}
-        helperText={
-          props.errors.confirm_password
-            ? props.errors.confirm_password.message
-            : '*Enter the same password'
-        }
+        helperText={props.errors.confirm_password ? props.errors.confirm_password.message : helper}
+        onChange={() => {
+          props.errors.confirm_password && props.clearErrors('confirm_password');
+          dispatch(removeAuthError());
+        }}
       />
     </div>
   );
