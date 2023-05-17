@@ -21,6 +21,7 @@ function Response(props: ComponentProps) {
         display: 'flex',
         width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
         height: '100%',
+        maxHeight: { lg: '100%', md: '100%', sm: 'calc(100vh - 90px)', xs: 'calc(100vh - 90px)' },
         p: { lg: '20px 0 20px 20px', md: '15px 0 15px 15px', sm: '10px 0 10px 10px', xs: '10px 0 10px 10px' },
       }}
     >
