@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
@@ -11,6 +12,7 @@ import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
+  setValue: UseFormSetValue<FormInputs>;
   errors: FieldErrors<FormInputs>;
   clearErrors: UseFormClearErrors<FormInputs>;
 };
@@ -18,16 +20,20 @@ type ComponentProps = {
 function InputEmail(props: ComponentProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [inputValue, setInputValue] = useState('');
 
   const placeholder = t('emailInput.placeholder');
   const required = t('emailInput.required');
   const helper = t('emailInput.defaultHelper');
   const label = t('emailInput.label');
 
+  useEffect(() => props.setValue('email', inputValue));
+
   return (
     <div>
       <TextField
         variant="outlined"
+        autoComplete="new-password"
         size="small"
         label={label}
         type="text"
@@ -49,10 +55,12 @@ function InputEmail(props: ComponentProps) {
         fullWidth
         error={props.errors.email ? true : false}
         helperText={props.errors.email ? props.errors.email.message : helper}
-        onChange={() => {
+        onChange={(event) => {
+          setInputValue(event.target.value);
           props.errors.email && props.clearErrors('email');
           dispatch(removeAuthError());
         }}
+        value={inputValue}
       />
     </div>
   );

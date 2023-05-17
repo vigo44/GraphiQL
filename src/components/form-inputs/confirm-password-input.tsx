@@ -1,6 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import {
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { IconButton, InputAdornment, TextField } from '@mui/material';
@@ -12,6 +18,7 @@ import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
+  setValue: UseFormSetValue<FormInputs>;
   errors: FieldErrors<FormInputs>;
   watch: UseFormWatch<FormInputs>;
   clearErrors: UseFormClearErrors<FormInputs>;
@@ -20,6 +27,7 @@ type ComponentProps = {
 function InputConfirmPassword(props: ComponentProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -29,6 +37,8 @@ function InputConfirmPassword(props: ComponentProps) {
   const label = t('repeatPassInput.label');
   const helper = t('repeatPassInput.defaultHelper');
   const validatePass = t('repeatPassInput.validatePass');
+
+  useEffect(() => props.setValue('confirm_password', inputValue));
 
   return (
     <div>
@@ -79,10 +89,12 @@ function InputConfirmPassword(props: ComponentProps) {
         fullWidth
         error={props.errors.confirm_password ? true : false}
         helperText={props.errors.confirm_password ? props.errors.confirm_password.message : helper}
-        onChange={() => {
+        onChange={(event) => {
+          setInputValue(event.target.value);
           props.errors.confirm_password && props.clearErrors('confirm_password');
           dispatch(removeAuthError());
         }}
+        value={inputValue}
       />
     </div>
   );

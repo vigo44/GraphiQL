@@ -43,6 +43,7 @@ function PasswordReset() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
     clearErrors,
@@ -105,7 +106,12 @@ function PasswordReset() {
           handlePasswordReset(data.email);
         })}
       >
-        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
+        <InputEmail
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>

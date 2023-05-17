@@ -69,6 +69,7 @@ function SignUp() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     watch,
     formState: { errors },
@@ -132,11 +133,27 @@ function SignUp() {
           handleRegister(data);
         })}
       >
-        <InputName register={register} errors={errors} clearErrors={clearErrors} />
-        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
-        <InputPassword register={register} errors={errors} clearErrors={clearErrors} />
+        <InputName
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
+        <InputEmail
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
+        <InputPassword
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
         <InputConfirmPassword
           register={register}
+          setValue={setValue}
           errors={errors}
           watch={watch}
           clearErrors={clearErrors}
