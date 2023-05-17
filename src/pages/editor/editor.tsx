@@ -1,4 +1,3 @@
-import CodeEditor from '@uiw/react-textarea-code-editor';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import useLoadScheme from '../../hooks/load-scheme';
@@ -7,12 +6,12 @@ import useValidationVaribles from '../../hooks/validation-variables';
 import useValidationQuery from '../../hooks/validation-query';
 
 import Documentation from '../../components/editor/documentation';
+import VariablesHeader from '../../components/editor/variables-header';
+import Variables from '../../components/editor/variables';
+import Query from '../../components/editor/query';
+import Response from '../../components/editor/response';
 
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
-
-import { useTranslation } from 'react-i18next';
-import '../../i18nex';
-import { Close } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 const defQuery = `query($name: String) {
   characters(page: 2, filter: { name: $name }) {
@@ -31,7 +30,6 @@ const defVars = `{
 }`;
 
 function Editor() {
-  const { t } = useTranslation();
   const [codeQuery, setCodeQuery] = useState(defQuery);
   const [codeVars, setCodeVars] = useState(defVars);
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
@@ -131,199 +129,33 @@ function Editor() {
         component="div"
         sx={{
           display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
           height: '100%',
           p: { lg: '10px', md: '10px', sm: '10px 0', xs: '10px 0' },
         }}
       >
-        <Box
-          component="div"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            width: '80%',
-          }}
-        >
-          <Box
-            component="div"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              height: isVariablesOpen ? '70%' : '100%',
-            }}
-          >
-            <Typography
-              variant="h4"
-              component="h4"
-              sx={{
-                fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
-              }}
-            >
-              {t('editor.queryTitle')}
-            </Typography>
-            <CodeEditor
-              value={codeQuery}
-              language="graphql"
-              placeholder=""
-              onChange={handlerOnChangeQuery}
-              padding={15}
-              style={{
-                height: '100%',
-                fontSize: 12,
-                backgroundColor: `${coloreQuery}`,
-                fontFamily:
-                  'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                overflow: 'auto',
-              }}
-            />
-          </Box>
-          <Box
-            component="div"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              height: isVariablesOpen ? '30%' : '0',
-            }}
-          >
-            <Box
-              component="div"
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <Typography
-                variant="h4"
-                component="h4"
-                sx={{
-                  fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
-                }}
-              >
-                {t('editor.varsTitle')}
-              </Typography>
-              <IconButton
-                onClick={() => (isVariablesOpen ? setVariablesOpen(false) : setVariablesOpen(true))}
-              >
-                <Close />
-              </IconButton>
-            </Box>
-            <CodeEditor
-              value={codeVars}
-              language="json"
-              placeholder=""
-              onChange={handlerOnChangeVars}
-              padding={15}
-              style={{
-                width: '100%',
-                height: '100%',
-                fontSize: 12,
-                backgroundColor: `${coloreVars}`,
-                fontFamily:
-                  'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                overflow: 'auto',
-              }}
-            />
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '20%',
-          }}
-        >
-          <Tooltip title={t('editor.btnShowDocs')} placement="left" arrow>
-            <IconButton onClick={() => handlerClickDocs()}>
-              <Close />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t('editor.btnShowRespones')} placement="left" arrow>
-            <IconButton onClick={() => handlerClick()}>
-              <Close />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t('editor.btnClear')} placement="left" arrow>
-            <IconButton>
-              <Close />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
-            <IconButton>
-              <Close />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Query
+          coloreQuery={coloreQuery}
+          codeQuery={codeQuery}
+          handlerOnChangeQuery={handlerOnChangeQuery}
+          handlerClickDocs={handlerClickDocs}
+          handlerClick={handlerClick}
+          isVariablesOpen={isVariablesOpen}
+        ></Query>
+        <VariablesHeader
+          setVariablesOpen={setVariablesOpen}
+          isVariablesOpen={isVariablesOpen}
+        ></VariablesHeader>
+        <Variables
+          coloreVars={coloreVars}
+          codeVars={codeVars}
+          handlerOnChangeVars={handlerOnChangeVars}
+          isVariablesOpen={isVariablesOpen}
+        ></Variables>
       </Box>
-      <Box
-        component="div"
-        sx={{
-          display: 'flex',
-          width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
-          height: '100%',
-          p: { lg: '10px', md: '10px', sm: '10px 0', xs: '10px 0' },
-        }}
-      >
-        <Box
-          component="div"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            width: '80%',
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h4"
-            sx={{
-              fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
-            }}
-          >
-            {t('editor.responesTitle')}
-          </Typography>
-          <CodeEditor
-            readOnly={true}
-            value={codeResponse}
-            language="json"
-            placeholder=""
-            padding={15}
-            style={{
-              width: '100%',
-              height: '100%',
-              fontSize: 12,
-              backgroundColor: '#f5f5f5',
-              fontFamily:
-                'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-              overflow: 'auto',
-            }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '20%',
-          }}
-        >
-          <Tooltip title={t('editor.btnClear')} placement="left" arrow>
-            <IconButton>
-              <Close />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
-            <IconButton>
-              <Close />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+      <Response codeResponse={codeResponse}></Response>
     </Box>
   );
 }

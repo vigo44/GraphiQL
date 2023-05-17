@@ -104,6 +104,8 @@
     "btnShowRespones": "Execute query",
     "btnShowDocs": "Show docs",
     "btnClear": "Clear",
-    "btnCopy": "Copy"
+    "btnCopy": "Copy",
+    "btnOpenVars": "Show variables",
+    "btnCloseVars": "Close variables"
   }
 }

@@ -104,6 +104,8 @@
     "btnShowRespones": "Выполнить запрос",
     "btnShowDocs": "Показать документацию",
     "btnClear": "Очистить",
-    "btnCopy": "Скопировать"
+    "btnCopy": "Скопировать",
+    "btnOpenVars": "Показать переменные",
+    "btnCloseVars": "Скрыть пемеременные"
   }
 }
