@@ -102,6 +102,8 @@
     "responesTitle": "Respones",
     "docsTitle": "Docs",
     "btnShowRespones": "Execute query",
-    "btnShowDocs": "Show docs"
+    "btnShowDocs": "Show docs",
+    "btnClear": "Clear",
+    "btnCopy": "Copy"
   }
 }

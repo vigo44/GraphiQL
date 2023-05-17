@@ -102,6 +102,8 @@
     "responesTitle": "Ответ",
     "docsTitle": "Документация",
     "btnShowRespones": "Выполнить запрос",
-    "btnShowDocs": "Показать документацию"
+    "btnShowDocs": "Показать документацию",
+    "btnClear": "Очистить",
+    "btnCopy": "Скопировать"
   }
 }
