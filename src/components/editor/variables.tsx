@@ -43,10 +43,12 @@ function Variables(props: ComponentProps) {
           style={{
             width: '100%',
             height: props.isVariablesOpen ? '100%' : 0,
-            fontSize: 12,
+            fontSize: 14,
             backgroundColor: `${props.coloreVars}`,
             fontFamily:
               'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+            border: props.isVariablesOpen ? '1px solid grey' : 'none',
+            borderRadius: '5px',
             overflow: 'auto',
           }}
         />

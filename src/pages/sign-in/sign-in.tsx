@@ -10,7 +10,7 @@ import ErrorMessage from '../../hooks/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 
-import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/material';
+import { Alert, Box, Paper, Button, Collapse, Divider, Link, Typography } from '@mui/material';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
@@ -74,7 +74,8 @@ function SignIn() {
   useEffect(() => changeLanguage(currenLang));
 
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -82,8 +83,6 @@ function SignIn() {
         gap: '10px',
         p: '20px',
         backgroundColor: 'white',
-        borderRadius: '10px',
-        boxShadow: '0px 5px 10px grey',
       }}
     >
       <Typography
@@ -106,7 +105,7 @@ function SignIn() {
           p: '20px',
           backgroundColor: 'white',
           border: 1,
-          borderRadius: '10px',
+          borderRadius: '5px',
         }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
@@ -152,7 +151,7 @@ function SignIn() {
           {t('signInForm.forgotYourPass')}
         </Link>
       </Box>
-    </Box>
+    </Paper>
   );
 }
 

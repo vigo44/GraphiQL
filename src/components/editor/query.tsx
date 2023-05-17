@@ -68,10 +68,12 @@ function Query(props: ComponentProps) {
             padding={15}
             style={{
               height: '100%',
-              fontSize: 12,
+              fontSize: 14,
               backgroundColor: `${props.coloreQuery}`,
               fontFamily:
                 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              border: '1px solid grey',
+              borderRadius: '5px',
               overflow: 'auto',
             }}
           />

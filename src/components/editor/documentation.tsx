@@ -20,7 +20,8 @@ function Documentation(props: ComponentProps) {
     <SwipeableDrawer
       open={props.isDocsOpen}
       onClose={() => props.setDocsOpen(false)}
-      onOpen={() => props.setDocsOpen(false)}
+      onOpen={() => props.setDocsOpen(true)}
+      sx={{ touchAction: 'none' }}
     >
       <Box
         component="div"
@@ -47,17 +48,13 @@ function Documentation(props: ComponentProps) {
             component="h4"
             sx={{
               textAlign: 'center',
-              fontSize: { lg: '2.1rem', md: '1.9rem', sm: '1.7rem', xs: '1.5rem' },
+              fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
             }}
           >
             {t('editor.docsTitle')}
           </Typography>
           <IconButton onClick={() => props.setDocsOpen(false)}>
-            <Close
-              sx={{
-                fontSize: { lg: '2.1rem', md: '1.9rem', sm: '1.7rem', xs: '1.7rem' },
-              }}
-            />
+            <Close />
           </IconButton>
         </Box>
         <CodeEditor
@@ -67,10 +64,12 @@ function Documentation(props: ComponentProps) {
           placeholder=""
           padding={15}
           style={{
-            fontSize: 12,
-            backgroundColor: '#f5f5f5',
+            fontSize: 14,
+            backgroundColor: 'white',
             fontFamily:
               'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+            border: '1px solid grey',
+            borderRadius: '5px',
           }}
         />
       </Box>

@@ -11,7 +11,7 @@ import Variables from '../../components/editor/variables';
 import Query from '../../components/editor/query';
 import Response from '../../components/editor/response';
 
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
 const defQuery = `query($name: String) {
   characters(page: 2, filter: { name: $name }) {
@@ -114,9 +114,10 @@ function Editor() {
         flexDirection: { lg: 'row', md: 'row', sm: 'column', xs: 'column' },
         justifyContent: 'center',
         alignItems: 'center',
-        width: '90%',
+        gap: '15px',
+        width: { lg: '90%', md: '90%', sm: '90%', xs: '100%' },
         maxWidth: '1080px',
-        height: { lg: '570px', md: '400px', sm: 'fit-content', xs: 'fit-content' },
+        height: { lg: '650px', md: '400px', sm: 'fit-content', xs: 'fit-content' },
         marginBottom: '20px',
       }}
     >
@@ -125,7 +126,8 @@ function Editor() {
         isDocsOpen={isDocsOpen}
         setDocsOpen={setDocsOpen}
       ></Documentation>
-      <Box
+      <Paper
+      elevation={3}
         component="div"
         sx={{
           display: 'flex',
@@ -133,7 +135,7 @@ function Editor() {
           justifyContent: 'space-between',
           width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
           height: '100%',
-          p: { lg: '10px', md: '10px', sm: '10px 0', xs: '10px 0' },
+          p: { lg: '20px 0 20px 20px', md: '15px 0 15px 15px', sm: '10px 0 10px 10px', xs: '10px 0 10px 10px' },
         }}
       >
         <Query
@@ -154,7 +156,7 @@ function Editor() {
           handlerOnChangeVars={handlerOnChangeVars}
           isVariablesOpen={isVariablesOpen}
         ></Variables>
-      </Box>
+      </Paper>
       <Response codeResponse={codeResponse}></Response>
     </Box>
   );
