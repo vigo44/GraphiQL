@@ -54,9 +54,9 @@ function Editor() {
 
   useEffect(() => {
     if (isValidVaribles) {
-      setColoreVars('#ACE1AF');
+      setColoreVars('#F0FFF0');
     } else if (isValidVaribles === false) {
-      setColoreVars('#FFD6D6');
+      setColoreVars('#FFE4E1');
     } else {
       setColoreVars('#f5f5f5');
     }
@@ -64,9 +64,9 @@ function Editor() {
 
   useEffect(() => {
     if (isValidQuery) {
-      setColoreQuery('#ACE1AF');
+      setColoreQuery('#F0FFF0');
     } else if (isValidQuery === false) {
-      setColoreQuery('#FFD6D6');
+      setColoreQuery('#FFE4E1');
     } else {
       setColoreQuery('#f5f5f5');
     }
