@@ -54,7 +54,7 @@ function NotFound() {
           underline="hover"
           sx={{ width: '100%', paddingTop: '10px' }}
           onClick={() => {
-            navigate('/pass-reset');
+            navigate('/welcome');
           }}
         >
           {t('notFoundPage.toWelcomePage')}
