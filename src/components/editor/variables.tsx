@@ -7,6 +7,8 @@ import { DeleteOutlineRounded, ContentCopyRounded } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
+import { DEF_EDITOR_VALUES } from '../../common/constants';
+
 type ComponentProps = {
   coloreVars: string;
   codeVars: string;
@@ -37,7 +39,9 @@ function Variables(props: ComponentProps) {
         <CodeEditor
           value={props.codeVars}
           language="json"
-          placeholder=""
+          placeholder={`------------------
+          ${DEF_EDITOR_VALUES.VARIABLES_PLACEHOLDER}
+          `}
           onChange={props.handlerOnChangeVars}
           padding={15}
           style={{
@@ -63,16 +67,20 @@ function Variables(props: ComponentProps) {
       >
         {props.isVariablesOpen && (
           <Tooltip title={t('editor.btnClear')} placement="left" arrow>
-            <IconButton>
-              <DeleteOutlineRounded />
-            </IconButton>
+            <div>
+              <IconButton disabled={props.codeVars ? false : true}>
+                <DeleteOutlineRounded />
+              </IconButton>
+            </div>
           </Tooltip>
         )}
         {props.isVariablesOpen && (
           <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
-            <IconButton>
-              <ContentCopyRounded />
-            </IconButton>
+            <div>
+              <IconButton disabled={props.codeVars ? false : true}>
+                <ContentCopyRounded />
+              </IconButton>
+            </div>
           </Tooltip>
         )}
       </Box>

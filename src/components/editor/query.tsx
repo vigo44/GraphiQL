@@ -68,10 +68,12 @@ function Query(props: ComponentProps) {
           <CodeEditor
             value={props.codeQuery}
             language="graphql"
-            placeholder=""
+            placeholder={`${t('editor.queryPlaceholder')}
+            ${DEF_EDITOR_VALUES.QUERY_PLACEHOLDER}`}
             onChange={props.handlerOnChangeQuery}
             padding={15}
             style={{
+              alignItems: 'flex-start',
               height: '100%',
               fontSize: 14,
               backgroundColor: `${props.coloreQuery}`,
@@ -93,9 +95,17 @@ function Query(props: ComponentProps) {
         }}
       >
         <Tooltip title={t('editor.btnShowRespones')} placement="left" arrow>
-          <IconButton onClick={() => props.handlerClick()}>
-            <SlowMotionVideoOutlined color="primary" fontSize="large" />
-          </IconButton>
+          <div>
+            <IconButton
+              onClick={() => props.handlerClick()}
+              disabled={props.codeQuery ? false : true}
+            >
+              <SlowMotionVideoOutlined
+                color={props.codeQuery ? 'primary' : 'disabled'}
+                fontSize="large"
+              />
+            </IconButton>
+          </div>
         </Tooltip>
         <Tooltip title={t('editor.btnShowDocs')} placement="left" arrow>
           <IconButton onClick={() => props.handlerClickDocs()}>
@@ -103,14 +113,18 @@ function Query(props: ComponentProps) {
           </IconButton>
         </Tooltip>
         <Tooltip title={t('editor.btnClear')} placement="left" arrow>
-          <IconButton>
-            <DeleteOutlineRounded />
-          </IconButton>
+          <div>
+            <IconButton disabled={props.codeQuery ? false : true}>
+              <DeleteOutlineRounded />
+            </IconButton>
+          </div>
         </Tooltip>
         <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
-          <IconButton>
-            <ContentCopyRounded />
-          </IconButton>
+          <div>
+            <IconButton disabled={props.codeQuery ? false : true}>
+              <ContentCopyRounded />
+            </IconButton>
+          </div>
         </Tooltip>
         <Tooltip title={t('editor.btnSetTestValues')} placement="left" arrow>
           <IconButton

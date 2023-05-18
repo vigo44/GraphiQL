@@ -9,8 +9,20 @@ const DEF_EDITOR_VALUES = {
     }
   }
 }`,
-
   VARIABLES: `{
+  "name": "rick",
+  "page": 2
+}`,
+  QUERY_PLACEHOLDER: `
+----------------------
+
+{
+  character(id: "1") {
+    name
+  }
+}`,
+  VARIABLES_PLACEHOLDER: `
+{
   "name": "rick",
   "page": 2
 }`,

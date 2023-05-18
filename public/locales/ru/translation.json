@@ -109,6 +109,8 @@
     "btnCopy": "Скопировать",
     "btnOpenVars": "Показать переменные",
     "btnCloseVars": "Скрыть пемеременные",
-    "btnSetTestValues": "Установить тестовые значения"
+    "btnSetTestValues": "Установить тестовые значения",
+    "queryPlaceholder": "Введите ваш GraphQL-запрос или прочтите документацию",
+    "requestPlaceholder": "Ответ на ваш запрос появится в этом воле"
   }
 }

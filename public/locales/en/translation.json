@@ -109,6 +109,8 @@
     "btnCopy": "Copy",
     "btnOpenVars": "Show variables",
     "btnCloseVars": "Close variables",
-    "btnSetTestValues": "Set test values"
+    "btnSetTestValues": "Set test values",
+    "queryPlaceholder": "Enter your GraphQL request or reed the documentation",
+    "requestPlaceholder": "Answer to your request will apear in this field"
   }
 }
