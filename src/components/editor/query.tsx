@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
@@ -7,14 +7,19 @@ import {
   SlowMotionVideoOutlined,
   DeleteOutlineRounded,
   ContentCopyRounded,
+  DashboardCustomizeOutlined,
 } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
+import { DEF_EDITOR_VALUES } from '../../common/constants';
+
 type ComponentProps = {
   coloreQuery: string;
   codeQuery: string;
+  setCodeQuery: Dispatch<SetStateAction<string>>;
+  setCodeVars: Dispatch<SetStateAction<string>>;
   handlerOnChangeQuery(evn: ChangeEvent<HTMLTextAreaElement>): void;
   handlerClickDocs(): void;
   handlerClick(): void;
@@ -87,14 +92,14 @@ function Query(props: ComponentProps) {
           width: '15%',
         }}
       >
+        <Tooltip title={t('editor.btnShowRespones')} placement="left" arrow>
+          <IconButton onClick={() => props.handlerClick()}>
+            <SlowMotionVideoOutlined color="primary" fontSize="large" />
+          </IconButton>
+        </Tooltip>
         <Tooltip title={t('editor.btnShowDocs')} placement="left" arrow>
           <IconButton onClick={() => props.handlerClickDocs()}>
             <PlagiarismOutlined />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={t('editor.btnShowRespones')} placement="left" arrow>
-          <IconButton onClick={() => props.handlerClick()}>
-            <SlowMotionVideoOutlined />
           </IconButton>
         </Tooltip>
         <Tooltip title={t('editor.btnClear')} placement="left" arrow>
@@ -105,6 +110,16 @@ function Query(props: ComponentProps) {
         <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
           <IconButton>
             <ContentCopyRounded />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={t('editor.btnSetTestValues')} placement="left" arrow>
+          <IconButton
+            onClick={() => {
+              props.setCodeQuery(DEF_EDITOR_VALUES.QUERY);
+              props.setCodeVars(DEF_EDITOR_VALUES.VARIABLES);
+            }}
+          >
+            <DashboardCustomizeOutlined />
           </IconButton>
         </Tooltip>
       </Box>

@@ -13,32 +13,16 @@ import Response from '../../components/editor/response';
 
 import { Box, Paper } from '@mui/material';
 
-const defQuery = `query($name: String) {
-  characters(page: 2, filter: { name: $name }) {
-    info {
-      count
-    }
-    results {
-      name
-    }
-  }
-  }`;
-
-const defVars = `{
-  "name": "rick",
-  "page": 2
-}`;
-
 function Editor() {
-  const [codeQuery, setCodeQuery] = useState(defQuery);
-  const [codeVars, setCodeVars] = useState(defVars);
+  const [codeQuery, setCodeQuery] = useState('');
+  const [codeVars, setCodeVars] = useState('');
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
   const [codeDocs, setCodeDocs] = useState<undefined | string>();
   const [coloreQuery, setColoreQuery] = useState('#f5f5f5');
   const [coloreVars, setColoreVars] = useState('#f5f5f5');
   const [validation, setValidation] = useState<undefined | boolean>();
   const [errMessage, setErrMessage] = useState<undefined | string>();
-  const [isVariablesOpen, setVariablesOpen] = useState(false);
+  const [isVariablesOpen, setVariablesOpen] = useState(true);
   const [isDocsOpen, setDocsOpen] = useState(false);
 
   const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
@@ -127,7 +111,7 @@ function Editor() {
         setDocsOpen={setDocsOpen}
       ></Documentation>
       <Paper
-      elevation={3}
+        elevation={3}
         component="div"
         sx={{
           display: 'flex',
@@ -135,12 +119,19 @@ function Editor() {
           justifyContent: 'space-between',
           width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
           height: '100%',
-          p: { lg: '20px 0 20px 20px', md: '15px 0 15px 15px', sm: '10px 0 10px 10px', xs: '10px 0 10px 10px' },
+          p: {
+            lg: '20px 0 20px 20px',
+            md: '15px 0 15px 15px',
+            sm: '10px 0 10px 10px',
+            xs: '10px 0 10px 10px',
+          },
         }}
       >
         <Query
           coloreQuery={coloreQuery}
           codeQuery={codeQuery}
+          setCodeQuery={setCodeQuery}
+          setCodeVars={setCodeVars}
           handlerOnChangeQuery={handlerOnChangeQuery}
           handlerClickDocs={handlerClickDocs}
           handlerClick={handlerClick}

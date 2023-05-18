@@ -11,7 +11,8 @@
     "menu": "Menu"
   },
   "notFoundPage": {
-    "notFound": "404 Page not found!"
+    "notFound": "It looks like we can't find this page. Please check the entered url.",
+    "toWelcomePage": "Take a look at Welcome page"
   },
   "forgotPassForm": {
     "resetPass": "Reset password",
@@ -33,7 +34,8 @@
     "forgotYourPass": "Forgot your password?"
   },
   "passResetModal": {
-    "successText": "Success! Check your email to reset your password.",
+    "successHeader": "Success!",
+    "successText": "Check your email to reset your password.",
     "signIN": "Sign In"
   },
   "creatorsSection": {
@@ -106,6 +108,7 @@
     "btnClear": "Clear",
     "btnCopy": "Copy",
     "btnOpenVars": "Show variables",
-    "btnCloseVars": "Close variables"
+    "btnCloseVars": "Close variables",
+    "btnSetTestValues": "Set test values"
   }
 }
