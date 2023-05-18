@@ -44,6 +44,7 @@ function Query(props: ComponentProps) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           width: '85%',
+          minHeight: { lg: '', md: '', sm: '250px', xs: '250px' },
         }}
       >
         <Box

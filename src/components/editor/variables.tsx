@@ -25,6 +25,7 @@ function Variables(props: ComponentProps) {
       sx={{
         display: 'flex',
         height: props.isVariablesOpen ? '30%' : '0',
+        minHeight: props.isVariablesOpen ? { lg: '', md: '', sm: '150px', xs: '150px' } : '0',
       }}
     >
       <Box

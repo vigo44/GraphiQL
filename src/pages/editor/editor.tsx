@@ -101,7 +101,7 @@ function Editor() {
         gap: '15px',
         width: { lg: '90%', md: '90%', sm: '90%', xs: '100%' },
         maxWidth: '1080px',
-        height: { lg: '650px', md: '400px', sm: 'fit-content', xs: 'fit-content' },
+        height: { lg: '650px', md: '430px', sm: 'fit-content', xs: 'fit-content' },
         marginBottom: '20px',
       }}
     >
