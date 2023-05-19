@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { Box, Paper, IconButton, Tooltip, Typography } from '@mui/material';
@@ -8,6 +9,8 @@ import '../../i18nex';
 
 type ComponentProps = {
   codeResponse: undefined | string;
+  setCodeResponse: Dispatch<SetStateAction<string | undefined>>;
+  setSnackOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 function Response(props: ComponentProps) {
@@ -79,14 +82,23 @@ function Response(props: ComponentProps) {
       >
         <Tooltip title={t('editor.btnClear')} placement="left" arrow>
           <div>
-            <IconButton disabled={props.codeResponse ? false : true}>
+            <IconButton
+              onClick={() => props.setCodeResponse(undefined)}
+              disabled={props.codeResponse ? false : true}
+            >
               <DeleteOutlineRounded />
             </IconButton>
           </div>
         </Tooltip>
         <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
           <div>
-            <IconButton disabled={props.codeResponse ? false : true}>
+            <IconButton
+              onClick={() => {
+                props.codeResponse && navigator.clipboard.writeText(props.codeResponse);
+                props.setSnackOpen(true);
+              }}
+              disabled={props.codeResponse ? false : true}
+            >
               <ContentCopyRounded />
             </IconButton>
           </div>

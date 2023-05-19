@@ -20,6 +20,7 @@ type ComponentProps = {
   codeQuery: string;
   setCodeQuery: Dispatch<SetStateAction<string>>;
   setCodeVars: Dispatch<SetStateAction<string>>;
+  setSnackOpen: Dispatch<SetStateAction<boolean>>;
   handlerOnChangeQuery(evn: ChangeEvent<HTMLTextAreaElement>): void;
   handlerClickDocs(): void;
   handlerClick(): void;
@@ -115,14 +116,23 @@ function Query(props: ComponentProps) {
         </Tooltip>
         <Tooltip title={t('editor.btnClear')} placement="left" arrow>
           <div>
-            <IconButton disabled={props.codeQuery ? false : true}>
+            <IconButton
+              onClick={() => props.setCodeQuery('')}
+              disabled={props.codeQuery ? false : true}
+            >
               <DeleteOutlineRounded />
             </IconButton>
           </div>
         </Tooltip>
         <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
           <div>
-            <IconButton disabled={props.codeQuery ? false : true}>
+            <IconButton
+              onClick={() => {
+                navigator.clipboard.writeText(props.codeQuery);
+                props.setSnackOpen(true);
+              }}
+              disabled={props.codeQuery ? false : true}
+            >
               <ContentCopyRounded />
             </IconButton>
           </div>

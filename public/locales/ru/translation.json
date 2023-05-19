@@ -111,6 +111,7 @@
     "btnCloseVars": "Скрыть пемеременные",
     "btnSetTestValues": "Установить тестовые значения",
     "queryPlaceholder": "Введите ваш GraphQL-запрос или прочтите документацию",
-    "requestPlaceholder": "Ответ на ваш запрос появится в этом воле"
+    "requestPlaceholder": "Ответ на ваш запрос появится в этом поле",
+    "copySnack": "Скопировано!"
   }
 }

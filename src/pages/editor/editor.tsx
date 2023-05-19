@@ -11,9 +11,13 @@ import Variables from '../../components/editor/variables';
 import Query from '../../components/editor/query';
 import Response from '../../components/editor/response';
 
-import { Box, Paper } from '@mui/material';
+import { Alert, Box, Paper, Snackbar } from '@mui/material';
+
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function Editor() {
+  const { t } = useTranslation();
   const [codeQuery, setCodeQuery] = useState('');
   const [codeVars, setCodeVars] = useState('');
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
@@ -24,6 +28,7 @@ function Editor() {
   const [errMessage, setErrMessage] = useState<undefined | string>();
   const [isVariablesOpen, setVariablesOpen] = useState(true);
   const [isDocsOpen, setDocsOpen] = useState(false);
+  const [isSnackOpen, setSnackOpen] = useState(false);
 
   const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
   const { response, error } = useQueryGraphQL(
@@ -105,6 +110,16 @@ function Editor() {
         marginBottom: '20px',
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackOpen(false)}
+      >
+        <Alert onClose={() => setSnackOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {t('editor.copySnack')}
+        </Alert>
+      </Snackbar>
       <Documentation
         codeDocs={codeDocs}
         isDocsOpen={isDocsOpen}
@@ -132,6 +147,7 @@ function Editor() {
           codeQuery={codeQuery}
           setCodeQuery={setCodeQuery}
           setCodeVars={setCodeVars}
+          setSnackOpen={setSnackOpen}
           handlerOnChangeQuery={handlerOnChangeQuery}
           handlerClickDocs={handlerClickDocs}
           handlerClick={handlerClick}
@@ -144,11 +160,17 @@ function Editor() {
         <Variables
           coloreVars={coloreVars}
           codeVars={codeVars}
+          setCodeVars={setCodeVars}
+          setSnackOpen={setSnackOpen}
           handlerOnChangeVars={handlerOnChangeVars}
           isVariablesOpen={isVariablesOpen}
         ></Variables>
       </Paper>
-      <Response codeResponse={codeResponse}></Response>
+      <Response
+        codeResponse={codeResponse}
+        setCodeResponse={setCodeResponse}
+        setSnackOpen={setSnackOpen}
+      ></Response>
     </Box>
   );
 }

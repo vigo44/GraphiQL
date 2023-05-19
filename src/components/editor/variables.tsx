@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { Box, IconButton, Tooltip } from '@mui/material';
@@ -12,6 +12,8 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 type ComponentProps = {
   coloreVars: string;
   codeVars: string;
+  setCodeVars: Dispatch<SetStateAction<string>>;
+  setSnackOpen: Dispatch<SetStateAction<boolean>>;
   handlerOnChangeVars(evn: ChangeEvent<HTMLTextAreaElement>): void;
   isVariablesOpen: boolean;
 };
@@ -69,7 +71,10 @@ function Variables(props: ComponentProps) {
         {props.isVariablesOpen && (
           <Tooltip title={t('editor.btnClear')} placement="left" arrow>
             <div>
-              <IconButton disabled={props.codeVars ? false : true}>
+              <IconButton
+                onClick={() => props.setCodeVars('')}
+                disabled={props.codeVars ? false : true}
+              >
                 <DeleteOutlineRounded />
               </IconButton>
             </div>
@@ -78,7 +83,13 @@ function Variables(props: ComponentProps) {
         {props.isVariablesOpen && (
           <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
             <div>
-              <IconButton disabled={props.codeVars ? false : true}>
+              <IconButton
+                onClick={() => {
+                  navigator.clipboard.writeText(props.codeVars);
+                  props.setSnackOpen(true);
+                }}
+                disabled={props.codeVars ? false : true}
+              >
                 <ContentCopyRounded />
               </IconButton>
             </div>
