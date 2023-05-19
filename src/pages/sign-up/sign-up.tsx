@@ -17,7 +17,8 @@ import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 import InputConfirmPassword from '../../components/form-inputs/confirm-password-input';
 
-import { Alert, Box, Paper, Button, Collapse, Divider, Link, Typography } from '@mui/material';
+import { Alert, Box, Paper, Collapse, Divider, Link, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { RootState } from 'store';
 import { useTranslation } from 'react-i18next';
@@ -37,9 +38,12 @@ function SignUp() {
   const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
   const [currenLang, setLang] = useState(t('lang.appLang') as string);
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = (data: FormInputs) => {
     const auth = getAuth();
+
+    setLoading(true);
 
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
@@ -64,6 +68,8 @@ function SignUp() {
             error: setErrorMessage(error.code),
           })
         );
+
+        setLoading(false);
       });
   };
 
@@ -163,9 +169,9 @@ function SignUp() {
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
-        <Button variant="contained" type="submit" value="SIGN UP">
+        <LoadingButton variant="contained" type="submit" loading={loading}>
           {t('signUpForm.signUP')}
-        </Button>
+        </LoadingButton>
       </Box>
       <Box
         sx={{

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { Box, Paper, IconButton, Tooltip, Typography, LinearProgress } from '@mui/material';
-import { DeleteOutlineRounded, ContentCopyRounded } from '@mui/icons-material';
+import { ContentCopyRounded } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';

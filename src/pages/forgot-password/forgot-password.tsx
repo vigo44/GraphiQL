@@ -10,7 +10,8 @@ import ErrorMessage from '../../hooks/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
 
-import { Alert, Box, Paper, Button, Collapse, Link, Typography } from '@mui/material';
+import { Alert, Box, Paper, Collapse, Link, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
@@ -24,9 +25,12 @@ function PasswordReset() {
   const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
   const [currenLang, setLang] = useState(t('lang.appLang') as string);
+  const [loading, setLoading] = useState(false);
 
   const handlePasswordReset = (email: string) => {
     const auth = getAuth();
+
+    setLoading(true);
 
     sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -38,6 +42,8 @@ function PasswordReset() {
             error: setErrorMessage(error.code),
           })
         );
+
+        setLoading(false);
       });
   };
 
@@ -117,9 +123,9 @@ function PasswordReset() {
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
-        <Button variant="contained" type="submit">
+        <LoadingButton variant="contained" type="submit" loading={loading}>
           {t('forgotPassForm.confirm')}
-        </Button>
+        </LoadingButton>
       </Box>
       <Link
         component="button"
