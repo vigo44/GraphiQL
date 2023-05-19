@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setPassResetModalClose } from '../../store/password-reset-modal-slice';
 
-import { Modal, Box, Button, Typography, Paper } from '@mui/material';
+import { Modal, Button, Typography, Paper } from '@mui/material';
 
 import { RootState } from 'store';
 import { useTranslation } from 'react-i18next';
