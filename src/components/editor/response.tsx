@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
-import { Box, Paper, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Paper, IconButton, Tooltip, Typography, CircularProgress } from '@mui/material';
 import { DeleteOutlineRounded, ContentCopyRounded } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
 type ComponentProps = {
+  loading: boolean;
   codeResponse: undefined | string;
   setCodeResponse: Dispatch<SetStateAction<string | undefined>>;
   setSnackOpen: Dispatch<SetStateAction<boolean>>;
@@ -53,24 +54,41 @@ function Response(props: ComponentProps) {
         >
           {t('editor.responesTitle')}
         </Typography>
-        <CodeEditor
-          readOnly={true}
-          value={props.codeResponse}
-          language="json"
-          placeholder={`${t('editor.requestPlaceholder')}`}
-          padding={15}
-          style={{
-            width: '100%',
-            height: '100%',
-            fontSize: 14,
-            backgroundColor: '#f5f5f5',
-            fontFamily:
-              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-            border: '1px solid grey',
-            borderRadius: '5px',
-            overflow: 'auto',
-          }}
-        />
+        {props.loading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#f5f5f5',
+              border: '1px solid grey',
+              borderRadius: '5px',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <CodeEditor
+            readOnly={true}
+            value={props.codeResponse}
+            language="json"
+            placeholder={`${t('editor.requestPlaceholder')}`}
+            padding={15}
+            style={{
+              width: '100%',
+              height: '100%',
+              fontSize: 14,
+              backgroundColor: '#f5f5f5',
+              fontFamily:
+                'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              border: '1px solid grey',
+              borderRadius: '5px',
+              overflow: 'auto',
+            }}
+          />
+        )}
       </Box>
       <Box
         sx={{

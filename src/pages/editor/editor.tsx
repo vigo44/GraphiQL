@@ -31,7 +31,7 @@ function Editor() {
   const [isSnackOpen, setSnackOpen] = useState(false);
 
   const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
-  const { response, error } = useQueryGraphQL(
+  const { loading, response, error } = useQueryGraphQL(
     'https://rickandmortyapi.com/graphql',
     codeQuery,
     codeVars,
@@ -167,6 +167,7 @@ function Editor() {
         ></Variables>
       </Paper>
       <Response
+        loading={loading}
         codeResponse={codeResponse}
         setCodeResponse={setCodeResponse}
         setSnackOpen={setSnackOpen}
