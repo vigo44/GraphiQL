@@ -10,7 +10,6 @@ import '../../i18nex';
 type ComponentProps = {
   loading: boolean;
   codeResponse: undefined | string;
-  setCodeResponse: Dispatch<SetStateAction<string | undefined>>;
   setSnackOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -86,24 +85,6 @@ function Response(props: ComponentProps) {
             }}
           />
         )}
-        {/* <CodeEditor
-          readOnly={true}
-          value={props.codeResponse}
-          language="json"
-          placeholder={`${t('editor.requestPlaceholder')}`}
-          padding={15}
-          style={{
-            width: '100%',
-            height: '100%',
-            fontSize: 14,
-            backgroundColor: '#f5f5f5',
-            fontFamily:
-              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-            border: '1px solid grey',
-            borderRadius: '5px',
-            overflow: 'auto',
-          }}
-        /> */}
       </Box>
       <Box
         sx={{
@@ -113,16 +94,6 @@ function Response(props: ComponentProps) {
           width: '15%',
         }}
       >
-        <Tooltip title={t('editor.btnClear')} placement="left" arrow>
-          <div>
-            <IconButton
-              onClick={() => props.setCodeResponse(undefined)}
-              disabled={props.codeResponse ? false : true}
-            >
-              <DeleteOutlineRounded />
-            </IconButton>
-          </div>
-        </Tooltip>
         <Tooltip title={t('editor.btnCopy')} placement="left" arrow>
           <div>
             <IconButton

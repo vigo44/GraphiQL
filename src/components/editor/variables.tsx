@@ -12,9 +12,9 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 type ComponentProps = {
   coloreVars: string;
   codeVars: string;
-  setCodeVars: Dispatch<SetStateAction<string>>;
-  setSnackOpen: Dispatch<SetStateAction<boolean>>;
   handlerOnChangeVars(evn: ChangeEvent<HTMLTextAreaElement>): void;
+  hadlerOnClearVars: () => void;
+  setSnackOpen: Dispatch<SetStateAction<boolean>>;
   isVariablesOpen: boolean;
 };
 
@@ -72,7 +72,7 @@ function Variables(props: ComponentProps) {
           <Tooltip title={t('editor.btnClear')} placement="left" arrow>
             <div>
               <IconButton
-                onClick={() => props.setCodeVars('')}
+                onClick={() => props.hadlerOnClearVars()}
                 disabled={props.codeVars ? false : true}
               >
                 <DeleteOutlineRounded />

@@ -13,6 +13,8 @@ import Response from '../../components/editor/response';
 
 import { Alert, Box, Paper, Snackbar } from '@mui/material';
 
+import { DEF_EDITOR_VALUES } from '../../common/constants';
+
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
@@ -40,6 +42,46 @@ function Editor() {
 
   const { isValidVaribles, errValidVaribles } = useValidationVaribles(codeVars);
   const { isValidQuery } = useValidationQuery(codeQuery, scheme);
+
+  const handlerClickDocs = () => {
+    setDocsOpen(true);
+    setCodeDocs(schemeDocs);
+  };
+
+  const handlerClick = () => {
+    if (isValidVaribles === false) {
+      setErrMessage(errValidVaribles);
+    } else {
+      setValidation(true);
+      setErrMessage(undefined);
+    }
+  };
+
+  const handlerOnChangeQuery = (evn: ChangeEvent<HTMLTextAreaElement>) => {
+    setCodeQuery(evn.target.value);
+    setValidation(false);
+  };
+
+  const hadlerOnClearQuery = () => {
+    setCodeQuery('');
+    setValidation(undefined);
+  };
+
+  const handlerOnChangeVars = (evn: ChangeEvent<HTMLTextAreaElement>) => {
+    setCodeVars(evn.target.value);
+    setValidation(false);
+  };
+
+  const hadlerOnClearVars = () => {
+    setCodeVars('');
+    setValidation(undefined);
+  };
+
+  const handlerSetDefaultValues = () => {
+    setCodeQuery(DEF_EDITOR_VALUES.QUERY);
+    setCodeVars(DEF_EDITOR_VALUES.VARIABLES);
+    setValidation(false);
+  };
 
   useEffect(() => {
     if (isValidVaribles) {
@@ -70,30 +112,6 @@ function Editor() {
       setCodeResponse(response);
     }
   }, [response, error, errMessage]);
-
-  function handlerClickDocs() {
-    setDocsOpen(true);
-    setCodeDocs(schemeDocs);
-  }
-
-  function handlerClick() {
-    if (isValidVaribles === false) {
-      setErrMessage(errValidVaribles);
-    } else {
-      setValidation(true);
-      setErrMessage(undefined);
-    }
-  }
-
-  function handlerOnChangeQuery(evn: ChangeEvent<HTMLTextAreaElement>) {
-    setCodeQuery(evn.target.value);
-    setValidation(false);
-  }
-
-  function handlerOnChangeVars(evn: ChangeEvent<HTMLTextAreaElement>) {
-    setCodeVars(evn.target.value);
-    setValidation(false);
-  }
 
   return (
     <Box
@@ -146,12 +164,12 @@ function Editor() {
         <Query
           coloreQuery={coloreQuery}
           codeQuery={codeQuery}
-          setCodeQuery={setCodeQuery}
-          setCodeVars={setCodeVars}
-          setSnackOpen={setSnackOpen}
+          hadlerOnClearQuery={hadlerOnClearQuery}
+          handlerSetDefaultValues={handlerSetDefaultValues}
           handlerOnChangeQuery={handlerOnChangeQuery}
           handlerClickDocs={handlerClickDocs}
           handlerClick={handlerClick}
+          setSnackOpen={setSnackOpen}
           isVariablesOpen={isVariablesOpen}
         ></Query>
         <VariablesHeader
@@ -161,16 +179,15 @@ function Editor() {
         <Variables
           coloreVars={coloreVars}
           codeVars={codeVars}
-          setCodeVars={setCodeVars}
-          setSnackOpen={setSnackOpen}
           handlerOnChangeVars={handlerOnChangeVars}
+          hadlerOnClearVars={hadlerOnClearVars}
+          setSnackOpen={setSnackOpen}
           isVariablesOpen={isVariablesOpen}
         ></Variables>
       </Paper>
       <Response
         loading={loading}
         codeResponse={codeResponse}
-        setCodeResponse={setCodeResponse}
         setSnackOpen={setSnackOpen}
       ></Response>
     </Box>

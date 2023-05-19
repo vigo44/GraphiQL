@@ -18,12 +18,12 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 type ComponentProps = {
   coloreQuery: string;
   codeQuery: string;
-  setCodeQuery: Dispatch<SetStateAction<string>>;
-  setCodeVars: Dispatch<SetStateAction<string>>;
-  setSnackOpen: Dispatch<SetStateAction<boolean>>;
+  hadlerOnClearQuery: () => void;
+  handlerSetDefaultValues: () => void;
   handlerOnChangeQuery(evn: ChangeEvent<HTMLTextAreaElement>): void;
   handlerClickDocs(): void;
   handlerClick(): void;
+  setSnackOpen: Dispatch<SetStateAction<boolean>>;
   isVariablesOpen: boolean;
 };
 
@@ -117,7 +117,7 @@ function Query(props: ComponentProps) {
         <Tooltip title={t('editor.btnClear')} placement="left" arrow>
           <div>
             <IconButton
-              onClick={() => props.setCodeQuery('')}
+              onClick={() => props.hadlerOnClearQuery()}
               disabled={props.codeQuery ? false : true}
             >
               <DeleteOutlineRounded />
@@ -138,12 +138,7 @@ function Query(props: ComponentProps) {
           </div>
         </Tooltip>
         <Tooltip title={t('editor.btnSetTestValues')} placement="left" arrow>
-          <IconButton
-            onClick={() => {
-              props.setCodeQuery(DEF_EDITOR_VALUES.QUERY);
-              props.setCodeVars(DEF_EDITOR_VALUES.VARIABLES);
-            }}
-          >
+          <IconButton onClick={() => props.handlerSetDefaultValues()}>
             <DashboardCustomizeOutlined />
           </IconButton>
         </Tooltip>
