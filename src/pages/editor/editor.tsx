@@ -121,6 +121,7 @@ function Editor() {
         </Alert>
       </Snackbar>
       <Documentation
+        loading={loading}
         codeDocs={codeDocs}
         isDocsOpen={isDocsOpen}
         setDocsOpen={setDocsOpen}

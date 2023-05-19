@@ -1,13 +1,14 @@
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Box, IconButton, SwipeableDrawer, Typography } from '@mui/material';
+import { Box, IconButton, LinearProgress, SwipeableDrawer, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
 type ComponentProps = {
+  loading: boolean;
   codeDocs: string | undefined;
   isDocsOpen: boolean;
   setDocsOpen: Dispatch<SetStateAction<boolean>>;
@@ -57,6 +58,19 @@ function Documentation(props: ComponentProps) {
             <Close />
           </IconButton>
         </Box>
+        {props.loading ? (
+          <Box
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#f5f5f5',
+              border: '1px solid grey',
+              borderRadius: '5px',
+            }}
+          >
+            <LinearProgress sx={{ width: '100%' }} />
+          </Box>
+        ) : (
         <CodeEditor
           readOnly={true}
           value={props.codeDocs}
@@ -72,6 +86,7 @@ function Documentation(props: ComponentProps) {
             borderRadius: '5px',
           }}
         />
+        )}
       </Box>
     </SwipeableDrawer>
   );
