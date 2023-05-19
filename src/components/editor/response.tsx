@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
-import { Box, Paper, IconButton, Tooltip, Typography, CircularProgress } from '@mui/material';
+import { Box, Paper, IconButton, Tooltip, Typography, LinearProgress } from '@mui/material';
 import { DeleteOutlineRounded, ContentCopyRounded } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
@@ -56,10 +56,7 @@ function Response(props: ComponentProps) {
         </Typography>
         {props.loading ? (
           <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+            style={{
               width: '100%',
               height: '100%',
               backgroundColor: '#f5f5f5',
@@ -67,7 +64,7 @@ function Response(props: ComponentProps) {
               borderRadius: '5px',
             }}
           >
-            <CircularProgress />
+            <LinearProgress sx={{ width: '100%' }} />
           </Box>
         ) : (
           <CodeEditor
@@ -89,6 +86,24 @@ function Response(props: ComponentProps) {
             }}
           />
         )}
+        {/* <CodeEditor
+          readOnly={true}
+          value={props.codeResponse}
+          language="json"
+          placeholder={`${t('editor.requestPlaceholder')}`}
+          padding={15}
+          style={{
+            width: '100%',
+            height: '100%',
+            fontSize: 14,
+            backgroundColor: '#f5f5f5',
+            fontFamily:
+              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+            border: '1px solid grey',
+            borderRadius: '5px',
+            overflow: 'auto',
+          }}
+        /> */}
       </Box>
       <Box
         sx={{
