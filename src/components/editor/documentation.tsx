@@ -1,8 +1,16 @@
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Box, IconButton, LinearProgress, SwipeableDrawer, Typography } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import {
+  Box,
+  Chip,
+  IconButton,
+  LinearProgress,
+  Stack,
+  SwipeableDrawer,
+  Typography,
+} from '@mui/material';
+import { Close, Brightness1 } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
@@ -58,6 +66,41 @@ function Documentation(props: ComponentProps) {
             <Close />
           </IconButton>
         </Box>
+        <Typography variant="body1" component="h5">
+          {t('editor.docsValidationTitle')}
+        </Typography>
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '15px' }}>
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#F0FFF0', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationTrue')}
+            variant="outlined"
+          />
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#FFE4E1', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationFalse')}
+            variant="outlined"
+          />
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#F5F5F5', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationEmpty')}
+            variant="outlined"
+          />
+        </Stack>
+        <Typography variant="body1" component="h5">
+          {t('editor.docsAPITitle')}
+        </Typography>
         {props.loading ? (
           <Box
             style={{
@@ -71,21 +114,21 @@ function Documentation(props: ComponentProps) {
             <LinearProgress sx={{ width: '100%' }} />
           </Box>
         ) : (
-        <CodeEditor
-          readOnly={true}
-          value={props.codeDocs}
-          language="graphql"
-          placeholder=""
-          padding={15}
-          style={{
-            fontSize: 14,
-            backgroundColor: 'white',
-            fontFamily:
-              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-            border: '1px solid grey',
-            borderRadius: '5px',
-          }}
-        />
+          <CodeEditor
+            readOnly={true}
+            value={props.codeDocs}
+            language="graphql"
+            placeholder=""
+            padding={15}
+            style={{
+              fontSize: 14,
+              backgroundColor: 'white',
+              fontFamily:
+                'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              border: '1px solid grey',
+              borderRadius: '5px',
+            }}
+          />
         )}
       </Box>
     </SwipeableDrawer>

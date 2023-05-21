@@ -89,7 +89,7 @@ function Editor() {
     } else if (isValidVaribles === false) {
       setColoreVars('#FFE4E1');
     } else {
-      setColoreVars('#f5f5f5');
+      setColoreVars('#F5F5F5');
     }
   }, [isValidVaribles]);
 
