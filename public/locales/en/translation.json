@@ -118,5 +118,14 @@
     "queryPlaceholder": "Enter your GraphQL request or reed the documentation",
     "requestPlaceholder": "Answer to your request will apear in this field",
     "copySnack": "Copyed!"
+  },
+  "creators": {
+    "chipManage": "management",
+    "chipGraph": "graphql",
+    "chipTest": "testing",
+    "chipDesign": "adaptive design",
+    "chipAuth": "authentication",
+    "chipMui": "mui",
+    "chipTranslate": "app localisation"
   }
 }

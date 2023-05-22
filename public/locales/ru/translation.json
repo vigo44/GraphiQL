@@ -118,5 +118,14 @@
     "queryPlaceholder": "Введите ваш GraphQL-запрос или прочтите документацию",
     "requestPlaceholder": "Ответ на ваш запрос появится в этом поле",
     "copySnack": "Скопировано!"
+  },
+  "creators": {
+    "chipManage": "управление",
+    "chipGraph": "graphql",
+    "chipTest": "тестирование",
+    "chipDesign": "адаптивный дизайн",
+    "chipAuth": "аунтефикация",
+    "chipMui": "mui",
+    "chipTranslate": "локализация приложения"
   }
 }
