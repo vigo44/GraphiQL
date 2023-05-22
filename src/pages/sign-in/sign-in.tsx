@@ -10,7 +10,8 @@ import ErrorMessage from '../../hooks/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import InputPassword from '../../components/form-inputs/password-input';
 
-import { Alert, Box, Button, Collapse, Divider, Link, Typography } from '@mui/material';
+import { Alert, Box, Paper, Collapse, Divider, Link, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
@@ -24,9 +25,12 @@ function SignIn() {
   const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
   const [currenLang, setLang] = useState(t('lang.appLang') as string);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (data: FormInputs) => {
     const auth = getAuth();
+
+    setLoading(true);
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
@@ -45,11 +49,14 @@ function SignIn() {
             error: setErrorMessage(error.code),
           })
         );
+
+        setLoading(false);
       });
   };
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
     clearErrors,
@@ -74,7 +81,8 @@ function SignIn() {
   useEffect(() => changeLanguage(currenLang));
 
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -82,8 +90,6 @@ function SignIn() {
         gap: '10px',
         p: '20px',
         backgroundColor: 'white',
-        borderRadius: '10px',
-        boxShadow: '0px 5px 10px grey',
       }}
     >
       <Typography
@@ -106,23 +112,33 @@ function SignIn() {
           p: '20px',
           backgroundColor: 'white',
           border: 1,
-          borderRadius: '10px',
+          borderRadius: '5px',
         }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
           handleLogin(data);
         })}
       >
-        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
-        <InputPassword register={register} errors={errors} clearErrors={clearErrors} />
+        <InputEmail
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
+        <InputPassword
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
-        <Button variant="contained" type="submit">
+        <LoadingButton variant="contained" type="submit" loading={loading}>
           {t('signInForm.signIN')}
-        </Button>
+        </LoadingButton>
       </Box>
       <Box
         sx={{
@@ -152,7 +168,7 @@ function SignIn() {
           {t('signInForm.forgotYourPass')}
         </Link>
       </Box>
-    </Box>
+    </Paper>
   );
 }
 

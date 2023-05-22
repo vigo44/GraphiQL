@@ -1,4 +1,3 @@
-import CodeEditor from '@uiw/react-textarea-code-editor';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import useLoadScheme from '../../hooks/load-scheme';
@@ -6,34 +5,35 @@ import useQueryGraphQL from '../../hooks/query-graphql';
 import useValidationVaribles from '../../hooks/validation-variables';
 import useValidationQuery from '../../hooks/validation-query';
 
-const defQuery = `query($name: String) {
-  characters(page: 2, filter: { name: $name }) {
-    info {
-      count
-    }
-    results {
-      name
-    }
-  }
-  }`;
+import Documentation from '../../components/editor/documentation';
+import VariablesHeader from '../../components/editor/variables-header';
+import Variables from '../../components/editor/variables';
+import Query from '../../components/editor/query';
+import Response from '../../components/editor/response';
 
-const defVars = `{
-  "name": "rick",
-  "page": 2
-}`;
+import { Alert, Box, Paper, Snackbar } from '@mui/material';
+
+import { DEF_EDITOR_VALUES } from '../../common/constants';
+
+import { useTranslation } from 'react-i18next';
+import '../../i18nex';
 
 function Editor() {
-  const [codeQuery, setCodeQuery] = useState(defQuery);
-  const [codeVars, setCodeVars] = useState(defVars);
+  const { t } = useTranslation();
+  const [codeQuery, setCodeQuery] = useState('');
+  const [codeVars, setCodeVars] = useState('');
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
   const [codeDocs, setCodeDocs] = useState<undefined | string>();
   const [coloreQuery, setColoreQuery] = useState('#f5f5f5');
   const [coloreVars, setColoreVars] = useState('#f5f5f5');
   const [validation, setValidation] = useState<undefined | boolean>();
   const [errMessage, setErrMessage] = useState<undefined | string>();
+  const [isVariablesOpen, setVariablesOpen] = useState(true);
+  const [isDocsOpen, setDocsOpen] = useState(false);
+  const [isSnackOpen, setSnackOpen] = useState(false);
 
   const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
-  const { response, error } = useQueryGraphQL(
+  const { loading, response, error } = useQueryGraphQL(
     'https://rickandmortyapi.com/graphql',
     codeQuery,
     codeVars,
@@ -43,21 +43,61 @@ function Editor() {
   const { isValidVaribles, errValidVaribles } = useValidationVaribles(codeVars);
   const { isValidQuery } = useValidationQuery(codeQuery, scheme);
 
+  const handlerClickDocs = () => {
+    setDocsOpen(true);
+    setCodeDocs(schemeDocs);
+  };
+
+  const handlerClick = () => {
+    if (isValidVaribles === false) {
+      setErrMessage(errValidVaribles);
+    } else {
+      setValidation(true);
+      setErrMessage(undefined);
+    }
+  };
+
+  const handlerOnChangeQuery = (evn: ChangeEvent<HTMLTextAreaElement>) => {
+    setCodeQuery(evn.target.value);
+    setValidation(false);
+  };
+
+  const hadlerOnClearQuery = () => {
+    setCodeQuery('');
+    setValidation(undefined);
+  };
+
+  const handlerOnChangeVars = (evn: ChangeEvent<HTMLTextAreaElement>) => {
+    setCodeVars(evn.target.value);
+    setValidation(false);
+  };
+
+  const hadlerOnClearVars = () => {
+    setCodeVars('');
+    setValidation(undefined);
+  };
+
+  const handlerSetDefaultValues = () => {
+    setCodeQuery(DEF_EDITOR_VALUES.QUERY);
+    setCodeVars(DEF_EDITOR_VALUES.VARIABLES);
+    setValidation(false);
+  };
+
   useEffect(() => {
     if (isValidVaribles) {
-      setColoreVars('#ACE1AF');
+      setColoreVars('#F0FFF0');
     } else if (isValidVaribles === false) {
-      setColoreVars('#FFD6D6');
+      setColoreVars('#FFE4E1');
     } else {
-      setColoreVars('#f5f5f5');
+      setColoreVars('#F5F5F5');
     }
   }, [isValidVaribles]);
 
   useEffect(() => {
     if (isValidQuery) {
-      setColoreQuery('#ACE1AF');
+      setColoreQuery('#F0FFF0');
     } else if (isValidQuery === false) {
-      setColoreQuery('#FFD6D6');
+      setColoreQuery('#FFE4E1');
     } else {
       setColoreQuery('#f5f5f5');
     }
@@ -73,90 +113,84 @@ function Editor() {
     }
   }, [response, error, errMessage]);
 
-  function handlerClickDocs() {
-    setCodeDocs(schemeDocs);
-  }
-
-  function handlerClick() {
-    if (isValidVaribles === false) {
-      setErrMessage(errValidVaribles);
-    } else {
-      setValidation(true);
-      setErrMessage(undefined);
-    }
-  }
-
-  function handlerOnChangeQuery(evn: ChangeEvent<HTMLTextAreaElement>) {
-    setCodeQuery(evn.target.value);
-    setValidation(false);
-  }
-
-  function handlerOnChangeVars(evn: ChangeEvent<HTMLTextAreaElement>) {
-    setCodeVars(evn.target.value);
-    setValidation(false);
-  }
-
   return (
-    <>
-      <p>Query:</p>
-      <CodeEditor
-        value={codeQuery}
-        language="graphql"
-        placeholder=""
-        onChange={handlerOnChangeQuery}
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: `${coloreQuery}`,
-          fontFamily:
-            'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+    <Box
+      component="div"
+      sx={{
+        display: 'flex',
+        flexDirection: { lg: 'row', md: 'row', sm: 'column', xs: 'column' },
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '15px',
+        width: { lg: '90%', md: '90%', sm: '90%', xs: '100%' },
+        maxWidth: '1080px',
+        height: { lg: '650px', md: '430px', sm: 'fit-content', xs: 'fit-content' },
+        marginBottom: '20px',
+      }}
+    >
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackOpen(false)}
+      >
+        <Alert onClose={() => setSnackOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {t('editor.copySnack')}
+        </Alert>
+      </Snackbar>
+      <Documentation
+        loading={loading}
+        codeDocs={codeDocs}
+        isDocsOpen={isDocsOpen}
+        setDocsOpen={setDocsOpen}
+      ></Documentation>
+      <Paper
+        elevation={3}
+        component="div"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
+          height: '100%',
+          p: {
+            lg: '20px 0 20px 20px',
+            md: '15px 0 15px 15px',
+            sm: '10px 0 10px 10px',
+            xs: '10px 0 10px 10px',
+          },
         }}
-      />
-      <p>Vars:</p>
-      <CodeEditor
-        value={codeVars}
-        language="json"
-        placeholder=""
-        onChange={handlerOnChangeVars}
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: `${coloreVars}`,
-          fontFamily:
-            'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-        }}
-      />
-      <button onClick={handlerClick}>Show response</button>
-      <p>Response:</p>
-      <CodeEditor
-        readOnly={true}
-        value={codeResponse}
-        language="json"
-        placeholder=""
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: '#f5f5f5',
-          fontFamily:
-            'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-        }}
-      />
-      <button onClick={handlerClickDocs}>Show Docs</button>
-      <p>Docs:</p>
-      <CodeEditor
-        readOnly={true}
-        value={codeDocs}
-        language="graphql"
-        placeholder=""
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: '#f5f5f5',
-          fontFamily:
-            'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-        }}
-      />
-    </>
+      >
+        <Query
+          coloreQuery={coloreQuery}
+          codeQuery={codeQuery}
+          hadlerOnClearQuery={hadlerOnClearQuery}
+          handlerSetDefaultValues={handlerSetDefaultValues}
+          handlerOnChangeQuery={handlerOnChangeQuery}
+          handlerClickDocs={handlerClickDocs}
+          handlerClick={handlerClick}
+          setSnackOpen={setSnackOpen}
+          isVariablesOpen={isVariablesOpen}
+        ></Query>
+        <VariablesHeader
+          setVariablesOpen={setVariablesOpen}
+          isVariablesOpen={isVariablesOpen}
+        ></VariablesHeader>
+        <Variables
+          coloreVars={coloreVars}
+          codeVars={codeVars}
+          handlerOnChangeVars={handlerOnChangeVars}
+          hadlerOnClearVars={hadlerOnClearVars}
+          setSnackOpen={setSnackOpen}
+          isVariablesOpen={isVariablesOpen}
+        ></Variables>
+      </Paper>
+      <Response
+        loading={loading}
+        codeResponse={codeResponse}
+        setSnackOpen={setSnackOpen}
+      ></Response>
+    </Box>
   );
 }
 

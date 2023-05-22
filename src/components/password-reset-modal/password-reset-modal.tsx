@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setPassResetModalClose } from '../../store/password-reset-modal-slice';
 
-import { Modal, Box, Button } from '@mui/material';
+import { Modal, Button, Typography, Paper } from '@mui/material';
 
 import { RootState } from 'store';
 import { useTranslation } from 'react-i18next';
@@ -29,30 +29,48 @@ function PasswordResetModal() {
         navigate('/sign-in');
       }}
     >
-      <Box
+      <Paper
+        elevation={3}
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           gap: '10px',
-          width: '350px',
-          height: 'fit-content',
           p: '20px',
           backgroundColor: 'white',
-          border: 1,
-          borderRadius: '10px',
         }}
       >
-        <span>{t('passResetModal.successText')}</span>
+        <Typography
+          variant="h3"
+          component="h2"
+          sx={{
+            alignSelf: 'flex-start',
+            fontSize: { lg: '3rem', md: '2.5rem', sm: '2rem', xs: '1.5rem' },
+          }}
+        >
+          {t('passResetModal.successHeader')}
+        </Typography>
+        <Typography
+          variant="body1"
+          component="p"
+          sx={{
+            alignSelf: 'flex-start',
+            maxWidth: '400px',
+          }}
+        >
+          {t('passResetModal.successText')}
+        </Typography>
         <Button
           variant="contained"
           onClick={() => {
             dispatch(setPassResetModalClose());
             navigate('/sign-in');
           }}
+          fullWidth
         >
           {t('passResetModal.signIN')}
         </Button>
-      </Box>
+      </Paper>
     </Modal>
   );
 }

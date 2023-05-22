@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { IconButton, InputAdornment, TextField } from '@mui/material';
@@ -12,6 +12,7 @@ import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
+  setValue: UseFormSetValue<FormInputs>;
   errors: FieldErrors<FormInputs>;
   clearErrors: UseFormClearErrors<FormInputs>;
 };
@@ -19,6 +20,7 @@ type ComponentProps = {
 function InputPassword(props: ComponentProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -27,6 +29,8 @@ function InputPassword(props: ComponentProps) {
   const required = t('passwordInput.required');
   const label = t('passwordInput.label');
   const helper = t('passwordInput.defaultHelper');
+
+  useEffect(() => props.setValue('password', inputValue));
 
   return (
     <div>
@@ -72,10 +76,12 @@ function InputPassword(props: ComponentProps) {
         fullWidth
         error={props.errors.password ? true : false}
         helperText={props.errors.password ? props.errors.password.message : helper}
-        onChange={() => {
+        onChange={(event) => {
+          setInputValue(event.target.value);
           props.errors.password && props.clearErrors('password');
           dispatch(removeAuthError());
         }}
+        value={inputValue}
       />
     </div>
   );

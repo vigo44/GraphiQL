@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormClearErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { removeAuthError } from '../../store/auth-error-slice';
 
 import { InputAdornment, TextField } from '@mui/material';
@@ -11,6 +12,7 @@ import '../../i18nex';
 
 type ComponentProps = {
   register: UseFormRegister<FormInputs>;
+  setValue: UseFormSetValue<FormInputs>;
   errors: FieldErrors<FormInputs>;
   clearErrors: UseFormClearErrors<FormInputs>;
 };
@@ -18,10 +20,13 @@ type ComponentProps = {
 function InputName(props: ComponentProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState('');
 
   const placeholder = t('nameInput.placeholder');
   const required = t('nameInput.required');
   const label = t('nameInput.label');
+
+  useEffect(() => props.setValue('name', inputValue));
 
   return (
     <div>
@@ -49,10 +54,12 @@ function InputName(props: ComponentProps) {
         fullWidth
         error={props.errors.name ? true : false}
         helperText={props.errors.name ? props.errors.name.message : '*Jonh Dow'}
-        onChange={() => {
+        onChange={(event) => {
+          setInputValue(event.target.value);
           props.errors.name && props.clearErrors('name');
           dispatch(removeAuthError());
         }}
+        value={inputValue}
       />
     </div>
   );

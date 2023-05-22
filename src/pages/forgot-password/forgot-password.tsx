@@ -10,7 +10,8 @@ import ErrorMessage from '../../hooks/error-message';
 import InputEmail from '../../components/form-inputs/email-input';
 import PasswordResetModal from '../../components/password-reset-modal/password-reset-modal';
 
-import { Alert, Box, Button, Collapse, Link, Typography } from '@mui/material';
+import { Alert, Box, Paper, Collapse, Link, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { RootState } from 'store';
 import { FormInputs } from '../../pages/sign-up/sign-up';
@@ -24,9 +25,12 @@ function PasswordReset() {
   const { setErrorMessage } = ErrorMessage();
   const authError = useSelector((state: RootState) => state.authError);
   const [currenLang, setLang] = useState(t('lang.appLang') as string);
+  const [loading, setLoading] = useState(false);
 
   const handlePasswordReset = (email: string) => {
     const auth = getAuth();
+
+    setLoading(true);
 
     sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -38,11 +42,14 @@ function PasswordReset() {
             error: setErrorMessage(error.code),
           })
         );
+
+        setLoading(false);
       });
   };
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
     clearErrors,
@@ -67,7 +74,8 @@ function PasswordReset() {
   useEffect(() => changeLanguage(currenLang));
 
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -75,8 +83,6 @@ function PasswordReset() {
         gap: '10px',
         p: '20px',
         backgroundColor: 'white',
-        borderRadius: '10px',
-        boxShadow: '0px 5px 10px grey',
       }}
     >
       <Typography
@@ -99,22 +105,27 @@ function PasswordReset() {
           p: '20px',
           backgroundColor: 'white',
           border: 1,
-          borderRadius: '10px',
+          borderRadius: '5px',
         }}
         onSubmit={handleSubmit((data) => {
           dispatch(removeAuthError());
           handlePasswordReset(data.email);
         })}
       >
-        <InputEmail register={register} errors={errors} clearErrors={clearErrors} />
+        <InputEmail
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          clearErrors={clearErrors}
+        />
         <Collapse in={!!authError.error}>
           <Alert severity="warning" onClose={() => dispatch(removeAuthError())}>
             <span>{authError.error}</span>
           </Alert>
         </Collapse>
-        <Button variant="contained" type="submit">
+        <LoadingButton variant="contained" type="submit" loading={loading}>
           {t('forgotPassForm.confirm')}
-        </Button>
+        </LoadingButton>
       </Box>
       <Link
         component="button"
@@ -126,7 +137,7 @@ function PasswordReset() {
         {t('forgotPassForm.loginToYourAcc')}
       </Link>
       <PasswordResetModal />
-    </Box>
+    </Paper>
   );
 }
 

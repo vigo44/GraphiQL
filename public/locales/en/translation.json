@@ -11,7 +11,8 @@
     "menu": "Menu"
   },
   "notFoundPage": {
-    "notFound": "404 Page not found!"
+    "notFound": "It looks like we can't find this page. Please check the entered url.",
+    "toWelcomePage": "Take a look at Welcome page"
   },
   "forgotPassForm": {
     "resetPass": "Reset password",
@@ -33,7 +34,8 @@
     "forgotYourPass": "Forgot your password?"
   },
   "passResetModal": {
-    "successText": "Success! Check your email to reset your password.",
+    "successHeader": "Success!",
+    "successText": "Check your email to reset your password.",
     "signIN": "Sign In"
   },
   "creatorsSection": {
@@ -95,5 +97,35 @@
     "emailAlreadyInUse": "User with that email is allready exists! Please, check your email or use another one.",
     "tooManyRequests": "There`s too many requests for now. Please, try again later.",
     "default": "Some unexpected error occured! Please, try again."
+  },
+  "editor": {
+    "queryTitle": "Query",
+    "varsTitle": "Variables",
+    "responesTitle": "Respones",
+    "docsTitle": "Documentation",
+    "docsValidationTitle": "Request fields validation colors",
+    "docsValidationTrue": "Field is valid",
+    "docsValidationFalse": "Field is invalid",
+    "docsValidationEmpty": "Field is empty",
+    "docsAPITitle": "API Documentation",
+    "btnShowRespones": "Execute query",
+    "btnShowDocs": "Show docs",
+    "btnClear": "Clear",
+    "btnCopy": "Copy",
+    "btnOpenVars": "Show variables",
+    "btnCloseVars": "Close variables",
+    "btnSetTestValues": "Set test values",
+    "queryPlaceholder": "Enter your GraphQL request or reed the documentation",
+    "requestPlaceholder": "Answer to your request will apear in this field",
+    "copySnack": "Copyed!"
+  },
+  "creators": {
+    "chipManage": "management",
+    "chipGraph": "graphql",
+    "chipTest": "testing",
+    "chipDesign": "adaptive design",
+    "chipAuth": "authentication",
+    "chipMui": "mui",
+    "chipTranslate": "app localisation"
   }
 }

@@ -1,7 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import DeveloperCard from '../../components/card/card';
 
-import palaceholder from '../../assets/placeholder.jpg';
+import vigo_avatar from '../../assets/vigo_avatar.jpg';
+import spectar_avatar from '../../assets/spectar_avatar.jpg';
+import loginanet_avatar from '../../assets/loginanet_avatar.jpg';
+
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
@@ -33,21 +36,24 @@ function CreatorsSection() {
         }}
       >
         <DeveloperCard
-          img={palaceholder}
+          img={vigo_avatar}
           name="vigo44"
           description="Team Lead"
+          chips={[t('creators.chipManage'), t('creators.chipGraph'), t('creators.chipTest')]}
           githubLink="https://github.com/vigo44"
         />
         <DeveloperCard
-          img={palaceholder}
+          img={spectar_avatar}
           name="Spektar001"
           description="Frontend Developer"
+          chips={[t('creators.chipTranslate'), t('creators.chipMui'), t('creators.chipGraph')]}
           githubLink="https://github.com/Spektar001"
         />
         <DeveloperCard
-          img={palaceholder}
+          img={loginanet_avatar}
           name="LoginamNet"
           description="Frontend Developer"
+          chips={[t('creators.chipDesign'), t('creators.chipAuth'), t('creators.chipMui')]}
           githubLink="https://github.com/LoginamNet"
         />
       </Box>

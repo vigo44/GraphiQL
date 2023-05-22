@@ -18,7 +18,29 @@ function useQueryGraphQL(
     try {
       setError('');
       setLoading(true);
-      if (query != '' && path != '' && validation === true) {
+      if (query != '' && variables === '' && path != '' && validation === true) {
+        const responseFetch = await fetch(path, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: query,
+          }),
+        });
+        if (responseFetch.ok) {
+          const jsonData = await responseFetch.json();
+          setResponse(JSON.stringify(jsonData, null, 2));
+        } else {
+          if (responseFetch.status === 400) {
+            const jsonData = await responseFetch.json();
+            setResponse(JSON.stringify(jsonData, null, 2));
+          } else {
+            const errorFetch = new Error(`Network Error: response ${responseFetch.status}`);
+            throw errorFetch;
+          }
+        }
+      } else if (query != '' && path != '' && validation === true) {
         const responseFetch = await fetch(path, {
           method: 'POST',
           headers: {

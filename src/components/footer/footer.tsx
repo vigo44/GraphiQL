@@ -32,6 +32,7 @@ function Footer() {
           sx={{
             width: 60,
             p: '20px',
+            '&:hover': { cursor: 'pointer' },
           }}
           alt="RsSchool logo"
           src={rs_school}

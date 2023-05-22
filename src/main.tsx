@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../src/store/index';
+import { CircularProgress } from '@mui/material';
 import './firebase';
 import './i18nex';
 
@@ -20,7 +21,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Suspense
           fallback={
             <div className="suspense__container">
-              <div className="loading-icon animation"></div>
+              <CircularProgress />
             </div>
           }
         >

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckAuth } from '../../hooks/check-auth';
 
-import { Box, Button, ButtonGroup, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Typography, useScrollTrigger } from '@mui/material';
 
 import { RootState } from '../../store';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,10 @@ function WelcomeSection() {
   const navigate = useNavigate();
   const { isAuth } = CheckAuth();
   const name = useSelector((state: RootState) => state.user.name);
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
 
   return (
     <Box
@@ -23,7 +27,10 @@ function WelcomeSection() {
         justifyContent: 'center',
         alignItems: 'center',
         gap: '15px',
-        minHeight: 'calc(100vh - 50px)',
+        minHeight: trigger ? '50px' : 'calc(100vh - 50px)',
+        paddingBottom: trigger ? '20px' : '0px',
+        borderBottom: trigger ? '1px solid black' : '1px solid white',
+        transition: '1s',
       }}
     >
       <Typography

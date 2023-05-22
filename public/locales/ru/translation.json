@@ -11,7 +11,8 @@
     "menu": "Меню"
   },
   "notFoundPage": {
-    "notFound": "404 Страница не найдена!"
+    "notFound": "Похоже, мы не можем найти данную страницу. Пожалуйста, проверьте введенный url-адрес.",
+    "toWelcomePage": "Взглянуть на страницу Приветствия"
   },
   "forgotPassForm": {
     "resetPass": "Сброс пароля",
@@ -33,7 +34,8 @@
     "forgotYourPass": "Забыли пароль?"
   },
   "passResetModal": {
-    "successText": "Отлично! Проверьте электронную почту, чтобы сбросить пароль.",
+    "successHeader": "Отлично!",
+    "successText": "Проверьте электронную почту, чтобы сбросить пароль.",
     "signIN": "Войти"
   },
   "creatorsSection": {
@@ -95,5 +97,35 @@
     "emailAlreadyInUse": "Пользователь с таким адресом электронной почты уже существует! Пожалуйста, проверьте свою электронную почту или используйте другую.",
     "tooManyRequests": "Слишком много запросов на данный момент. Пожалуйста, повторите попытку позже.",
     "default": "Произошла непредвиденная ошибка! Пожалуйста, попробуйте еще раз."
+  },
+  "editor": {
+    "queryTitle": "Запрос",
+    "varsTitle": "Переменные",
+    "responesTitle": "Ответ",
+    "docsTitle": "Документация",
+    "docsValidationTitle": "Цвета валидации полей ввода",
+    "docsValidationTrue": "Поле прошло валидацию",
+    "docsValidationFalse": "Поле не прошло валидацию",
+    "docsValidationEmpty": "Поле является пустым",
+    "docsAPITitle": "API Документация",
+    "btnShowRespones": "Выполнить запрос",
+    "btnShowDocs": "Показать документацию",
+    "btnClear": "Очистить",
+    "btnCopy": "Скопировать",
+    "btnOpenVars": "Показать переменные",
+    "btnCloseVars": "Скрыть пемеременные",
+    "btnSetTestValues": "Установить тестовые значения",
+    "queryPlaceholder": "Введите ваш GraphQL-запрос или прочтите документацию",
+    "requestPlaceholder": "Ответ на ваш запрос появится в этом поле",
+    "copySnack": "Скопировано!"
+  },
+  "creators": {
+    "chipManage": "управление",
+    "chipGraph": "graphql",
+    "chipTest": "тестирование",
+    "chipDesign": "адаптивный дизайн",
+    "chipAuth": "аунтефикация",
+    "chipMui": "mui",
+    "chipTranslate": "локализация приложения"
   }
 }
