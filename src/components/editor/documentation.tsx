@@ -3,33 +3,34 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 type Docs = {
   name: string;
   description: string;
-  fields: [
+  fields: Fields[];
+  inputFields: InputFields[];
+};
+
+type InputFields = {
+  name: string;
+  description: string;
+  type: { kind: string; name: string | null };
+};
+
+type Fields = {
+  name: string;
+  description: string;
+  args: [
     {
       name: string;
       description: string;
-      args: [
-        {
-          name: string;
-          description: string;
-          type: {
-            name: string | null;
-            ofType: { name: string | null };
-          };
-        }
-      ];
       type: {
+        name: string | null;
         kind: string;
-        name: string;
+        ofType: { name: string | null };
       };
     }
   ];
-  inputFields: [
-    {
-      name: string;
-      description: string;
-      type: { name: string | null };
-    }
-  ];
+  type: {
+    kind: string;
+    name: string;
+  };
 };
 
 import {
@@ -73,7 +74,6 @@ function Documentation(props: ComponentProps) {
       if (response.ok) {
         const jsonData = await response.json();
         const queryArr = jsonData.data.__schema.types;
-        console.log(queryArr);
         setDocs(findNestedObj(queryArr, name));
       } else {
         const errorFetch = new Error(`Network Error: response ${response.status}`);
@@ -84,20 +84,19 @@ function Documentation(props: ComponentProps) {
     }
   };
 
-  // const findByName = (arr: Array<Docs>, name: string) => {
-  //   const obj = arr.find((el) => el.name === name) as Docs;
-  //   setDocs(obj);
-  // };
-
   function findNestedObj(arr: Array<Docs>, name: string) {
     let foundObj;
-    JSON.stringify(arr, (_, nestedValue) => {
-      if (nestedValue && nestedValue['name'] === name) {
-        foundObj = nestedValue;
-      }
-      return nestedValue;
-    });
-    console.log(foundObj);
+    if (arr.filter((el) => el.name === name).length) {
+      foundObj = arr.filter((el) => el.name === name)[0];
+    } else {
+      JSON.stringify(arr, (_, nestedValue) => {
+        if (nestedValue && nestedValue['name'] === name) {
+          foundObj = nestedValue;
+        }
+        return nestedValue;
+      });
+    }
+    console.log(arr, foundObj);
     return foundObj;
   }
 
@@ -205,52 +204,98 @@ function Documentation(props: ComponentProps) {
             }}
           >
             {docs && (
-              <>
-                <div>{docs.name}</div>
-                <div>{docs.description}</div>
-                <div>
-                  {docs.inputFields && (
-                    <Box>
-                      {docs.inputFields.map((el, key) => (
-                        <Box
-                          key={key}
-                          onClick={() => {
-                            props.setQueryName(el.name);
-                            console.log(props.queryName, docs);
-                          }}
-                        >
-                          {el.name}
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
-                </div>
-                <div>
+              <Box>
+                <Typography variant="h6">{docs.name}</Typography>
+                <Typography variant="body1">{docs.description}</Typography>
+                <Box>
                   {docs.fields && (
                     <Box>
                       {docs.fields.map((el, key) => (
-                        <Box
-                          key={key}
-                          onClick={() => {
-                            props.setQueryName(el.name);
-                            console.log(props.queryName, docs);
-                          }}
-                        >
-                          {el.name}
-                          {`${el.args && el.args[0].name} | ${
-                            el.args[0].type.ofType && el.args[0].type.ofType.name
-                          }`}
-                          {el.type.name}
+                        <Box key={key} sx={{ p: '5px 0' }}>
+                          <Typography
+                            variant="body1"
+                            onClick={() => {
+                              props.setQueryName(el.name);
+                            }}
+                          >
+                            {el.name}
+                          </Typography>
+                          {el.args && (
+                            <Box>
+                              {el.args.map((el, key) => (
+                                <Box key={key}>
+                                  <Typography variant="body1">{el.name}</Typography>
+                                  {el.type.kind !== 'NON_NULL' ? (
+                                    <Typography
+                                      variant="body1"
+                                      onClick={() => {
+                                        el.type.name && props.setQueryName(el.type.name);
+                                      }}
+                                    >
+                                      {el.type.name}
+                                    </Typography>
+                                  ) : (
+                                    <Typography
+                                      variant="body1"
+                                      onClick={() => {
+                                        el.type.ofType.name &&
+                                          props.setQueryName(el.type.ofType.name);
+                                        console.log(docs);
+                                      }}
+                                    >
+                                      {el.type.ofType.name}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              ))}
+                            </Box>
+                          )}
+                          <Typography
+                            variant="body1"
+                            onClick={() => {
+                              el.type.name && props.setQueryName(el.type.name);
+                              console.log(docs);
+                            }}
+                          >
+                            {el.type.name}
+                          </Typography>
+                          <Typography variant="body1">{el.description}</Typography>
                         </Box>
                       ))}
                     </Box>
                   )}
-                </div>
-                <button onClick={() => props.setQueryName('Query')}>XXXX</button>
-              </>
+                </Box>
+                <Box>
+                  {docs.inputFields && (
+                    <Box>
+                      {docs.inputFields.map((el, key) => (
+                        <Box key={key}>
+                          <Typography
+                            variant="body1"
+                            onClick={() => {
+                              props.setQueryName(el.name);
+                            }}
+                          >
+                            {el.name}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            onClick={() => {
+                              el.type.name && props.setQueryName(el.type.name);
+                            }}
+                          >
+                            {el.type.name}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              </Box>
             )}
           </Box>
         )}
+        <button onClick={() => props.setQueryName('Query')}>XXXX</button>
       </Box>
     </SwipeableDrawer>
   );

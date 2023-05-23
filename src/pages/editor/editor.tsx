@@ -46,7 +46,6 @@ function Editor() {
 
   const handlerClickDocs = () => {
     setDocsOpen(true);
-    queryName ? setQueryName(queryName) : setQueryName('Query');
   };
 
   const handlerClick = () => {
