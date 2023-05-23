@@ -23,7 +23,6 @@ function Editor() {
   const [codeQuery, setCodeQuery] = useState('');
   const [codeVars, setCodeVars] = useState('');
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
-  const [codeDocs, setCodeDocs] = useState<undefined | string>();
   const [coloreQuery, setColoreQuery] = useState('#f5f5f5');
   const [coloreVars, setColoreVars] = useState('#f5f5f5');
   const [validation, setValidation] = useState<undefined | boolean>();
@@ -32,7 +31,9 @@ function Editor() {
   const [isDocsOpen, setDocsOpen] = useState(false);
   const [isSnackOpen, setSnackOpen] = useState(false);
 
-  const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
+  const [queryName, setQueryName] = useState('');
+
+  const { scheme } = useLoadScheme('https://rickandmortyapi.com/graphql');
   const { loading, response, error } = useQueryGraphQL(
     'https://rickandmortyapi.com/graphql',
     codeQuery,
@@ -45,7 +46,7 @@ function Editor() {
 
   const handlerClickDocs = () => {
     setDocsOpen(true);
-    setCodeDocs(schemeDocs);
+    queryName ? setQueryName(queryName) : setQueryName('Query');
   };
 
   const handlerClick = () => {
@@ -140,7 +141,8 @@ function Editor() {
       </Snackbar>
       <Documentation
         loading={loading}
-        codeDocs={codeDocs}
+        queryName={queryName}
+        setQueryName={setQueryName}
         isDocsOpen={isDocsOpen}
         setDocsOpen={setDocsOpen}
       ></Documentation>

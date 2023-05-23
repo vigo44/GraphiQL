@@ -1,5 +1,36 @@
-import CodeEditor from '@uiw/react-textarea-code-editor';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+
+type Docs = {
+  name: string;
+  description: string;
+  fields: [
+    {
+      name: string;
+      description: string;
+      args: [
+        {
+          name: string;
+          description: string;
+          type: {
+            name: string | null;
+            ofType: { name: string | null };
+          };
+        }
+      ];
+      type: {
+        kind: string;
+        name: string;
+      };
+    }
+  ];
+  inputFields: [
+    {
+      name: string;
+      description: string;
+      type: { name: string | null };
+    }
+  ];
+};
 
 import {
   Box,
@@ -14,16 +45,66 @@ import { Close, Brightness1 } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
+import { getIntrospectionQuery } from 'graphql';
 
 type ComponentProps = {
   loading: boolean;
-  codeDocs: string | undefined;
+  queryName: string;
+  setQueryName: Dispatch<SetStateAction<string>>;
   isDocsOpen: boolean;
   setDocsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 function Documentation(props: ComponentProps) {
   const { t } = useTranslation();
+  const [docs, setDocs] = useState<undefined | Docs>();
+
+  const getDocs = async (path: RequestInfo | URL, name: string) => {
+    try {
+      const response = await fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: getIntrospectionQuery() as string,
+        }),
+      });
+      if (response.ok) {
+        const jsonData = await response.json();
+        const queryArr = jsonData.data.__schema.types;
+        console.log(queryArr);
+        setDocs(findNestedObj(queryArr, name));
+      } else {
+        const errorFetch = new Error(`Network Error: response ${response.status}`);
+        throw errorFetch;
+      }
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  };
+
+  // const findByName = (arr: Array<Docs>, name: string) => {
+  //   const obj = arr.find((el) => el.name === name) as Docs;
+  //   setDocs(obj);
+  // };
+
+  function findNestedObj(arr: Array<Docs>, name: string) {
+    let foundObj;
+    JSON.stringify(arr, (_, nestedValue) => {
+      if (nestedValue && nestedValue['name'] === name) {
+        foundObj = nestedValue;
+      }
+      return nestedValue;
+    });
+    console.log(foundObj);
+    return foundObj;
+  }
+
+  useEffect(() => {
+    getDocs('https://rickandmortyapi.com/graphql', props.queryName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.queryName]);
 
   return (
     <SwipeableDrawer
@@ -114,21 +195,61 @@ function Documentation(props: ComponentProps) {
             <LinearProgress sx={{ width: '100%' }} />
           </Box>
         ) : (
-          <CodeEditor
-            readOnly={true}
-            value={props.codeDocs}
-            language="graphql"
-            placeholder=""
-            padding={15}
+          <Box
             style={{
-              fontSize: 14,
-              backgroundColor: 'white',
-              fontFamily:
-                'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#f5f5f5',
               border: '1px solid grey',
               borderRadius: '5px',
             }}
-          />
+          >
+            {docs && (
+              <>
+                <div>{docs.name}</div>
+                <div>{docs.description}</div>
+                <div>
+                  {docs.inputFields && (
+                    <Box>
+                      {docs.inputFields.map((el, key) => (
+                        <Box
+                          key={key}
+                          onClick={() => {
+                            props.setQueryName(el.name);
+                            console.log(props.queryName, docs);
+                          }}
+                        >
+                          {el.name}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </div>
+                <div>
+                  {docs.fields && (
+                    <Box>
+                      {docs.fields.map((el, key) => (
+                        <Box
+                          key={key}
+                          onClick={() => {
+                            props.setQueryName(el.name);
+                            console.log(props.queryName, docs);
+                          }}
+                        >
+                          {el.name}
+                          {`${el.args && el.args[0].name} | ${
+                            el.args[0].type.ofType && el.args[0].type.ofType.name
+                          }`}
+                          {el.type.name}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </div>
+                <button onClick={() => props.setQueryName('Query')}>XXXX</button>
+              </>
+            )}
+          </Box>
         )}
       </Box>
     </SwipeableDrawer>
