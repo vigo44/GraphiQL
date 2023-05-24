@@ -1,14 +1,6 @@
-import { Dispatch, SetStateAction, Suspense, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import {
-  Box,
-  Chip,
-  CircularProgress,
-  IconButton,
-  Stack,
-  SwipeableDrawer,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Chip, IconButton, Stack, SwipeableDrawer, Typography } from '@mui/material';
 import { Close, Brightness1 } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
@@ -17,7 +9,7 @@ import '../../i18nex';
 import { Docs } from '../../pages/editor/editor';
 
 type ComponentProps = {
-  docs: Docs[] | undefined
+  docs: Docs[] | undefined;
   isDocsOpen: boolean;
   setDocsOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -30,12 +22,14 @@ function Documentation(props: ComponentProps) {
   const findNestedObj = (name: string) => {
     let foundObj;
 
+    currentDocs && setBreadcrumbs([...breadcrumbs, currentDocs]);
+
     if (
       name === 'id' ||
       name === 'type' ||
       name === 'name' ||
       name === 'location' ||
-      name === 'locations' || 
+      name === 'locations' ||
       name === 'character' ||
       name === 'characters' ||
       name === 'episode' ||
@@ -66,7 +60,7 @@ function Documentation(props: ComponentProps) {
     }
     console.log(breadcrumbs);
     setCurrentDocs(foundObj);
-  }
+  };
 
   return (
     <SwipeableDrawer
@@ -75,93 +69,132 @@ function Documentation(props: ComponentProps) {
       onOpen={() => props.setDocsOpen(true)}
       sx={{ touchAction: 'none' }}
     >
+      <Box
+        component="div"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
+          gap: '20px',
+          p: '20px',
+        }}
+      >
         <Box
           component="div"
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
-            gap: '20px',
-            p: '20px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
           }}
         >
+          <Typography
+            variant="h4"
+            component="h4"
+            sx={{
+              textAlign: 'center',
+              fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
+            }}
+          >
+            {t('editor.docsTitle')}
+          </Typography>
+          <IconButton onClick={() => props.setDocsOpen(false)}>
+            <Close />
+          </IconButton>
+        </Box>
+        <Typography variant="body1" component="h5">
+          {t('editor.docsValidationTitle')}
+        </Typography>
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '15px' }}>
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#F0FFF0', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationTrue')}
+            variant="outlined"
+          />
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#FFE4E1', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationFalse')}
+            variant="outlined"
+          />
+          <Chip
+            icon={
+              <Brightness1
+                style={{ color: '#F5F5F5', border: '1px solid gray', borderRadius: '50%' }}
+              />
+            }
+            label={t('editor.docsValidationEmpty')}
+            variant="outlined"
+          />
+        </Stack>
+        {props.docs && (
           <Box
-            component="div"
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              flexDirection: 'column',
+              gap: '15px',
               width: '100%',
             }}
           >
-            <Typography
-              variant="h4"
-              component="h4"
+            <Typography variant="body1" component="h5">
+              {t('editor.docsAPITitle')}
+            </Typography>
+            <Button
+              variant="contained"
+              size="small"
               sx={{
-                textAlign: 'center',
-                fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
+                width: 'fit-content',
+              }}
+              onClick={() => {
+                setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
+                setCurrentDocs(undefined);
               }}
             >
-              {t('editor.docsTitle')}
-            </Typography>
-            <IconButton onClick={() => props.setDocsOpen(false)}>
-              <Close />
-            </IconButton>
-          </Box>
-          <Typography variant="body1" component="h5">
-            {t('editor.docsValidationTitle')}
-          </Typography>
-          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '15px' }}>
-            <Chip
-              icon={
-                <Brightness1
-                  style={{ color: '#F0FFF0', border: '1px solid gray', borderRadius: '50%' }}
-                />
-              }
-              label={t('editor.docsValidationTrue')}
-              variant="outlined"
-            />
-            <Chip
-              icon={
-                <Brightness1
-                  style={{ color: '#FFE4E1', border: '1px solid gray', borderRadius: '50%' }}
-                />
-              }
-              label={t('editor.docsValidationFalse')}
-              variant="outlined"
-            />
-            <Chip
-              icon={
-                <Brightness1
-                  style={{ color: '#F5F5F5', border: '1px solid gray', borderRadius: '50%' }}
-                />
-              }
-              label={t('editor.docsValidationEmpty')}
-              variant="outlined"
-            />
-          </Stack>
-          <Typography variant="body1" component="h5">
-            {t('editor.docsAPITitle')}
-          </Typography>
+              Root Types
+            </Button>
             <Box
               sx={{
-                width: '100%',
-                height: '100%',
                 backgroundColor: '#f5f5f5',
                 border: '1px solid grey',
                 borderRadius: '5px',
               }}
             >
-              {currentDocs && (
+              {currentDocs ? (
                 <Box
-                  sx={{ width: { lg: '100%', md: '100%', sm: '100%', xs: 'fit-content' }, p: '10px' }}
+                  sx={{
+                    p: '10px',
+                  }}
                 >
-                  {breadcrumbs.length > 0 && <Typography variant="body1" onClick={() => {
-                    setCurrentDocs(breadcrumbs[breadcrumbs.length - 1])
-                    setBreadcrumbs(breadcrumbs.slice(0, -1))
-                  }}>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
+                  {breadcrumbs.length > 1 ? (
+                    <Typography
+                      variant="body1"
+                      onClick={() => {
+                        setCurrentDocs(breadcrumbs[breadcrumbs.length - 1]);
+                        setBreadcrumbs(breadcrumbs.slice(0, -1));
+                      }}
+                    >
+                      {`<- ${breadcrumbs[breadcrumbs.length - 1].name}`}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      variant="body1"
+                      onClick={() => {
+                        setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
+                        setCurrentDocs(undefined);
+                      }}
+                    >
+                      Docs
+                    </Typography>
+                  )}
                   <Typography variant="h6">{currentDocs.name}</Typography>
                   <Typography variant="body1">{currentDocs.description}</Typography>
                   <Box>
@@ -210,7 +243,6 @@ function Documentation(props: ComponentProps) {
                                           variant="body1"
                                           color="orange"
                                           onClick={() => {
-                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
                                             el.type.name && findNestedObj(el.type.name);
                                           }}
                                         >
@@ -221,7 +253,6 @@ function Documentation(props: ComponentProps) {
                                           variant="body1"
                                           color="orange"
                                           onClick={() => {
-                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
                                             el.type.ofType.name &&
                                               findNestedObj(el.type.ofType.name);
                                           }}
@@ -233,7 +264,6 @@ function Documentation(props: ComponentProps) {
                                           variant="body1"
                                           color="orange"
                                           onClick={() => {
-                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
                                             el.type.ofType.ofType.name &&
                                               findNestedObj(el.type.ofType.ofType.name);
                                           }}
@@ -245,7 +275,6 @@ function Documentation(props: ComponentProps) {
                                           variant="body1"
                                           color="orange"
                                           onClick={() => {
-                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
                                             el.type.ofType.ofType.ofType.name &&
                                               findNestedObj(el.type.ofType.ofType.ofType.name);
                                           }}
@@ -286,7 +315,6 @@ function Documentation(props: ComponentProps) {
                                   variant="body1"
                                   color="orange"
                                   onClick={() => {
-                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
                                     el.type.name && findNestedObj(el.type.name);
                                   }}
                                 >
@@ -297,7 +325,6 @@ function Documentation(props: ComponentProps) {
                                   variant="body1"
                                   color="orange"
                                   onClick={() => {
-                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
                                     el.type.ofType.name && findNestedObj(el.type.ofType.name);
                                   }}
                                 >
@@ -308,7 +335,6 @@ function Documentation(props: ComponentProps) {
                                   variant="body1"
                                   color="orange"
                                   onClick={() => {
-                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
                                     el.type.ofType.ofType.name &&
                                       findNestedObj(el.type.ofType.ofType.name);
                                   }}
@@ -344,7 +370,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="blue"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 findNestedObj(el.name);
                               }}
                             >
@@ -355,7 +380,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="orange"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 el.type.name && findNestedObj(el.type.name);
                               }}
                             >
@@ -370,7 +394,9 @@ function Documentation(props: ComponentProps) {
                     <Box>
                       <Typography variant="subtitle2">Type</Typography>
                       <Box sx={{ display: 'flex' }}>
-                        <Typography variant="body1">{currentDocs.type.kind === 'LIST' && '['}</Typography>
+                        <Typography variant="body1">
+                          {currentDocs.type.kind === 'LIST' && '['}
+                        </Typography>
                         {currentDocs.type.ofType && (
                           <Typography variant="body1">
                             {currentDocs.type.ofType.kind === 'LIST' && '['}
@@ -381,7 +407,6 @@ function Documentation(props: ComponentProps) {
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              setBreadcrumbs([...breadcrumbs, currentDocs]);
                               currentDocs.type.name && findNestedObj(currentDocs.type.name);
                             }}
                           >
@@ -392,8 +417,8 @@ function Documentation(props: ComponentProps) {
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              setBreadcrumbs([...breadcrumbs, currentDocs]);
-                              currentDocs.type.ofType.name && findNestedObj(currentDocs.type.ofType.name);
+                              currentDocs.type.ofType.name &&
+                                findNestedObj(currentDocs.type.ofType.name);
                             }}
                           >
                             {currentDocs.type.ofType.name}
@@ -403,7 +428,6 @@ function Documentation(props: ComponentProps) {
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              setBreadcrumbs([...breadcrumbs, currentDocs]);
                               currentDocs.type.ofType.ofType.name &&
                                 findNestedObj(currentDocs.type.ofType.ofType.name);
                             }}
@@ -411,7 +435,9 @@ function Documentation(props: ComponentProps) {
                             {currentDocs.type.ofType.ofType.name}
                           </Typography>
                         )}
-                        <Typography variant="body1">{currentDocs.type.kind === 'LIST' && ']'}</Typography>
+                        <Typography variant="body1">
+                          {currentDocs.type.kind === 'LIST' && ']'}
+                        </Typography>
                         {currentDocs.type.ofType && (
                           <Typography variant="body1">
                             {currentDocs.type.ofType.kind === 'LIST' && ']'}
@@ -421,7 +447,9 @@ function Documentation(props: ComponentProps) {
                           {currentDocs.type.kind === 'NON_NULL' && '!'}
                         </Typography>
                       </Box>
-                      {currentDocs.args.length > 0 && <Typography variant="subtitle2">Arguments</Typography>}
+                      {currentDocs.args.length > 0 && (
+                        <Typography variant="subtitle2">Arguments</Typography>
+                      )}
                       {currentDocs.args.map((el, key) => (
                         <Box
                           key={key}
@@ -444,7 +472,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="orange"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 el.type.name && findNestedObj(el.type.name);
                               }}
                             >
@@ -455,7 +482,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="orange"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 el.type.ofType.name && findNestedObj(el.type.ofType.name);
                               }}
                             >
@@ -466,7 +492,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="orange"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 el.type.ofType.ofType.name &&
                                   findNestedObj(el.type.ofType.ofType.name);
                               }}
@@ -478,7 +503,6 @@ function Documentation(props: ComponentProps) {
                               variant="body1"
                               color="orange"
                               onClick={() => {
-                                setBreadcrumbs([...breadcrumbs, currentDocs]);
                                 el.type.ofType.ofType.ofType.name &&
                                   findNestedObj(el.type.ofType.ofType.ofType.name);
                               }}
@@ -503,54 +527,81 @@ function Documentation(props: ComponentProps) {
                       ))}
                     </Box>
                   )}
-                  {!currentDocs.args && !currentDocs.fields && !currentDocs.inputFields && currentDocs.type && (
-                    <Box>
-                      <Typography variant="subtitle2">Type</Typography>
-                      {currentDocs.type.name ? (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            setBreadcrumbs([...breadcrumbs, currentDocs]);
-                            currentDocs.type.name && findNestedObj(currentDocs.type.name);
-                          }}
-                        >
-                          {currentDocs.type.name}
-                        </Typography>
-                      ) : currentDocs.type.ofType.name ? (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            setBreadcrumbs([...breadcrumbs, currentDocs]);
-                            currentDocs.type.ofType.name && findNestedObj(currentDocs.type.ofType.name);
-                          }}
-                        >
-                          {currentDocs.type.ofType.name}
-                        </Typography>
-                      ) : (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            setBreadcrumbs([...breadcrumbs, currentDocs]);
-                            currentDocs.type.ofType.ofType.name &&
-                              findNestedObj(currentDocs.type.ofType.ofType.name);
-                          }}
-                        >
-                          {currentDocs.type.ofType.ofType.name}
-                        </Typography>
-                      )}
-                    </Box>
-                  )}
+                  {!currentDocs.args &&
+                    !currentDocs.fields &&
+                    !currentDocs.inputFields &&
+                    currentDocs.type && (
+                      <Box>
+                        <Typography variant="subtitle2">Type</Typography>
+                        {currentDocs.type.name ? (
+                          <Typography
+                            variant="body1"
+                            color="orange"
+                            onClick={() => {
+                              currentDocs.type.name && findNestedObj(currentDocs.type.name);
+                            }}
+                          >
+                            {currentDocs.type.name}
+                          </Typography>
+                        ) : currentDocs.type.ofType.name ? (
+                          <Typography
+                            variant="body1"
+                            color="orange"
+                            onClick={() => {
+                              currentDocs.type.ofType.name &&
+                                findNestedObj(currentDocs.type.ofType.name);
+                            }}
+                          >
+                            {currentDocs.type.ofType.name}
+                          </Typography>
+                        ) : (
+                          <Typography
+                            variant="body1"
+                            color="orange"
+                            onClick={() => {
+                              currentDocs.type.ofType.ofType.name &&
+                                findNestedObj(currentDocs.type.ofType.ofType.name);
+                            }}
+                          >
+                            {currentDocs.type.ofType.ofType.name}
+                          </Typography>
+                        )}
+                      </Box>
+                    )}
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: { lg: '100%', md: '100%', sm: '100%', xs: 'fit-content' },
+                    p: '10px',
+                  }}
+                >
+                  <Typography variant="h5">Docs</Typography>
+                  <Typography variant="body1">
+                    A GraphQL schema provides a root type for each kind of operation.
+                  </Typography>
+                  <Typography variant="subtitle2">Root Types</Typography>
+                  <Box sx={{ display: 'flex' }}>
+                    <Typography variant="body1" color="blue">
+                      query:
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      color="orange"
+                      onClick={() => {
+                        findNestedObj('Query');
+                        props.docs && setBreadcrumbs([...breadcrumbs, props.docs[0]]);
+                      }}
+                    >
+                      Query
+                    </Typography>
+                  </Box>
                 </Box>
               )}
             </Box>
-          <button onClick={() => {
-            setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
-            // props.docs && setBreadcrumbs([...breadcrumbs, props.docs[0]]);
-            findNestedObj('Query')}}>XXXX</button>
-        </Box>
+          </Box>
+        )}
+      </Box>
     </SwipeableDrawer>
   );
 }
