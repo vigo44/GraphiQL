@@ -5,6 +5,12 @@ type Docs = {
   description: string;
   fields: Fields[];
   inputFields: InputFields[];
+  args: Args[];
+  type: {
+    name: string | null;
+    kind: string;
+    ofType: { name: string | null };
+  };
 };
 
 type InputFields = {
@@ -16,20 +22,20 @@ type InputFields = {
 type Fields = {
   name: string;
   description: string;
-  args: [
-    {
-      name: string;
-      description: string;
-      type: {
-        name: string | null;
-        kind: string;
-        ofType: { name: string | null };
-      };
-    }
-  ];
+  args: Args[];
   type: {
     kind: string;
     name: string;
+  };
+};
+
+type Args = {
+  name: string;
+  description: string;
+  type: {
+    name: string | null;
+    kind: string;
+    ofType: { name: string | null };
   };
 };
 
@@ -86,16 +92,36 @@ function Documentation(props: ComponentProps) {
 
   function findNestedObj(arr: Array<Docs>, name: string) {
     let foundObj;
-    if (arr.filter((el) => el.name === name).length) {
-      foundObj = arr.filter((el) => el.name === name)[0];
-    } else {
-      JSON.stringify(arr, (_, nestedValue) => {
+    if (
+      name === 'id' ||
+      name === 'type' ||
+      name === 'name' ||
+      name === 'location' ||
+      name === 'locations' ||
+      name === 'character' ||
+      name === 'characters' ||
+      name === 'episode' ||
+      name === 'episodes'
+    ) {
+      JSON.stringify(docs, (_, nestedValue) => {
         if (nestedValue && nestedValue['name'] === name) {
           foundObj = nestedValue;
         }
         return nestedValue;
       });
+    } else {
+      if (arr.filter((el) => el.name === name).length) {
+        foundObj = arr.filter((el) => el.name === name)[0];
+      } else {
+        JSON.stringify(arr, (_, nestedValue) => {
+          if (nestedValue && nestedValue['name'] === name) {
+            foundObj = nestedValue;
+          }
+          return nestedValue;
+        });
+      }
     }
+
     console.log(arr, foundObj);
     return foundObj;
   }
@@ -211,54 +237,76 @@ function Documentation(props: ComponentProps) {
                   {docs.fields && (
                     <Box>
                       {docs.fields.map((el, key) => (
-                        <Box key={key} sx={{ p: '5px 0' }}>
-                          <Typography
-                            variant="body1"
-                            onClick={() => {
-                              props.setQueryName(el.name);
-                            }}
-                          >
-                            {el.name}
-                          </Typography>
-                          {el.args && (
-                            <Box>
-                              {el.args.map((el, key) => (
-                                <Box key={key}>
-                                  <Typography variant="body1">{el.name}</Typography>
-                                  {el.type.kind !== 'NON_NULL' ? (
-                                    <Typography
-                                      variant="body1"
-                                      onClick={() => {
-                                        el.type.name && props.setQueryName(el.type.name);
-                                      }}
-                                    >
-                                      {el.type.name}
+                        <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
+                          <Box sx={{ display: 'flex', p: '5px 0' }}>
+                            <Typography
+                              variant="body1"
+                              color="blue"
+                              onClick={() => {
+                                props.setQueryName(el.name);
+                              }}
+                            >
+                              {el.name}
+                            </Typography>
+                            <Typography variant="body1">
+                              {docs.name === 'Query' ? '(' : ':'}
+                            </Typography>
+                            {el.args && (
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  gap: '5px',
+                                }}
+                              >
+                                {el.args.map((el, key) => (
+                                  <Box
+                                    key={key}
+                                    sx={{
+                                      display: 'flex',
+                                    }}
+                                  >
+                                    <Typography variant="body1" color="indianred">
+                                      {el.name}:
                                     </Typography>
-                                  ) : (
-                                    <Typography
-                                      variant="body1"
-                                      onClick={() => {
-                                        el.type.ofType.name &&
-                                          props.setQueryName(el.type.ofType.name);
-                                        console.log(docs);
-                                      }}
-                                    >
-                                      {el.type.ofType.name}
-                                    </Typography>
-                                  )}
-                                </Box>
-                              ))}
-                            </Box>
-                          )}
-                          <Typography
-                            variant="body1"
-                            onClick={() => {
-                              el.type.name && props.setQueryName(el.type.name);
-                              console.log(docs);
-                            }}
-                          >
-                            {el.type.name}
-                          </Typography>
+                                    {el.type.kind !== 'NON_NULL' ? (
+                                      <Typography
+                                        variant="body1"
+                                        color="orange"
+                                        onClick={() => {
+                                          el.type.name && props.setQueryName(el.type.name);
+                                        }}
+                                      >
+                                        {el.type.name}
+                                      </Typography>
+                                    ) : (
+                                      <Typography
+                                        variant="body1"
+                                        color="orange"
+                                        onClick={() => {
+                                          el.type.ofType.name &&
+                                            props.setQueryName(el.type.ofType.name);
+                                        }}
+                                      >
+                                        {el.type.ofType.name}
+                                      </Typography>
+                                    )}
+                                  </Box>
+                                ))}
+                              </Box>
+                            )}
+                            <Typography variant="body1">
+                              {docs.name === 'Query' && '): '}
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                el.type.name && props.setQueryName(el.type.name);
+                              }}
+                            >
+                              {el.type.name}
+                            </Typography>
+                          </Box>
                           <Typography variant="body1">{el.description}</Typography>
                         </Box>
                       ))}
@@ -280,6 +328,7 @@ function Documentation(props: ComponentProps) {
                           </Typography>
                           <Typography
                             variant="body1"
+                            color="orange"
                             onClick={() => {
                               el.type.name && props.setQueryName(el.type.name);
                             }}
@@ -291,6 +340,58 @@ function Documentation(props: ComponentProps) {
                     </Box>
                   )}
                 </Box>
+                {docs.args && (
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      color="orange"
+                      onClick={() => {
+                        docs.type.name && props.setQueryName(docs.type.name);
+                      }}
+                    >
+                      {docs.type.name}
+                    </Typography>
+                    {docs.args.map((el, key) => (
+                      <Box key={key}>
+                        <Typography variant="body1">{el.name}</Typography>
+                        {el.type.kind !== 'NON_NULL' ? (
+                          <Typography
+                            variant="body1"
+                            color="orange"
+                            onClick={() => {
+                              el.type.name && props.setQueryName(el.type.name);
+                            }}
+                          >
+                            {el.type.name}
+                          </Typography>
+                        ) : (
+                          <Typography
+                            variant="body1"
+                            color="orange"
+                            onClick={() => {
+                              el.type.ofType.name && props.setQueryName(el.type.ofType.name);
+                            }}
+                          >
+                            {el.type.ofType.name}
+                          </Typography>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+                {!docs.args && !docs.fields && !docs.inputFields && docs.type && (
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      color="orange"
+                      onClick={() => {
+                        docs.type.name && props.setQueryName(docs.type.name);
+                      }}
+                    >
+                      {docs.type.name}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
