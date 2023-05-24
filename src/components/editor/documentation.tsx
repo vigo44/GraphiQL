@@ -9,7 +9,7 @@ type Docs = {
   type: {
     name: string | null;
     kind: string;
-    ofType: { name: string | null; ofType: { name: string | null } };
+    ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
   };
 };
 
@@ -26,7 +26,7 @@ type Fields = {
   type: {
     kind: string;
     name: string;
-    ofType: { name: string | null; ofType: { name: string | null } };
+    ofType: { kind: string; name: string | null; ofType: { name: string | null } };
   };
 };
 
@@ -34,11 +34,12 @@ type Args = {
   name: string;
   description: string;
   type: {
-    name: string | null;
     kind: string;
+    name: string | null;
     ofType: {
+      kind: string;
       name: string | null;
-      ofType: { name: string | null; ofType: { name: string | null } };
+      ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
     };
   };
 };
@@ -245,6 +246,7 @@ function Documentation(props: ComponentProps) {
                 <Box>
                   {docs.fields && (
                     <Box>
+                      <Typography variant="subtitle2">Fields</Typography>
                       {docs.fields.map((el, key) => (
                         <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Box sx={{ display: 'flex', p: '5px 0' }}>
@@ -277,6 +279,11 @@ function Documentation(props: ComponentProps) {
                                     <Typography variant="body1" color="indianred">
                                       {el.name}:
                                     </Typography>
+                                    {el.type.ofType && (
+                                      <Typography variant="body1">
+                                        {el.type.ofType.kind === 'LIST' && '['}
+                                      </Typography>
+                                    )}
                                     {el.type.name ? (
                                       <Typography
                                         variant="body1"
@@ -314,6 +321,7 @@ function Documentation(props: ComponentProps) {
                                         variant="body1"
                                         color="orange"
                                         onClick={() => {
+                                          console.log(el);
                                           el.type.ofType.ofType.ofType.name &&
                                             props.setQueryName(el.type.ofType.ofType.ofType.name);
                                         }}
@@ -321,6 +329,19 @@ function Documentation(props: ComponentProps) {
                                         {el.type.ofType.ofType.ofType.name}
                                       </Typography>
                                     )}
+                                    {el.type.ofType && el.type.ofType.ofType && (
+                                      <Typography variant="body1">
+                                        {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
+                                      </Typography>
+                                    )}
+                                    {el.type.ofType && (
+                                      <Typography variant="body1">
+                                        {el.type.ofType.kind === 'LIST' && ']'}
+                                      </Typography>
+                                    )}
+                                    <Typography variant="body1">
+                                      {el.type.kind === 'NON_NULL' && '!'}
+                                    </Typography>
                                   </Box>
                                 ))}
                               </Box>
@@ -328,6 +349,14 @@ function Documentation(props: ComponentProps) {
                             <Typography variant="body1">
                               {docs.name === 'Query' && '): '}
                             </Typography>
+                            <Typography variant="body1">
+                              {el.type.kind === 'LIST' && '['}
+                            </Typography>
+                            {el.type.ofType && (
+                              <Typography variant="body1">
+                                {el.type.ofType.kind === 'LIST' && '['}
+                              </Typography>
+                            )}
                             {el.type.name ? (
                               <Typography
                                 variant="body1"
@@ -360,6 +389,17 @@ function Documentation(props: ComponentProps) {
                                 {el.type.ofType.ofType.name}
                               </Typography>
                             )}
+                            <Typography variant="body1">
+                              {el.type.kind === 'LIST' && ']'}
+                            </Typography>
+                            {el.type.ofType && (
+                              <Typography variant="body1">
+                                {el.type.ofType.kind === 'LIST' && ']'}
+                              </Typography>
+                            )}
+                            <Typography variant="body1">
+                              {el.type.kind === 'NON_NULL' && '!'}
+                            </Typography>
                           </Box>
                           <Typography variant="body1">{el.description}</Typography>
                         </Box>
@@ -370,16 +410,19 @@ function Documentation(props: ComponentProps) {
                 <Box>
                   {docs.inputFields && (
                     <Box>
+                      <Typography variant="subtitle2">Fields</Typography>
                       {docs.inputFields.map((el, key) => (
-                        <Box key={key}>
+                        <Box key={key} sx={{ display: 'flex' }}>
                           <Typography
                             variant="body1"
+                            color="blue"
                             onClick={() => {
                               props.setQueryName(el.name);
                             }}
                           >
                             {el.name}
                           </Typography>
+                          <Typography variant="subtitle2">{':'}</Typography>
                           <Typography
                             variant="body1"
                             color="orange"
@@ -397,38 +440,55 @@ function Documentation(props: ComponentProps) {
                 {docs.args && (
                   <Box>
                     <Typography variant="subtitle2">Type</Typography>
-                    {docs.type.name ? (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.name && props.setQueryName(docs.type.name);
-                        }}
-                      >
-                        {docs.type.name}
+                    <Box sx={{ display: 'flex' }}>
+                      <Typography variant="body1">{docs.type.kind === 'LIST' && '['}</Typography>
+                      {docs.type.ofType && (
+                        <Typography variant="body1">
+                          {docs.type.ofType.kind === 'LIST' && '['}
+                        </Typography>
+                      )}
+                      {docs.type.name ? (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            docs.type.name && props.setQueryName(docs.type.name);
+                          }}
+                        >
+                          {docs.type.name}
+                        </Typography>
+                      ) : docs.type.ofType.name ? (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            docs.type.ofType.name && props.setQueryName(docs.type.ofType.name);
+                          }}
+                        >
+                          {docs.type.ofType.name}
+                        </Typography>
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            docs.type.ofType.ofType.name &&
+                              props.setQueryName(docs.type.ofType.ofType.name);
+                          }}
+                        >
+                          {docs.type.ofType.ofType.name}
+                        </Typography>
+                      )}
+                      <Typography variant="body1">{docs.type.kind === 'LIST' && ']'}</Typography>
+                      {docs.type.ofType && (
+                        <Typography variant="body1">
+                          {docs.type.ofType.kind === 'LIST' && ']'}
+                        </Typography>
+                      )}
+                      <Typography variant="body1">
+                        {docs.type.kind === 'NON_NULL' && '!'}
                       </Typography>
-                    ) : docs.type.ofType.name ? (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.ofType.name && props.setQueryName(docs.type.ofType.name);
-                        }}
-                      >
-                        {docs.type.ofType.name}
-                      </Typography>
-                    ) : (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.ofType.ofType.name &&
-                            props.setQueryName(docs.type.ofType.ofType.name);
-                        }}
-                      >
-                        {docs.type.ofType.ofType.name}
-                      </Typography>
-                    )}
+                    </Box>
                     {docs.args.length > 0 && <Typography variant="subtitle2">Arguments</Typography>}
                     {docs.args.map((el, key) => (
                       <Box
@@ -440,9 +500,13 @@ function Documentation(props: ComponentProps) {
                         <Typography variant="body1" color="indianred">
                           {el.name}
                         </Typography>
-                        <Typography variant="body1" color="indianred">
-                          {':'}
-                        </Typography>
+                        <Typography variant="body1">{':'}</Typography>
+                        <Typography variant="body1">{el.type.kind === 'LIST' && '['}</Typography>
+                        {el.type.ofType && (
+                          <Typography variant="body1">
+                            {el.type.ofType.kind === 'LIST' && '['}
+                          </Typography>
+                        )}
                         {el.type.name ? (
                           <Typography
                             variant="body1"
@@ -486,6 +550,19 @@ function Documentation(props: ComponentProps) {
                             {el.type.ofType.ofType.ofType.name}
                           </Typography>
                         )}
+                        {el.type.ofType && el.type.ofType.ofType && (
+                          <Typography variant="body1">
+                            {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
+                          </Typography>
+                        )}
+                        {el.type.ofType && (
+                          <Typography variant="body1">
+                            {el.type.ofType.kind === 'LIST' && ']'}
+                          </Typography>
+                        )}
+                        <Typography variant="body1">
+                          {el.type.kind === 'NON_NULL' && '!'}
+                        </Typography>
                       </Box>
                     ))}
                   </Box>
