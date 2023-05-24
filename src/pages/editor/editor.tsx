@@ -139,7 +139,6 @@ function Editor() {
         </Alert>
       </Snackbar>
       <Documentation
-        loading={loading}
         queryName={queryName}
         setQueryName={setQueryName}
         isDocsOpen={isDocsOpen}

@@ -60,7 +60,6 @@ import '../../i18nex';
 import { getIntrospectionQuery } from 'graphql';
 
 type ComponentProps = {
-  loading: boolean;
   queryName: string;
   setQueryName: Dispatch<SetStateAction<string>>;
   isDocsOpen: boolean;
@@ -70,8 +69,11 @@ type ComponentProps = {
 function Documentation(props: ComponentProps) {
   const { t } = useTranslation();
   const [docs, setDocs] = useState<undefined | Docs>();
+  const [loading, setLoading] = useState(false);
 
   const getDocs = async (path: RequestInfo | URL, name: string) => {
+    setLoading(true);
+
     try {
       const response = await fetch(path, {
         method: 'POST',
@@ -86,11 +88,14 @@ function Documentation(props: ComponentProps) {
         const jsonData = await response.json();
         const queryArr = jsonData.data.__schema.types;
         setDocs(findNestedObj(queryArr, name));
+        setLoading(false);
       } else {
+        setLoading(false);
         const errorFetch = new Error(`Network Error: response ${response.status}`);
         throw errorFetch;
       }
     } catch (err: unknown) {
+      setLoading(false);
       console.error(err);
     }
   };
@@ -155,7 +160,7 @@ function Documentation(props: ComponentProps) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
-          width: { lg: '600px', md: '500px', sm: '100wh', xs: '100wh' },
+          width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
           gap: '20px',
           p: '20px',
         }}
@@ -218,10 +223,10 @@ function Documentation(props: ComponentProps) {
         <Typography variant="body1" component="h5">
           {t('editor.docsAPITitle')}
         </Typography>
-        {props.loading ? (
+        {loading ? (
           <Box
-            style={{
-              width: '100%',
+            sx={{
+              minWidth: '100%',
               height: '100%',
               backgroundColor: '#f5f5f5',
               border: '1px solid grey',
@@ -241,7 +246,9 @@ function Documentation(props: ComponentProps) {
             }}
           >
             {docs && (
-              <Box sx={{ p: '10px' }}>
+              <Box
+                sx={{ width: { lg: '100%', md: '100%', sm: '100%', xs: 'fit-content' }, p: '10px' }}
+              >
                 <Typography variant="h6">{docs.name}</Typography>
                 <Typography variant="body1">{docs.description}</Typography>
                 <Box>
