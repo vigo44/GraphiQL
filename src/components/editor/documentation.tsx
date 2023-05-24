@@ -155,6 +155,7 @@ function Documentation(props: ComponentProps) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
+          width: { lg: '600px', md: '500px', sm: '100wh', xs: '100wh' },
           gap: '20px',
           p: '20px',
         }}
@@ -231,7 +232,7 @@ function Documentation(props: ComponentProps) {
           </Box>
         ) : (
           <Box
-            style={{
+            sx={{
               width: '100%',
               height: '100%',
               backgroundColor: '#f5f5f5',
@@ -240,7 +241,7 @@ function Documentation(props: ComponentProps) {
             }}
           >
             {docs && (
-              <Box>
+              <Box sx={{ p: '10px' }}>
                 <Typography variant="h6">{docs.name}</Typography>
                 <Typography variant="body1">{docs.description}</Typography>
                 <Box>
@@ -249,7 +250,7 @@ function Documentation(props: ComponentProps) {
                       <Typography variant="subtitle2">Fields</Typography>
                       {docs.fields.map((el, key) => (
                         <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Box sx={{ display: 'flex', p: '5px 0' }}>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', p: '5px 0' }}>
                             <Typography
                               variant="body1"
                               color="blue"
