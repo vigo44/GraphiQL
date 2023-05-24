@@ -9,8 +9,6 @@ import {
   Stack,
 } from '@mui/material';
 
-import { t } from 'i18next';
-
 type ComponentProps = {
   img: string;
   name: string;

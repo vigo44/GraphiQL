@@ -208,11 +208,7 @@ function Editor() {
           {t('editor.copySnack')}
         </Alert>
       </Snackbar>
-      <Documentation
-        docs={docs}
-        isDocsOpen={isDocsOpen}
-        setDocsOpen={setDocsOpen}
-      ></Documentation>
+      <Documentation docs={docs} isDocsOpen={isDocsOpen} setDocsOpen={setDocsOpen}></Documentation>
       <Paper
         elevation={3}
         component="div"
