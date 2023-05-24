@@ -1,54 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-
-type Docs = {
-  name: string;
-  description: string;
-  fields: Fields[];
-  inputFields: InputFields[];
-  args: Args[];
-  type: {
-    name: string | null;
-    kind: string;
-    ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
-  };
-};
-
-type InputFields = {
-  name: string;
-  description: string;
-  type: { kind: string; name: string | null };
-};
-
-type Fields = {
-  name: string;
-  description: string;
-  args: Args[];
-  type: {
-    kind: string;
-    name: string;
-    ofType: { kind: string; name: string | null; ofType: { name: string | null } };
-  };
-};
-
-type Args = {
-  name: string;
-  description: string;
-  type: {
-    kind: string;
-    name: string | null;
-    ofType: {
-      kind: string;
-      name: string | null;
-      ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
-    };
-  };
-};
+import { Dispatch, SetStateAction, Suspense, useEffect, useState } from 'react';
 
 import {
   Box,
   Chip,
+  CircularProgress,
   IconButton,
-  LinearProgress,
   Stack,
   SwipeableDrawer,
   Typography,
@@ -57,57 +13,29 @@ import { Close, Brightness1 } from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
-import { getIntrospectionQuery } from 'graphql';
+
+import { Docs } from '../../pages/editor/editor';
 
 type ComponentProps = {
-  queryName: string;
-  setQueryName: Dispatch<SetStateAction<string>>;
+  docs: Docs[] | undefined
   isDocsOpen: boolean;
   setDocsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 function Documentation(props: ComponentProps) {
   const { t } = useTranslation();
-  const [docs, setDocs] = useState<undefined | Docs>();
-  const [loading, setLoading] = useState(false);
+  const [currentDocs, setCurrentDocs] = useState<undefined | Docs>();
+  const [breadcrumbs, setBreadcrumbs] = useState<Docs[]>([]);
 
-  const getDocs = async (path: RequestInfo | URL, name: string) => {
-    setLoading(true);
-
-    try {
-      const response = await fetch(path, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: getIntrospectionQuery() as string,
-        }),
-      });
-      if (response.ok) {
-        const jsonData = await response.json();
-        const queryArr = jsonData.data.__schema.types;
-        setDocs(findNestedObj(queryArr, name));
-        setLoading(false);
-      } else {
-        setLoading(false);
-        const errorFetch = new Error(`Network Error: response ${response.status}`);
-        throw errorFetch;
-      }
-    } catch (err: unknown) {
-      setLoading(false);
-      console.error(err);
-    }
-  };
-
-  function findNestedObj(arr: Array<Docs>, name: string) {
+  const findNestedObj = (name: string) => {
     let foundObj;
+
     if (
       name === 'id' ||
       name === 'type' ||
       name === 'name' ||
       name === 'location' ||
-      name === 'locations' ||
+      name === 'locations' || 
       name === 'character' ||
       name === 'characters' ||
       name === 'episode' ||
@@ -118,17 +46,17 @@ function Documentation(props: ComponentProps) {
       name === 'origin' ||
       name === 'created'
     ) {
-      JSON.stringify(docs, (_, nestedValue) => {
+      JSON.stringify(currentDocs, (_, nestedValue) => {
         if (nestedValue && nestedValue['name'] === name) {
           foundObj = nestedValue;
         }
         return nestedValue;
       });
     } else {
-      if (arr.filter((el) => el.name === name).length) {
-        foundObj = arr.filter((el) => el.name === name)[0];
+      if (props.docs && props.docs.filter((el) => el.name === name).length) {
+        foundObj = props.docs.filter((el) => el.name === name)[0];
       } else {
-        JSON.stringify(arr, (_, nestedValue) => {
+        JSON.stringify(props.docs, (_, nestedValue) => {
           if (nestedValue && nestedValue['name'] === name) {
             foundObj = nestedValue;
           }
@@ -136,15 +64,9 @@ function Documentation(props: ComponentProps) {
         });
       }
     }
-
-    console.log(arr, foundObj);
-    return foundObj;
+    console.log(breadcrumbs);
+    setCurrentDocs(foundObj);
   }
-
-  useEffect(() => {
-    getDocs('https://rickandmortyapi.com/graphql', props.queryName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.queryName]);
 
   return (
     <SwipeableDrawer
@@ -153,471 +75,482 @@ function Documentation(props: ComponentProps) {
       onOpen={() => props.setDocsOpen(true)}
       sx={{ touchAction: 'none' }}
     >
-      <Box
-        component="div"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
-          gap: '20px',
-          p: '20px',
-        }}
-      >
         <Box
           component="div"
           sx={{
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
+            gap: '20px',
+            p: '20px',
           }}
         >
-          <Typography
-            variant="h4"
-            component="h4"
-            sx={{
-              textAlign: 'center',
-              fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
-            }}
-          >
-            {t('editor.docsTitle')}
-          </Typography>
-          <IconButton onClick={() => props.setDocsOpen(false)}>
-            <Close />
-          </IconButton>
-        </Box>
-        <Typography variant="body1" component="h5">
-          {t('editor.docsValidationTitle')}
-        </Typography>
-        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '15px' }}>
-          <Chip
-            icon={
-              <Brightness1
-                style={{ color: '#F0FFF0', border: '1px solid gray', borderRadius: '50%' }}
-              />
-            }
-            label={t('editor.docsValidationTrue')}
-            variant="outlined"
-          />
-          <Chip
-            icon={
-              <Brightness1
-                style={{ color: '#FFE4E1', border: '1px solid gray', borderRadius: '50%' }}
-              />
-            }
-            label={t('editor.docsValidationFalse')}
-            variant="outlined"
-          />
-          <Chip
-            icon={
-              <Brightness1
-                style={{ color: '#F5F5F5', border: '1px solid gray', borderRadius: '50%' }}
-              />
-            }
-            label={t('editor.docsValidationEmpty')}
-            variant="outlined"
-          />
-        </Stack>
-        <Typography variant="body1" component="h5">
-          {t('editor.docsAPITitle')}
-        </Typography>
-        {loading ? (
           <Box
+            component="div"
             sx={{
-              minWidth: '100%',
-              height: '100%',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid grey',
-              borderRadius: '5px',
-            }}
-          >
-            <LinearProgress sx={{ width: '100%' }} />
-          </Box>
-        ) : (
-          <Box
-            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               width: '100%',
-              height: '100%',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid grey',
-              borderRadius: '5px',
             }}
           >
-            {docs && (
-              <Box
-                sx={{ width: { lg: '100%', md: '100%', sm: '100%', xs: 'fit-content' }, p: '10px' }}
-              >
-                <Typography variant="h6">{docs.name}</Typography>
-                <Typography variant="body1">{docs.description}</Typography>
-                <Box>
-                  {docs.fields && (
-                    <Box>
-                      <Typography variant="subtitle2">Fields</Typography>
-                      {docs.fields.map((el, key) => (
-                        <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', p: '5px 0' }}>
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{
+                textAlign: 'center',
+                fontSize: { lg: '1.5rem', md: '1.4rem', sm: '1.3rem', xs: '1.2rem' },
+              }}
+            >
+              {t('editor.docsTitle')}
+            </Typography>
+            <IconButton onClick={() => props.setDocsOpen(false)}>
+              <Close />
+            </IconButton>
+          </Box>
+          <Typography variant="body1" component="h5">
+            {t('editor.docsValidationTitle')}
+          </Typography>
+          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '15px' }}>
+            <Chip
+              icon={
+                <Brightness1
+                  style={{ color: '#F0FFF0', border: '1px solid gray', borderRadius: '50%' }}
+                />
+              }
+              label={t('editor.docsValidationTrue')}
+              variant="outlined"
+            />
+            <Chip
+              icon={
+                <Brightness1
+                  style={{ color: '#FFE4E1', border: '1px solid gray', borderRadius: '50%' }}
+                />
+              }
+              label={t('editor.docsValidationFalse')}
+              variant="outlined"
+            />
+            <Chip
+              icon={
+                <Brightness1
+                  style={{ color: '#F5F5F5', border: '1px solid gray', borderRadius: '50%' }}
+                />
+              }
+              label={t('editor.docsValidationEmpty')}
+              variant="outlined"
+            />
+          </Stack>
+          <Typography variant="body1" component="h5">
+            {t('editor.docsAPITitle')}
+          </Typography>
+            <Box
+              sx={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#f5f5f5',
+                border: '1px solid grey',
+                borderRadius: '5px',
+              }}
+            >
+              {currentDocs && (
+                <Box
+                  sx={{ width: { lg: '100%', md: '100%', sm: '100%', xs: 'fit-content' }, p: '10px' }}
+                >
+                  {breadcrumbs.length > 0 && <Typography variant="body1" onClick={() => {
+                    setCurrentDocs(breadcrumbs[breadcrumbs.length - 1])
+                    setBreadcrumbs(breadcrumbs.slice(0, -1))
+                  }}>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
+                  <Typography variant="h6">{currentDocs.name}</Typography>
+                  <Typography variant="body1">{currentDocs.description}</Typography>
+                  <Box>
+                    {currentDocs.fields && (
+                      <Box>
+                        <Typography variant="subtitle2">Fields</Typography>
+                        {currentDocs.fields.map((el, key) => (
+                          <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', p: '5px 0' }}>
+                              <Typography
+                                variant="body1"
+                                color="blue"
+                                onClick={() => {
+                                  findNestedObj(el.name);
+                                }}
+                              >
+                                {el.name}
+                              </Typography>
+                              <Typography variant="body1">
+                                {currentDocs.name === 'Query' ? '(' : ':'}
+                              </Typography>
+                              {el.args && (
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    gap: '5px',
+                                  }}
+                                >
+                                  {el.args.map((el, key) => (
+                                    <Box
+                                      key={key}
+                                      sx={{
+                                        display: 'flex',
+                                      }}
+                                    >
+                                      <Typography variant="body1" color="indianred">
+                                        {el.name}:
+                                      </Typography>
+                                      {el.type.ofType && (
+                                        <Typography variant="body1">
+                                          {el.type.ofType.kind === 'LIST' && '['}
+                                        </Typography>
+                                      )}
+                                      {el.type.name ? (
+                                        <Typography
+                                          variant="body1"
+                                          color="orange"
+                                          onClick={() => {
+                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                            el.type.name && findNestedObj(el.type.name);
+                                          }}
+                                        >
+                                          {el.type.name}
+                                        </Typography>
+                                      ) : el.type.ofType.name ? (
+                                        <Typography
+                                          variant="body1"
+                                          color="orange"
+                                          onClick={() => {
+                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                            el.type.ofType.name &&
+                                              findNestedObj(el.type.ofType.name);
+                                          }}
+                                        >
+                                          {el.type.ofType.name}
+                                        </Typography>
+                                      ) : el.type.ofType.ofType.name ? (
+                                        <Typography
+                                          variant="body1"
+                                          color="orange"
+                                          onClick={() => {
+                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                            el.type.ofType.ofType.name &&
+                                              findNestedObj(el.type.ofType.ofType.name);
+                                          }}
+                                        >
+                                          {el.type.ofType.ofType.name}
+                                        </Typography>
+                                      ) : (
+                                        <Typography
+                                          variant="body1"
+                                          color="orange"
+                                          onClick={() => {
+                                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                            el.type.ofType.ofType.ofType.name &&
+                                              findNestedObj(el.type.ofType.ofType.ofType.name);
+                                          }}
+                                        >
+                                          {el.type.ofType.ofType.ofType.name}
+                                        </Typography>
+                                      )}
+                                      {el.type.ofType && el.type.ofType.ofType && (
+                                        <Typography variant="body1">
+                                          {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
+                                        </Typography>
+                                      )}
+                                      {el.type.ofType && (
+                                        <Typography variant="body1">
+                                          {el.type.ofType.kind === 'LIST' && ']'}
+                                        </Typography>
+                                      )}
+                                      <Typography variant="body1">
+                                        {el.type.kind === 'NON_NULL' && '!'}
+                                      </Typography>
+                                    </Box>
+                                  ))}
+                                </Box>
+                              )}
+                              <Typography variant="body1">
+                                {currentDocs.name === 'Query' && '): '}
+                              </Typography>
+                              <Typography variant="body1">
+                                {el.type.kind === 'LIST' && '['}
+                              </Typography>
+                              {el.type.ofType && (
+                                <Typography variant="body1">
+                                  {el.type.ofType.kind === 'LIST' && '['}
+                                </Typography>
+                              )}
+                              {el.type.name ? (
+                                <Typography
+                                  variant="body1"
+                                  color="orange"
+                                  onClick={() => {
+                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                    el.type.name && findNestedObj(el.type.name);
+                                  }}
+                                >
+                                  {el.type.name}
+                                </Typography>
+                              ) : el.type.ofType.name ? (
+                                <Typography
+                                  variant="body1"
+                                  color="orange"
+                                  onClick={() => {
+                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                    el.type.ofType.name && findNestedObj(el.type.ofType.name);
+                                  }}
+                                >
+                                  {el.type.ofType.name}
+                                </Typography>
+                              ) : (
+                                <Typography
+                                  variant="body1"
+                                  color="orange"
+                                  onClick={() => {
+                                    setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                    el.type.ofType.ofType.name &&
+                                      findNestedObj(el.type.ofType.ofType.name);
+                                  }}
+                                >
+                                  {el.type.ofType.ofType.name}
+                                </Typography>
+                              )}
+                              <Typography variant="body1">
+                                {el.type.kind === 'LIST' && ']'}
+                              </Typography>
+                              {el.type.ofType && (
+                                <Typography variant="body1">
+                                  {el.type.ofType.kind === 'LIST' && ']'}
+                                </Typography>
+                              )}
+                              <Typography variant="body1">
+                                {el.type.kind === 'NON_NULL' && '!'}
+                              </Typography>
+                            </Box>
+                            <Typography variant="body1">{el.description}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+                  </Box>
+                  <Box>
+                    {currentDocs.inputFields && (
+                      <Box>
+                        <Typography variant="subtitle2">Fields</Typography>
+                        {currentDocs.inputFields.map((el, key) => (
+                          <Box key={key} sx={{ display: 'flex' }}>
                             <Typography
                               variant="body1"
                               color="blue"
                               onClick={() => {
-                                props.setQueryName(el.name);
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                findNestedObj(el.name);
                               }}
                             >
                               {el.name}
                             </Typography>
-                            <Typography variant="body1">
-                              {docs.name === 'Query' ? '(' : ':'}
-                            </Typography>
-                            {el.args && (
-                              <Box
-                                sx={{
-                                  display: 'flex',
-                                  gap: '5px',
-                                }}
-                              >
-                                {el.args.map((el, key) => (
-                                  <Box
-                                    key={key}
-                                    sx={{
-                                      display: 'flex',
-                                    }}
-                                  >
-                                    <Typography variant="body1" color="indianred">
-                                      {el.name}:
-                                    </Typography>
-                                    {el.type.ofType && (
-                                      <Typography variant="body1">
-                                        {el.type.ofType.kind === 'LIST' && '['}
-                                      </Typography>
-                                    )}
-                                    {el.type.name ? (
-                                      <Typography
-                                        variant="body1"
-                                        color="orange"
-                                        onClick={() => {
-                                          el.type.name && props.setQueryName(el.type.name);
-                                        }}
-                                      >
-                                        {el.type.name}
-                                      </Typography>
-                                    ) : el.type.ofType.name ? (
-                                      <Typography
-                                        variant="body1"
-                                        color="orange"
-                                        onClick={() => {
-                                          el.type.ofType.name &&
-                                            props.setQueryName(el.type.ofType.name);
-                                        }}
-                                      >
-                                        {el.type.ofType.name}
-                                      </Typography>
-                                    ) : el.type.ofType.ofType.name ? (
-                                      <Typography
-                                        variant="body1"
-                                        color="orange"
-                                        onClick={() => {
-                                          el.type.ofType.ofType.name &&
-                                            props.setQueryName(el.type.ofType.ofType.name);
-                                        }}
-                                      >
-                                        {el.type.ofType.ofType.name}
-                                      </Typography>
-                                    ) : (
-                                      <Typography
-                                        variant="body1"
-                                        color="orange"
-                                        onClick={() => {
-                                          console.log(el);
-                                          el.type.ofType.ofType.ofType.name &&
-                                            props.setQueryName(el.type.ofType.ofType.ofType.name);
-                                        }}
-                                      >
-                                        {el.type.ofType.ofType.ofType.name}
-                                      </Typography>
-                                    )}
-                                    {el.type.ofType && el.type.ofType.ofType && (
-                                      <Typography variant="body1">
-                                        {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
-                                      </Typography>
-                                    )}
-                                    {el.type.ofType && (
-                                      <Typography variant="body1">
-                                        {el.type.ofType.kind === 'LIST' && ']'}
-                                      </Typography>
-                                    )}
-                                    <Typography variant="body1">
-                                      {el.type.kind === 'NON_NULL' && '!'}
-                                    </Typography>
-                                  </Box>
-                                ))}
-                              </Box>
-                            )}
-                            <Typography variant="body1">
-                              {docs.name === 'Query' && '): '}
-                            </Typography>
-                            <Typography variant="body1">
-                              {el.type.kind === 'LIST' && '['}
-                            </Typography>
-                            {el.type.ofType && (
-                              <Typography variant="body1">
-                                {el.type.ofType.kind === 'LIST' && '['}
-                              </Typography>
-                            )}
-                            {el.type.name ? (
-                              <Typography
-                                variant="body1"
-                                color="orange"
-                                onClick={() => {
-                                  el.type.name && props.setQueryName(el.type.name);
-                                }}
-                              >
-                                {el.type.name}
-                              </Typography>
-                            ) : el.type.ofType.name ? (
-                              <Typography
-                                variant="body1"
-                                color="orange"
-                                onClick={() => {
-                                  el.type.ofType.name && props.setQueryName(el.type.ofType.name);
-                                }}
-                              >
-                                {el.type.ofType.name}
-                              </Typography>
-                            ) : (
-                              <Typography
-                                variant="body1"
-                                color="orange"
-                                onClick={() => {
-                                  el.type.ofType.ofType.name &&
-                                    props.setQueryName(el.type.ofType.ofType.name);
-                                }}
-                              >
-                                {el.type.ofType.ofType.name}
-                              </Typography>
-                            )}
-                            <Typography variant="body1">
-                              {el.type.kind === 'LIST' && ']'}
-                            </Typography>
-                            {el.type.ofType && (
-                              <Typography variant="body1">
-                                {el.type.ofType.kind === 'LIST' && ']'}
-                              </Typography>
-                            )}
-                            <Typography variant="body1">
-                              {el.type.kind === 'NON_NULL' && '!'}
+                            <Typography variant="subtitle2">{':'}</Typography>
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                el.type.name && findNestedObj(el.type.name);
+                              }}
+                            >
+                              {el.type.name}
                             </Typography>
                           </Box>
-                          <Typography variant="body1">{el.description}</Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-                <Box>
-                  {docs.inputFields && (
+                        ))}
+                      </Box>
+                    )}
+                  </Box>
+                  {currentDocs.args && (
                     <Box>
-                      <Typography variant="subtitle2">Fields</Typography>
-                      {docs.inputFields.map((el, key) => (
-                        <Box key={key} sx={{ display: 'flex' }}>
-                          <Typography
-                            variant="body1"
-                            color="blue"
-                            onClick={() => {
-                              props.setQueryName(el.name);
-                            }}
-                          >
-                            {el.name}
-                          </Typography>
-                          <Typography variant="subtitle2">{':'}</Typography>
-                          <Typography
-                            variant="body1"
-                            color="orange"
-                            onClick={() => {
-                              el.type.name && props.setQueryName(el.type.name);
-                            }}
-                          >
-                            {el.type.name}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-                {docs.args && (
-                  <Box>
-                    <Typography variant="subtitle2">Type</Typography>
-                    <Box sx={{ display: 'flex' }}>
-                      <Typography variant="body1">{docs.type.kind === 'LIST' && '['}</Typography>
-                      {docs.type.ofType && (
-                        <Typography variant="body1">
-                          {docs.type.ofType.kind === 'LIST' && '['}
-                        </Typography>
-                      )}
-                      {docs.type.name ? (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            docs.type.name && props.setQueryName(docs.type.name);
-                          }}
-                        >
-                          {docs.type.name}
-                        </Typography>
-                      ) : docs.type.ofType.name ? (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            docs.type.ofType.name && props.setQueryName(docs.type.ofType.name);
-                          }}
-                        >
-                          {docs.type.ofType.name}
-                        </Typography>
-                      ) : (
-                        <Typography
-                          variant="body1"
-                          color="orange"
-                          onClick={() => {
-                            docs.type.ofType.ofType.name &&
-                              props.setQueryName(docs.type.ofType.ofType.name);
-                          }}
-                        >
-                          {docs.type.ofType.ofType.name}
-                        </Typography>
-                      )}
-                      <Typography variant="body1">{docs.type.kind === 'LIST' && ']'}</Typography>
-                      {docs.type.ofType && (
-                        <Typography variant="body1">
-                          {docs.type.ofType.kind === 'LIST' && ']'}
-                        </Typography>
-                      )}
-                      <Typography variant="body1">
-                        {docs.type.kind === 'NON_NULL' && '!'}
-                      </Typography>
-                    </Box>
-                    {docs.args.length > 0 && <Typography variant="subtitle2">Arguments</Typography>}
-                    {docs.args.map((el, key) => (
-                      <Box
-                        key={key}
-                        sx={{
-                          display: 'flex',
-                        }}
-                      >
-                        <Typography variant="body1" color="indianred">
-                          {el.name}
-                        </Typography>
-                        <Typography variant="body1">{':'}</Typography>
-                        <Typography variant="body1">{el.type.kind === 'LIST' && '['}</Typography>
-                        {el.type.ofType && (
+                      <Typography variant="subtitle2">Type</Typography>
+                      <Box sx={{ display: 'flex' }}>
+                        <Typography variant="body1">{currentDocs.type.kind === 'LIST' && '['}</Typography>
+                        {currentDocs.type.ofType && (
                           <Typography variant="body1">
-                            {el.type.ofType.kind === 'LIST' && '['}
+                            {currentDocs.type.ofType.kind === 'LIST' && '['}
                           </Typography>
                         )}
-                        {el.type.name ? (
+                        {currentDocs.type.name ? (
                           <Typography
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              el.type.name && props.setQueryName(el.type.name);
+                              setBreadcrumbs([...breadcrumbs, currentDocs]);
+                              currentDocs.type.name && findNestedObj(currentDocs.type.name);
                             }}
                           >
-                            {el.type.name}
+                            {currentDocs.type.name}
                           </Typography>
-                        ) : el.type.ofType.name ? (
+                        ) : currentDocs.type.ofType.name ? (
                           <Typography
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              el.type.ofType.name && props.setQueryName(el.type.ofType.name);
+                              setBreadcrumbs([...breadcrumbs, currentDocs]);
+                              currentDocs.type.ofType.name && findNestedObj(currentDocs.type.ofType.name);
                             }}
                           >
-                            {el.type.ofType.name}
-                          </Typography>
-                        ) : el.type.ofType.ofType.name ? (
-                          <Typography
-                            variant="body1"
-                            color="orange"
-                            onClick={() => {
-                              el.type.ofType.ofType.name &&
-                                props.setQueryName(el.type.ofType.ofType.name);
-                            }}
-                          >
-                            {el.type.ofType.ofType.name}
+                            {currentDocs.type.ofType.name}
                           </Typography>
                         ) : (
                           <Typography
                             variant="body1"
                             color="orange"
                             onClick={() => {
-                              el.type.ofType.ofType.ofType.name &&
-                                props.setQueryName(el.type.ofType.ofType.ofType.name);
+                              setBreadcrumbs([...breadcrumbs, currentDocs]);
+                              currentDocs.type.ofType.ofType.name &&
+                                findNestedObj(currentDocs.type.ofType.ofType.name);
                             }}
                           >
-                            {el.type.ofType.ofType.ofType.name}
+                            {currentDocs.type.ofType.ofType.name}
                           </Typography>
                         )}
-                        {el.type.ofType && el.type.ofType.ofType && (
+                        <Typography variant="body1">{currentDocs.type.kind === 'LIST' && ']'}</Typography>
+                        {currentDocs.type.ofType && (
                           <Typography variant="body1">
-                            {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
-                          </Typography>
-                        )}
-                        {el.type.ofType && (
-                          <Typography variant="body1">
-                            {el.type.ofType.kind === 'LIST' && ']'}
+                            {currentDocs.type.ofType.kind === 'LIST' && ']'}
                           </Typography>
                         )}
                         <Typography variant="body1">
-                          {el.type.kind === 'NON_NULL' && '!'}
+                          {currentDocs.type.kind === 'NON_NULL' && '!'}
                         </Typography>
                       </Box>
-                    ))}
-                  </Box>
-                )}
-                {!docs.args && !docs.fields && !docs.inputFields && docs.type && (
-                  <Box>
-                    <Typography variant="subtitle2">Type</Typography>
-                    {docs.type.name ? (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.name && props.setQueryName(docs.type.name);
-                        }}
-                      >
-                        {docs.type.name}
-                      </Typography>
-                    ) : docs.type.ofType.name ? (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.ofType.name && props.setQueryName(docs.type.ofType.name);
-                        }}
-                      >
-                        {docs.type.ofType.name}
-                      </Typography>
-                    ) : (
-                      <Typography
-                        variant="body1"
-                        color="orange"
-                        onClick={() => {
-                          docs.type.ofType.ofType.name &&
-                            props.setQueryName(docs.type.ofType.ofType.name);
-                        }}
-                      >
-                        {docs.type.ofType.ofType.name}
-                      </Typography>
-                    )}
-                  </Box>
-                )}
-              </Box>
-            )}
-          </Box>
-        )}
-        <button onClick={() => props.setQueryName('Query')}>XXXX</button>
-      </Box>
+                      {currentDocs.args.length > 0 && <Typography variant="subtitle2">Arguments</Typography>}
+                      {currentDocs.args.map((el, key) => (
+                        <Box
+                          key={key}
+                          sx={{
+                            display: 'flex',
+                          }}
+                        >
+                          <Typography variant="body1" color="indianred">
+                            {el.name}
+                          </Typography>
+                          <Typography variant="body1">{':'}</Typography>
+                          <Typography variant="body1">{el.type.kind === 'LIST' && '['}</Typography>
+                          {el.type.ofType && (
+                            <Typography variant="body1">
+                              {el.type.ofType.kind === 'LIST' && '['}
+                            </Typography>
+                          )}
+                          {el.type.name ? (
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                el.type.name && findNestedObj(el.type.name);
+                              }}
+                            >
+                              {el.type.name}
+                            </Typography>
+                          ) : el.type.ofType.name ? (
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                el.type.ofType.name && findNestedObj(el.type.ofType.name);
+                              }}
+                            >
+                              {el.type.ofType.name}
+                            </Typography>
+                          ) : el.type.ofType.ofType.name ? (
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                el.type.ofType.ofType.name &&
+                                  findNestedObj(el.type.ofType.ofType.name);
+                              }}
+                            >
+                              {el.type.ofType.ofType.name}
+                            </Typography>
+                          ) : (
+                            <Typography
+                              variant="body1"
+                              color="orange"
+                              onClick={() => {
+                                setBreadcrumbs([...breadcrumbs, currentDocs]);
+                                el.type.ofType.ofType.ofType.name &&
+                                  findNestedObj(el.type.ofType.ofType.ofType.name);
+                              }}
+                            >
+                              {el.type.ofType.ofType.ofType.name}
+                            </Typography>
+                          )}
+                          {el.type.ofType && el.type.ofType.ofType && (
+                            <Typography variant="body1">
+                              {el.type.ofType.ofType.kind === 'NON_NULL' && '!'}
+                            </Typography>
+                          )}
+                          {el.type.ofType && (
+                            <Typography variant="body1">
+                              {el.type.ofType.kind === 'LIST' && ']'}
+                            </Typography>
+                          )}
+                          <Typography variant="body1">
+                            {el.type.kind === 'NON_NULL' && '!'}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                  {!currentDocs.args && !currentDocs.fields && !currentDocs.inputFields && currentDocs.type && (
+                    <Box>
+                      <Typography variant="subtitle2">Type</Typography>
+                      {currentDocs.type.name ? (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                            currentDocs.type.name && findNestedObj(currentDocs.type.name);
+                          }}
+                        >
+                          {currentDocs.type.name}
+                        </Typography>
+                      ) : currentDocs.type.ofType.name ? (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                            currentDocs.type.ofType.name && findNestedObj(currentDocs.type.ofType.name);
+                          }}
+                        >
+                          {currentDocs.type.ofType.name}
+                        </Typography>
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          color="orange"
+                          onClick={() => {
+                            setBreadcrumbs([...breadcrumbs, currentDocs]);
+                            currentDocs.type.ofType.ofType.name &&
+                              findNestedObj(currentDocs.type.ofType.ofType.name);
+                          }}
+                        >
+                          {currentDocs.type.ofType.ofType.name}
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                </Box>
+              )}
+            </Box>
+          <button onClick={() => {
+            setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
+            // props.docs && setBreadcrumbs([...breadcrumbs, props.docs[0]]);
+            findNestedObj('Query')}}>XXXX</button>
+        </Box>
     </SwipeableDrawer>
   );
 }

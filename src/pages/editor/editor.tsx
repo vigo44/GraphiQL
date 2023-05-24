@@ -17,6 +17,51 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
+import { getIntrospectionQuery } from 'graphql';
+
+export type Docs = {
+  name: string;
+  description: string;
+  fields: Fields[];
+  inputFields: InputFields[];
+  args: Args[];
+  type: {
+    name: string | null;
+    kind: string;
+    ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
+  };
+};
+
+type InputFields = {
+  name: string;
+  description: string;
+  type: { kind: string; name: string | null };
+};
+
+type Fields = {
+  name: string;
+  description: string;
+  args: Args[];
+  type: {
+    kind: string;
+    name: string;
+    ofType: { kind: string; name: string | null; ofType: { name: string | null } };
+  };
+};
+
+type Args = {
+  name: string;
+  description: string;
+  type: {
+    kind: string;
+    name: string | null;
+    ofType: {
+      kind: string;
+      name: string | null;
+      ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
+    };
+  };
+};
 
 function Editor() {
   const { t } = useTranslation();
@@ -28,10 +73,9 @@ function Editor() {
   const [validation, setValidation] = useState<undefined | boolean>();
   const [errMessage, setErrMessage] = useState<undefined | string>();
   const [isVariablesOpen, setVariablesOpen] = useState(true);
+  const [docs, setDocs] = useState<undefined | Docs[]>();
   const [isDocsOpen, setDocsOpen] = useState(false);
   const [isSnackOpen, setSnackOpen] = useState(false);
-
-  const [queryName, setQueryName] = useState('');
 
   const { scheme } = useLoadScheme('https://rickandmortyapi.com/graphql');
   const { loading, response, error } = useQueryGraphQL(
@@ -44,7 +88,33 @@ function Editor() {
   const { isValidVaribles, errValidVaribles } = useValidationVaribles(codeVars);
   const { isValidQuery } = useValidationQuery(codeQuery, scheme);
 
+  const getDocs = async (path: RequestInfo | URL) => {
+    try {
+      const response = await fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: getIntrospectionQuery() as string,
+        }),
+      });
+      if (response.ok) {
+        const jsonData = await response.json();
+        const queryArr = jsonData.data.__schema.types;
+
+        setDocs(queryArr);
+      } else {
+        const errorFetch = new Error(`Network Error: response ${response.status}`);
+        throw errorFetch;
+      }
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  };
+
   const handlerClickDocs = () => {
+    getDocs('https://rickandmortyapi.com/graphql');
     setDocsOpen(true);
   };
 
@@ -139,8 +209,7 @@ function Editor() {
         </Alert>
       </Snackbar>
       <Documentation
-        queryName={queryName}
-        setQueryName={setQueryName}
+        docs={docs}
         isDocsOpen={isDocsOpen}
         setDocsOpen={setDocsOpen}
       ></Documentation>
