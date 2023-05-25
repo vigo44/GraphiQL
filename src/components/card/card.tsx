@@ -28,7 +28,7 @@ function DeveloperCard(props: ComponentProps) {
         <Typography variant="body2" color="text.secondary">
           {props.description}
         </Typography>
-        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '5px' }}>
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '5px', marginTop: '10px' }}>
           {props.chips.map((el, key) => (
             <Chip key={key} label={el} variant="outlined" size="small" />
           ))}
