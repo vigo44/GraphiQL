@@ -80,7 +80,7 @@ function APIDocs(props: ComponentProps) {
               width: 'fit-content',
             }}
             onClick={() => {
-              setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
+              setBreadcrumbs([]);
               setCurrentDocs(undefined);
             }}
           >
@@ -119,7 +119,7 @@ function APIDocs(props: ComponentProps) {
                     size="small"
                     startIcon={<Undo />}
                     onClick={() => {
-                      setBreadcrumbs(breadcrumbs.splice(0, breadcrumbs.length - 1));
+                      setBreadcrumbs([]);
                       setCurrentDocs(undefined);
                     }}
                   >
@@ -346,7 +346,7 @@ function APIDocs(props: ComponentProps) {
                     <Box>
                       <Typography variant="subtitle2">❐ Fields</Typography>
                       {currentDocs.inputFields.map((el, key) => (
-                        <Box key={key} sx={{ display: 'flex', paddingLeft: '5px' }}>
+                        <Box key={key} sx={{ display: 'flex', p: '5px 0 5px 5px' }}>
                           <Typography
                             variant="body1"
                             color="blue"
