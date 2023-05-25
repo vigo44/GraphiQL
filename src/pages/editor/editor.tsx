@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { getIntrospectionQuery } from 'graphql';
 
 import useLoadScheme from '../../hooks/load-scheme';
 import useQueryGraphQL from '../../hooks/query-graphql';
@@ -17,7 +18,6 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
-import { getIntrospectionQuery } from 'graphql';
 
 export type Docs = {
   name: string;

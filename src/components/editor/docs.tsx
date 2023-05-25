@@ -131,9 +131,12 @@ function APIDocs(props: ComponentProps) {
                 <Box>
                   {currentDocs.fields && (
                     <Box>
-                      <Typography variant="subtitle2">Fields</Typography>
+                      <Typography variant="subtitle2">❐ Fields</Typography>
                       {currentDocs.fields.map((el, key) => (
-                        <Box key={key} sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box
+                          key={key}
+                          sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}
+                        >
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', p: '5px 0' }}>
                             <Typography
                               variant="body1"
@@ -341,9 +344,9 @@ function APIDocs(props: ComponentProps) {
                 <Box>
                   {currentDocs.inputFields && (
                     <Box>
-                      <Typography variant="subtitle2">Fields</Typography>
+                      <Typography variant="subtitle2">❐ Fields</Typography>
                       {currentDocs.inputFields.map((el, key) => (
-                        <Box key={key} sx={{ display: 'flex' }}>
+                        <Box key={key} sx={{ display: 'flex', paddingLeft: '5px' }}>
                           <Typography
                             variant="body1"
                             color="blue"
@@ -359,7 +362,7 @@ function APIDocs(props: ComponentProps) {
                           >
                             {el.name}
                           </Typography>
-                          <Typography variant="subtitle2">{':'}</Typography>
+                          <Typography variant="body1">{':'}</Typography>
                           <Typography
                             variant="body1"
                             color="orange"
@@ -382,8 +385,8 @@ function APIDocs(props: ComponentProps) {
                 </Box>
                 {currentDocs.args && (
                   <Box>
-                    <Typography variant="subtitle2">Type</Typography>
-                    <Box sx={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">◈ Type</Typography>
+                    <Box sx={{ display: 'flex', paddingLeft: '5px' }}>
                       <Typography variant="body1">
                         {currentDocs.type.kind === 'LIST' && '['}
                       </Typography>
@@ -456,13 +459,14 @@ function APIDocs(props: ComponentProps) {
                       </Typography>
                     </Box>
                     {currentDocs.args.length > 0 && (
-                      <Typography variant="subtitle2">Arguments</Typography>
+                      <Typography variant="subtitle2">❖ Arguments</Typography>
                     )}
                     {currentDocs.args.map((el, key) => (
                       <Box
                         key={key}
                         sx={{
                           display: 'flex',
+                          paddingLeft: '5px',
                         }}
                       >
                         <Typography variant="body1" color="indianred">
@@ -564,7 +568,7 @@ function APIDocs(props: ComponentProps) {
                   !currentDocs.inputFields &&
                   currentDocs.type && (
                     <Box>
-                      <Typography variant="subtitle2">Type</Typography>
+                      <Typography variant="subtitle2">◈ Type</Typography>
                       {currentDocs.type.name ? (
                         <Typography
                           variant="body1"
@@ -630,8 +634,8 @@ function APIDocs(props: ComponentProps) {
                 <Typography variant="body1">
                   A GraphQL schema provides a root type for each kind of operation.
                 </Typography>
-                <Typography variant="subtitle2">Root Types</Typography>
-                <Box sx={{ display: 'flex' }}>
+                <Typography variant="subtitle2">⌘ Root Types</Typography>
+                <Box sx={{ display: 'flex', paddingLeft: '5px' }}>
                   <Typography variant="body1" color="blue">
                     query:
                   </Typography>
