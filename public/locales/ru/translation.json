@@ -120,12 +120,12 @@
     "copySnack": "Скопировано!"
   },
   "creators": {
-    "chipManage": "управление",
-    "chipGraph": "graphql",
-    "chipTest": "тестирование",
-    "chipDesign": "адаптивный дизайн",
-    "chipAuth": "аунтефикация",
-    "chipMui": "mui",
-    "chipTranslate": "локализация приложения"
+    "chipManage": "Управление",
+    "chipGraph": "GraphQL",
+    "chipTest": "Тестирование",
+    "chipDesign": "Адаптивный дизайн",
+    "chipAuth": "Аутентификация",
+    "chipMui": "MUI",
+    "chipTranslate": "Локализация приложения"
   }
 }
