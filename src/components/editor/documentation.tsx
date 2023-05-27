@@ -1,23 +1,17 @@
-import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Dispatch, SetStateAction } from 'react';
 
-import {
-  Box,
-  Chip,
-  IconButton,
-  LinearProgress,
-  Stack,
-  SwipeableDrawer,
-  Typography,
-} from '@mui/material';
+import { Box, Chip, IconButton, Stack, SwipeableDrawer, Typography } from '@mui/material';
 import { Close, Brightness1 } from '@mui/icons-material';
+
+import APIDocs from './docs';
 
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
+import { Docs } from '../../pages/editor/editor';
+
 type ComponentProps = {
-  loading: boolean;
-  codeDocs: string | undefined;
+  docs: Docs[] | undefined;
   isDocsOpen: boolean;
   setDocsOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -39,6 +33,7 @@ function Documentation(props: ComponentProps) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
+          width: { lg: '600px', md: '500px', sm: '400px', xs: 'fit-content' },
           gap: '20px',
           p: '20px',
         }}
@@ -98,38 +93,7 @@ function Documentation(props: ComponentProps) {
             variant="outlined"
           />
         </Stack>
-        <Typography variant="body1" component="h5">
-          {t('editor.docsAPITitle')}
-        </Typography>
-        {props.loading ? (
-          <Box
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid grey',
-              borderRadius: '5px',
-            }}
-          >
-            <LinearProgress sx={{ width: '100%' }} />
-          </Box>
-        ) : (
-          <CodeEditor
-            readOnly={true}
-            value={props.codeDocs}
-            language="graphql"
-            placeholder=""
-            padding={15}
-            style={{
-              fontSize: 14,
-              backgroundColor: 'white',
-              fontFamily:
-                'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-              border: '1px solid grey',
-              borderRadius: '5px',
-            }}
-          />
-        )}
+        <APIDocs docs={props.docs}></APIDocs>
       </Box>
     </SwipeableDrawer>
   );

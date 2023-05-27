@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { getIntrospectionQuery } from 'graphql';
 
 import useLoadScheme from '../../hooks/load-scheme';
 import useQueryGraphQL from '../../hooks/query-graphql';
@@ -18,21 +19,65 @@ import { DEF_EDITOR_VALUES } from '../../common/constants';
 import { useTranslation } from 'react-i18next';
 import '../../i18nex';
 
+export type Docs = {
+  name: string;
+  description: string;
+  fields: Fields[];
+  inputFields: InputFields[];
+  args: Args[];
+  type: {
+    name: string | null;
+    kind: string;
+    ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
+  };
+};
+
+type InputFields = {
+  name: string;
+  description: string;
+  type: { kind: string; name: string | null };
+};
+
+type Fields = {
+  name: string;
+  description: string;
+  args: Args[];
+  type: {
+    kind: string;
+    name: string;
+    ofType: { kind: string; name: string | null; ofType: { name: string | null } };
+  };
+};
+
+type Args = {
+  name: string;
+  description: string;
+  type: {
+    kind: string;
+    name: string | null;
+    ofType: {
+      kind: string;
+      name: string | null;
+      ofType: { kind: string; name: string | null; ofType: { kind: string; name: string | null } };
+    };
+  };
+};
+
 function Editor() {
   const { t } = useTranslation();
   const [codeQuery, setCodeQuery] = useState('');
   const [codeVars, setCodeVars] = useState('');
   const [codeResponse, setCodeResponse] = useState<undefined | string>();
-  const [codeDocs, setCodeDocs] = useState<undefined | string>();
   const [coloreQuery, setColoreQuery] = useState('#f5f5f5');
   const [coloreVars, setColoreVars] = useState('#f5f5f5');
   const [validation, setValidation] = useState<undefined | boolean>();
   const [errMessage, setErrMessage] = useState<undefined | string>();
   const [isVariablesOpen, setVariablesOpen] = useState(true);
+  const [docs, setDocs] = useState<undefined | Docs[]>();
   const [isDocsOpen, setDocsOpen] = useState(false);
   const [isSnackOpen, setSnackOpen] = useState(false);
 
-  const { scheme, schemeDocs } = useLoadScheme('https://rickandmortyapi.com/graphql');
+  const { scheme } = useLoadScheme('https://rickandmortyapi.com/graphql');
   const { loading, response, error } = useQueryGraphQL(
     'https://rickandmortyapi.com/graphql',
     codeQuery,
@@ -43,9 +88,34 @@ function Editor() {
   const { isValidVaribles, errValidVaribles } = useValidationVaribles(codeVars);
   const { isValidQuery } = useValidationQuery(codeQuery, scheme);
 
+  const getDocs = async (path: RequestInfo | URL) => {
+    try {
+      const response = await fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: getIntrospectionQuery() as string,
+        }),
+      });
+      if (response.ok) {
+        const jsonData = await response.json();
+        const queryArr = jsonData.data.__schema.types;
+
+        setDocs(queryArr);
+      } else {
+        const errorFetch = new Error(`Network Error: response ${response.status}`);
+        throw errorFetch;
+      }
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  };
+
   const handlerClickDocs = () => {
+    getDocs('https://rickandmortyapi.com/graphql');
     setDocsOpen(true);
-    setCodeDocs(schemeDocs);
   };
 
   const handlerClick = () => {
@@ -138,12 +208,7 @@ function Editor() {
           {t('editor.copySnack')}
         </Alert>
       </Snackbar>
-      <Documentation
-        loading={loading}
-        codeDocs={codeDocs}
-        isDocsOpen={isDocsOpen}
-        setDocsOpen={setDocsOpen}
-      ></Documentation>
+      <Documentation docs={docs} isDocsOpen={isDocsOpen} setDocsOpen={setDocsOpen}></Documentation>
       <Paper
         elevation={3}
         component="div"
